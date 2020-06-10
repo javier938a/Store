@@ -15,6 +15,7 @@ class tbl_tipo_usuario(models.Model):
         return self.tipo_usuario
 
 class User(AbstractUser):
+    tipo_usuario_id = models.ForeignKey(tbl_tipo_usuario, on_delete=models.SET_NULL, null=True)
     class Meta:
         db_table = "auth_user"
 
@@ -25,7 +26,6 @@ class tbl_cliente(models.Model):
         ('F','Femenino'),
     )
     genero = models.CharField(max_length=1, choices=GEN, blank=True, default='M',help_text='Ingrese su genero')
-    tipo_usuario_id = models.ForeignKey(tbl_tipo_usuario, on_delete=models.SET_NULL, null=True)
     nombre_negocio = models.CharField(max_length=50, help_text="Ingrese el nombre de su negocio")
     telefono = models.CharField(max_length=8, help_text="Ingrese su numero de telefono")
     pais_id = models.ForeignKey(tbl_pais, on_delete=models.SET_NULL, null=True)
@@ -41,11 +41,10 @@ class tbl_mayorista(models.Model):
         ('F','Femenino'),
     )
     genero = models.CharField(max_length=1, choices=GEN, blank=True, default='M',help_text='Ingrese su genero')
-    tipo_usuario_id = models.ForeignKey(tbl_tipo_usuario, on_delete=models.SET_NULL, null=True)
     nombre_empresa = models.CharField(max_length=50, help_text="Ingrese el nombre de su empresa")
     telefono = models.CharField(max_length=8, help_text="Ingrese su numero de telefono")
     pais_id = models.ForeignKey(tbl_pais, on_delete=models.SET_NULL, null=True)
-    fecha_nacimento = models.DateField(null=True, blank=True)
+    fecha_nacimiento = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return "%s %s" % (self.nombre_empresa)
+        return "%s" % (self.nombre_empresa)

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+    <div>
+        <h1>{{ perfil.nombre_negocio }}</h1>
+    </div>
+    <div>Negocio:  {{ perfil.user.tipo_usuario_id }}</div>
+    <div>
+        Genero {{ perfil.genero }}
+    </div>
+    <div>
+        Usuario: {{ perfil.user }} 
+    </div>
+    <div>
+        Nombres: {{ perfil.user.first_name }}
+    </div>
+    <div>
+        Apellidos: {{ perfil.user.last_name }}
+    </div>
+    <div>
+        Pais: {{ perfil.pais_id }} 
+    </div>
+    <div>
+        Correo: {{ perfil.user.email }}
+    </div>
+    <div>
+        Telefono: {{ perfil.telefono }}
+    </div>
+    <a href="{% url 'tienda:index' %}">Regresar</a>
+    
+
+ 
+{% endblock %}
