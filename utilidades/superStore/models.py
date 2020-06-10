@@ -19,6 +19,12 @@ class User(AbstractUser):
     class Meta:
         db_table = "auth_user"
 
+class tbl_direccion(models.Model):
+    direccion = models.TextField(max_length=200, help_text="ingresa la direccion del cliente")
+    estado = models.BooleanField(null=True, blank=True, help_text="seleccione si esta activo o no esta direccion")
+    def __str__(self):
+        return self.direccion
+
 class tbl_cliente(models.Model):
     user = models.OneToOneField(User, on_delete = models.CASCADE)
     GEN = (
@@ -30,6 +36,7 @@ class tbl_cliente(models.Model):
     telefono = models.CharField(max_length=8, help_text="Ingrese su numero de telefono")
     pais_id = models.ForeignKey(tbl_pais, on_delete=models.SET_NULL, null=True)
     fecha_nacimiento = models.DateField(null=True, blank=True)
+    direccion = models.ForeignKey(tbl_direccion, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return "%s" % (self.nombre_negocio)
