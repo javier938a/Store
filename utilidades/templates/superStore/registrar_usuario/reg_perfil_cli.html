@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            {{ form.user.label_tag }}
+            {{ form.user }}
+        </div>
+        <div>
+            {{ form.genero.label_tag}}
+            {{ form.genero }}
+        </div>
+        <div>
+            {{ form.nombre_negocio.label_tag }}
+            {{ form.nombre_negocio }}
+        </div>
+        <div>
+            {{ form.telefono.label_tag }}
+            {{ form.telefono }}
+        </div>
+        <div>
+            {{ form.pais_id.label_tag }}
+            {{ form.pais_id }}
+        </div>
+        <div>
+            {{ form.fecha_nacimiento.label_tag }}
+            {{ form.fecha_nacimiento }}
+        </div>
+        <div>
+            {% if form.nombre_empresa %}
+                {{ form.direccion.label_tag }}
+                {{ form.direccion }}
+
+            {% endif %}
+        </div>
+        <div>
+            <button type="submit" >Guardar y siguiente</button> 
+        </div>
+    </form>
+{% endblock %}

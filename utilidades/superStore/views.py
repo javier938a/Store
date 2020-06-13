@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
-from .models import User, tbl_tipo_usuario, tbl_pais, tbl_cliente, tbl_mayorista
-from .forms import CreatePerfilCliente, CreateUserForm, CreatePerfilMayorista
+from .models import User, tbl_tipo_usuario, tbl_pais, tbl_cliente, tbl_mayorista, tbl_direccion, tbl_producto
+from .forms import CreatePerfilCliente, CreateUserForm, CreatePerfilMayorista, FormCrearDireccion, FormCrearProducto
 from django.views.generic import TemplateView, CreateView, DetailView, ListView
 from django.contrib.auth import login as do_login
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm
+from django.urls import reverse_lazy, reverse
 
 # Create your views here.
 
@@ -26,7 +27,7 @@ def register(request):#metodo register sirve para registrar un nuevo usuario
                 print('valor: '+str(tipo_usuario))
                 url = '/superStore/registrar/perfil_reg/'+str(username)+'/'+str(tipo_usuario)
                 return redirect(url)
-    return render(request, "superStore/registrar/reg_usu.html", {'form':form})
+    return render(request, "superStore/registrar_usuario/reg_usu.html", {'form':form})
 
 
 
@@ -37,7 +38,13 @@ def RegistrarPerfilCliente(request, username, tipo_usuario):
         if tipo_usuario=='Cliente':
             form = CreatePerfilCliente(request.POST)
             registrar_perfil(form)#llamada al metodo registrar perfil para registrar el perfil del usuario
-            return redirect('tienda:index')
+            usuario = User.objects.get(username=username)
+
+            cliente  = tbl_cliente.objects.get(user=usuario.id)
+            print("hhhaaaaa")
+            print(cliente.id)
+            url='/superStore/registrar/direccion/'+str(cliente.id)
+            return redirect(url)
         elif  tipo_usuario=='Proveedor':
             form = CreatePerfilMayorista(request.POST)
             registrar_perfil(form)
@@ -46,13 +53,13 @@ def RegistrarPerfilCliente(request, username, tipo_usuario):
         if tipo_usuario == 'Cliente':#verificando si el usuario es cliente para pintar el formulario del cliete
             form = CreatePerfilCliente()
             print(form.Meta.model.user)
-            form['user'].queryset=User.objects.filter(username=username)
+            form.fields['user'].queryset=User.objects.filter(username=username)
             print("esto guarda",User.objects.filter(username=username),form.fields['user'])
         elif tipo_usuario=='Proveedor':
             form = CreatePerfilMayorista()#verificand si el usuario es proveedor para pintar el formulario del proveedor en la plantilla
             form.fields['user'].queryset = User.objects.filter(username=username)
 
-    return render(request, 'superStore/registrar/reg_perfil_cli.html',{'form':form})
+    return render(request, 'superStore/registrar_usuario/reg_perfil_cli.html',{'form':form})
 
 def registrar_perfil(form):#Funcion que servira para guardar formulario
     if form.is_valid():
@@ -83,7 +90,7 @@ def logiar(request):
         #Si llegamos al final renderizamos el formulario
     return render(
             request,
-            'superStore/registrar/login.html',
+            'superStore/registrar_usuario/login.html',
             { 'form':form }
         )
 
@@ -105,3 +112,23 @@ class UsuarioDetalle(DetailView):
         print(self.kwargs['pk'])
         print(perfil.pais_id)
         return context
+class RegistrarDireccion(CreateView):#sirve para registrar las direcciones del usuario
+    template_name = 'superStore/registrar_usuario/registrar_direccion.html'
+    form_class = FormCrearDireccion
+    context_object_name = 'form'
+    success_url = reverse_lazy('tienda:login')
+    def get_context_data(self, **kwargs):
+        context = super(RegistrarDireccion, self).get_context_data(**kwargs)
+        context.get('form').fields['cliente'].queryset = tbl_cliente.objects.filter(id=self.kwargs['pk'])
+        return context
+
+class RegistrarProducto(CreateView):#esta vista sirve para registrar producto
+    template_name = 'superStore/procesos_producto/registrar_productos.html'
+    form_class = FormCrearProducto
+    context_object_name = 'form'
+    success_url='/'
+
+class ListarProductos(ListView):
+    template_name = 'superStore/procesos_producto/listar_productos.html'
+    model = tbl_producto
+    context_object_name = 'prod_list'

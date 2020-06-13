@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+{% block contenido %}
+
+<div>
+    <h1><center>REGISTRAR NUEVO USUARIO</center></h1>
+</div>
+<form method="post">
+    {% csrf_token %}
+    <div>
+      <div>
+        {{ form.username.label_tag }}
+      </div>
+      <div>
+        {{ form.username}}
+      </div>
+      <div>
+        {{ form.first_name.label_tag }}
+      </div>
+      <div>
+        {{ form.first_name }}
+      </div>
+      <div>
+        {{ form.last_name.label_tag }}
+      </div>
+      <div>
+        {{ form.last_name }}
+      </div>
+      <div>
+        {{ form.email.label_tag }}
+      </div>
+      <div>
+        {{ form.email }}
+      </div>
+      <div>
+        {{ form.tipo_usuario_id.label_tag }}
+      </div>
+      <div>
+        {{ form.tipo_usuario_id }}
+      </div>
+      <div>
+        {{ form.password1.label_tag }}
+      </div>
+      <div>
+        {{ form.password1 }}
+      </div>
+      <div>
+        {{ form.password2.label_tag }}
+      </div>
+      <div>
+        {{ form.password2 }}
+      </div>
+      <div>
+        <br>
+        <button type="submit" class="btn btn-primary">Registrar</button>
+      </div>
+    </div>
+
+  </form>
+
+
+{% endblock %}
