@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block titulo %}
+    <title>Advertencia</title>
+{% endblock %}
+
+{% block contenido %}
+    <form method="post">
+       {% csrf_token %}
+        <h4>Esta seguro que desea eliminar el producto "{{ delete_prod.producto }}"</h4>
+        <button class="btn btn-danger" type="submit">si</button>
+        {% if delete_prod.mayorista_id %}
+            <a class="btn btn-success" href="{% url 'tienda:listar_prod' delete_prod.mayorista.id %}">No no quiero</a>
+        {% endif %}
+        
+    </form>
+{% endblock %}

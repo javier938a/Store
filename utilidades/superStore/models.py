@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from django.urls import reverse
 # Create your models here.
 
 class tbl_pais(models.Model):
@@ -73,6 +73,9 @@ class tbl_producto(models.Model):#Tabla producto que almacenara todos los produc
 
     def __str__(self):
         return self.producto
+
+    def get_absolute_url(self):
+        return reverse('producto', args=[str(self.id)])
 
 class tbl_venta(models.Model):#almacenara las ventas efectuadas por los mayoristas por parte de los clientes
     cliente_id = models.ForeignKey(tbl_cliente, on_delete=models.CASCADE)

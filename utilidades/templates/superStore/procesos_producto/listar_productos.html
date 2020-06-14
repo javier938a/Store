@@ -4,6 +4,8 @@
 {% endblock %}
 {# aqui inicia el listado #}
 {% block contenido %}
+ 
+    {#<a class="btn btn-success" href="{% url 'tienda:prod' prod_list.mayorista.id %}">Nuevo Producto</a>#}
     <div>
       {% if prod_list %}
         <table class="table">
@@ -30,8 +32,8 @@
                   <th>{{ prod.cantidad }}</th>
                   <th>{{ prod.precio_unitario }}</th>
                   <th>{{ prod.precio_total }}</th>
-                  <th><a class="btn btn-success" href="">Editar</a></th>
-                  <th><a class="btn btn-danger" href="">Eliminar</a></th>
+                  <th><a class="btn btn-success" href="{% url 'tienda:edit_prod' prod.id %}">Editar</a></th>
+                  <th><a class="btn btn-danger" href="{% url 'tienda:del_prod' prod.id %}">Eliminar</a></th>
                 </tr>
               {% endfor %}
             </tbody>
