@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import User, tbl_mayorista, tbl_cliente, tbl_direccion, tbl_producto
+from .models import User, tbl_mayorista, tbl_cliente, tbl_direccion, tbl_producto, tbl_venta
 
 class CreateUserForm(UserCreationForm):#extienda de la clase UserCreationForm
    class Meta:
@@ -16,8 +16,9 @@ class CreateUserForm(UserCreationForm):#extienda de la clase UserCreationForm
 class CreatePerfilCliente(forms.ModelForm):#Registra el perfil del cliente
     class Meta:
         model = tbl_cliente
-        fields = ('user','genero','nombre_negocio','telefono','pais_id','fecha_nacimiento')
+        fields = ('foto_perfil','user','genero','nombre_negocio','telefono','pais_id','fecha_nacimiento')
         labels = {
+            'foto_perfil':'Foto de Perfil',
             'user':'Usuario',
             'genero':'Genero',
             'nombre_negocio':'Nombre del negocio',
@@ -26,6 +27,7 @@ class CreatePerfilCliente(forms.ModelForm):#Registra el perfil del cliente
             'fecha_nacimiento':'Fecha de nacimiento',
         }
         widgets={
+            'foto_perfil':forms.FileInput(attrs={'class':'form-control'}),
             'user':forms.Select(attrs={'class':'form-control'}),
             'genero':forms.Select(attrs={'class':'form-control'}),
             'nombre_negocio':forms.TextInput(attrs={'class':'form-control'}),
@@ -37,8 +39,9 @@ class CreatePerfilCliente(forms.ModelForm):#Registra el perfil del cliente
 class CreatePerfilMayorista(forms.ModelForm):#Registra el perfil del proveedor
     class Meta:
         model = tbl_mayorista
-        fields = ('user','genero','nombre_empresa','telefono','pais_id','fecha_nacimiento','direccion')
+        fields = ('foto_perfil','user','genero','nombre_empresa','telefono','pais_id','fecha_nacimiento','direccion')
         labels = {
+            'foto_perfil':'Foto de Perfil',
             'user':'Usuario',
             'genero':'Genero',
             'nombre_empresa':'Empresa',
@@ -48,6 +51,7 @@ class CreatePerfilMayorista(forms.ModelForm):#Registra el perfil del proveedor
             'direccion':'Direccion de la empresa',
         }
         widgets={
+            'foto_perfil':forms.FileInput(attrs={'class':'form-control'}),
             'user':forms.Select(attrs={'class':'form-control'}),
             'genero':forms.Select(attrs={'class':'form-control'}),
             'nombre_empresa':forms.TextInput(attrs={'class':'form-control'}),
@@ -92,5 +96,25 @@ class FormCrearProducto(forms.ModelForm):
             'precio_unitario':forms.NumberInput(attrs={'class':'form-control'}),
             'precio_total':forms.NumberInput(attrs={'class':'form-control'}),
         }
+
+class FormCrearVenta(forms.ModelForm):
+    class Meta:
+        model = tbl_venta
+        fields = ('cliente_id', 'producto_id','cantidad', 'precio_unitario', 'precio_total',)
+        labels = {
+            'cliente_id':'Cliente',
+            'producto_id':'Producto',
+            'cantidad':'Cantidad',
+            'precio_unitario':'Precio Unitario',
+            'precio_total':'Precio Total',
+        }
+        widgets = {
+            'cliente_id':forms.Select(attrs={'class':'form-control'}),
+            'producto_id':forms.Select(attrs={'class':'form-control'}),
+            'cantidad':forms.NumberInput(attrs={'class':'form-control'}),
+            'precio_unitario':forms.NumberInput(attrs={'class':'form-control'}),
+            'precio_total':forms.NumberInput(attrs={'class':'form-control'}),
+        }
+
 
 

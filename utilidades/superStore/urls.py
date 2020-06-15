@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import index, register, RegistrarPerfilCliente, logiar, UsuarioDetalle, RegistrarDireccion, RegistrarProducto, ListarProductos, EditarProducto, EliminarProducto
-
+from .views import RegistrarVenta, ListarVenta
+from .views import ListarCesta
 app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
@@ -13,4 +14,7 @@ urlpatterns=[
     path('producto/editar_producto/<int:pk>',EditarProducto.as_view(), name='edit_prod'),#el pk hace referencia al id del producto que se va a editar
     path('producto/guardar_producto/<int:pk>', RegistrarProducto.as_view(), name='prod'),#el pk argumento hace referencia al id del mayorista que esta guardando su producto
     path('producto/eliminar_producto/<int:pk>', EliminarProducto.as_view(), name='del_prod'),
+    path('venta/registrar_venta/<int:pk>', RegistrarVenta.as_view(), name='reg_venta'),#pk es el id de cliente que relizara la compra
+    path('venta/<int:pk>', ListarVenta.as_view(), name='list_venta'),#pk es el id del proveedor al que se le muestran todos sus productos
+    path('cesta/<int:pk>', ListarCesta.as_view(), name='list_cesta')#pk es el id del cliente al que esta asociada la cesta
 ]

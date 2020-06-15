@@ -4,6 +4,10 @@
     <form method="post">
         {% csrf_token %}
         <div>
+            {{ form.foto_perfil.label_tag }}
+            {{ form.foto_perfil }}
+        </div>
+        <div>
             {{ form.user.label_tag }}
             {{ form.user }}
         </div>

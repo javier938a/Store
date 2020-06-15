@@ -12,6 +12,7 @@
             <thead head class="thead-dark">
               <tr>
                 <th scope="col">No</th>
+                <th scope="col">Image del poducto</th>
                 <th scope="col">Proveedor</th>
                 <th scope="col">Producto</th>
                 <th scope="col">Categoria</th>
@@ -26,6 +27,7 @@
               {% for prod in prod_list %}
                 <tr>
                   <th scope="row">{{ prod.id }}</th>
+                  <th>{{ prod.foto_producto1 }}</th>
                   <th>{{ prod.mayorista }}</th>
                   <th>{{ prod.producto }}</th>
                   <th>{{ prod.categoria }}</th>

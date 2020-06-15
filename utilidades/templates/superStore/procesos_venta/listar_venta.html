@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+{# recivo el contexto venta_list #}
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">No</th>
+        <th scope="col">Cliente</th>
+        <th scope="col">Proveedor</th>
+        <th scope="col">Producto</th>
+        <th scope="col">Fecha y hora de la venta</th>
+        <th scope="col">Cantidad</th>
+        <th scope="col">Precio Unitario</th>
+        <th scope="col">Precio Total</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% if venta_list %}
+            {% for venta in venta_list %}
+                <tr>
+                    <th scope="row">{{ venta.id }}</th>
+                    <th>{{ venta.cliente_id }}</th>
+                    <th>{{ venta.producto_id.mayorista }}</th>
+                    <th>{{ venta.producto_id }}</th>
+                    <th>{{ venta.fecha_hora_realizada }}</th>
+                    <th>{{ venta.cantidad }}</th>
+                    <th>{{ venta.precio_unitario }}</th>
+                    <th>{{ venta.precio_total }}</th>
+                </tr>
+            {% endfor %}
+        {% else %}
+                <p>No hay regostros que mostrar</p>
+        {% endif %}
+    </tbody>
+  </table>
+  
+{% endblock %}
