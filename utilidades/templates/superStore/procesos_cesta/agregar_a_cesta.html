@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block titulo %}
+    <title>Agregar a Cesta</title>
+{% endblock %}
+
+{% block contenido %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">agregar</button>
+    </form>
+{% endblock %}

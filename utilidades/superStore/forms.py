@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import User, tbl_mayorista, tbl_cliente, tbl_direccion, tbl_producto, tbl_venta
-
+from .models import tbl_cesta
 class CreateUserForm(UserCreationForm):#extienda de la clase UserCreationForm
    class Meta:
         model = User
@@ -115,6 +115,28 @@ class FormCrearVenta(forms.ModelForm):
             'precio_unitario':forms.NumberInput(attrs={'class':'form-control'}),
             'precio_total':forms.NumberInput(attrs={'class':'form-control'}),
         }
+
+class FormCrearCesta(forms.ModelForm):
+    class Meta:
+        model = tbl_cesta
+        fields = ('producto', 'cliente', 'fecha_hora_realizado', 'cantidad', 'precio_unitario', 'precio_total')
+        labels = {
+            'producto':'Producto',
+            'cliente':'Cliente',
+            'fecha_hora_realizado':'Fecha de transaccion',
+            'cantidad':'Cantidad',
+            'precio_unitario':'Precio Unitario',
+            'precio_total':'Precio Total',
+        }
+        widgets = {
+            'producto':forms.Select(attrs={'class':'form-control'}),
+            'cliente':forms.Select(attrs={'class':'form-control'}),
+            'fecha_hora_realizado':forms.DateTimeInput(attrs={'class':'form-control'}),
+            'cantidad':forms.NumberInput(attrs={'class':'form-control'}),
+            'precio_unitario':forms.NumberInput(attrs={'class':'form-control'}),
+            'precio_total':forms.NumberInput(attrs={'class':'form-control'}),
+        }
+        
 
 
 
