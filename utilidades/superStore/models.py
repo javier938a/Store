@@ -97,6 +97,14 @@ class tbl_categoria(models.Model):#modelo de categoria que almacenara todas las 
     categoria = models.TextField(max_length=50)
     def __str__(self):
         return self.categoria
+class tbl_sub_categoria(models.Model):
+    categoria = models.ForeignKey(tbl_categoria, on_delete=models.SET_NULL, null=True)
+    sub_categoria = models.CharField(max_length=50, help_text="Ingrese la subcategoria")
+    def __str__(self):
+        return self.sub_categoria
+    
+    def get_absolute_url(self):
+        return reverse("categoria-detalle",args=[str(self.id)])
 
 class tbl_producto(models.Model):#Tabla producto que almacenara todos los producto de todos los proveedores
     foto_producto1 = models.ImageField(upload_to='foto_producto', null=True)

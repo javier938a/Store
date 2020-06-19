@@ -1,2 +1,47 @@
 {% extends "base.html" %}
 
+{% block categoria %}
+    <div class="row">{# definiendo columna #}
+        <div class="col-sm-12 col-md-12, col-lg-12 col-xl-12">{#Barra de navegacion de las categorias vertical a la izquierda#}
+        {% if cate_list %}
+            <nav id="categorias" class="nav nav-pills flex-column flex-sm-row">
+                {% for cate in cate_list %}
+                        <a class="flex-sm-fill text-sm-center nav-link" id="c{{cate.id}}" href="{% url 'tienda:sub_categoria' cate.id %}">{{ cate.categoria }}</a>
+                {% endfor %}
+            </nav>
+        {% else %}
+            <p>No hay categorias que mostrar</p>
+        {% endif %}
+        </div>
+{% endblock %}
+{# se mostraran todas las ventas de los usuarios #}
+{% block ventas %}
+    <div class="row">
+        <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+        </div>
+        </div>
+        <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+        </div>
+        </div>
+    </div> 
+
+{% endblock %}
+
+{% block script %}
+
+    {% load static %}{# cargando el recurso de la carpeta estatica #}
+    <script src="{% static "js/store.js" %}"></script>{# llamando al archivo js principal que se encarga de gestionar eventos #}
+
+{% endblock %}

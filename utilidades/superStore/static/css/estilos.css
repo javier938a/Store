@@ -1,3 +1,15 @@
-.error{
-    color: #f00;
+.estiloLogin{
+    width: 1250px;
+    height: 500px;
+    position: fixed; left: 40px; top: 40px;
+    float: left;
+    z-index: 500;
+}
+.busqueda{
+    width: 40%;
+    height: 20%;
+}
+
+.estiloCategora{
+    display: none;   
 }

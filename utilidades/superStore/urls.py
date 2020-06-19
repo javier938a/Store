@@ -2,6 +2,7 @@ from django.urls import path
 from .views import index, register, RegistrarPerfilCliente, logiar, UsuarioDetalle, RegistrarDireccion, RegistrarProducto, ListarProductos, EditarProducto, EliminarProducto
 from .views import RegistrarVenta, ListarVenta
 from .views import ListarCesta, Agregar_a_Cesta, ActualizarCesta
+from .views import ListarSubCategoria
 app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
@@ -19,4 +20,5 @@ urlpatterns=[
     path('cesta/<int:pk>', ListarCesta.as_view(), name='list_cesta'),#pk es el id del cliente al que esta asociada la cesta
     path('cesta/agregar_cesta/<int:pk>',Agregar_a_Cesta.as_view(), name='agregar_cesta'),#pk es el id del cliente asociado a la cesta
     path('cesta/actualizar_cesta/<int:pk>', ActualizarCesta.as_view(), name='actualizar_cesta'),#pk recive el id de la cesta a editar
+    path('sub_categoria/<int:pk>', ListarSubCategoria.as_view(), name='sub_categoria'), #pk seria el valor de la Categia padre
 ]

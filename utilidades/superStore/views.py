@@ -9,11 +9,26 @@ from django.urls import reverse_lazy, reverse
 from .proces_venta.crud_venta import RegistrarVenta, ListarVenta #importanto la clase de registrar Venta
 from .proces_producto.crud_producto import RegistrarProducto, ListarProductos, EditarProducto, EliminarProducto
 from .proces_cesta.crud_cesta import ListarCesta, Agregar_a_Cesta, ActualizarCesta# importando la clase listar cesta en donde me lista todos productos de la cesta
-
+from .models import tbl_categoria, tbl_sub_categoria
 # Create your views here.
 
-class index(TemplateView):#Mostrando index Pagina Principal
+class index(ListView):#Mostrando index Pagina Principal
     template_name ='superStore/index.html'
+    model = tbl_categoria
+    context_object_name='cate_list'
+    def get_context_data(self, **kwargs):
+        context = super(index, self).get_context_data(**kwargs)
+        print('Valores')
+        print(context.get('cate_list'))
+        return context
+
+class ListarSubCategoria(ListView):
+    template_name = "superStore/proces_categoria/listar_sub_categoria.html"
+    model = tbl_sub_categoria
+    context_object_name = 'listar_sub_categoria'
+    def get_queryset(self):
+        return tbl_sub_categoria.objects.filter(categoria=self.kwargs['pk'])
+
 
 def register(request):#metodo register sirve para registrar un nuevo usuario
     form = CreateUserForm()#Creando un formulario vario de Registro de Usuario

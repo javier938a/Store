@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block contenido %}
+    <div id=sub_categoria> 
+            {% if listar_sub_categoria %}
+            <ul class="nav flex-column">
+                {% for sub_cate in listar_sub_categoria %}
+                    <li class="nav-item">
+                        <a href="" class="nav-link active">{{ sub_cate.sub_categoria }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+                <p>No hay Elementos que mostrar</p>
+            {% endif %}
+    </div>
+{% endblock %}
