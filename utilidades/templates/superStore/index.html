@@ -2,17 +2,26 @@
 
 {% block categoria %}
     <div class="row">{# definiendo columna #}
-        <div class="col-sm-12 col-md-12, col-lg-12 col-xl-12">{#Barra de navegacion de las categorias vertical a la izquierda#}
         {% if cate_list %}
-            <nav id="categorias" class="nav nav-pills flex-column flex-sm-row">
-                {% for cate in cate_list %}
-                        <a class="flex-sm-fill text-sm-center nav-link" id="c{{cate.id}}" href="{% url 'tienda:sub_categoria' cate.id %}">{{ cate.categoria }}</a>
-                {% endfor %}
-            </nav>
+                <div class="jumbotron jumbotron-fluid">
+                    <div class="container-fluid">
+                        <div class="row row-cols-5 row-cols-md-4 row-cols-lg-4">
+                            {% for cate in cate_list %}
+                                <div class="col mb-4">
+                                <div class="card">
+                                    <a href="{% url 'tienda:sub_categoria' cate.id %}"><img src=" {{ MEDIA_URL }}{{ cate.icono }}" width="100px" height="200px" class="card-img-top" alt="..."></a>
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ cate.categoria }}</h5>
+                                    </div>
+                                </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
         {% else %}
             <p>No hay categorias que mostrar</p>
         {% endif %}
-        </div>
 {% endblock %}
 {# se mostraran todas las ventas de los usuarios #}
 {% block ventas %}

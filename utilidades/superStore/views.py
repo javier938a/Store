@@ -18,8 +18,8 @@ class index(ListView):#Mostrando index Pagina Principal
     context_object_name='cate_list'
     def get_context_data(self, **kwargs):
         context = super(index, self).get_context_data(**kwargs)
-        print('Valores')
-        print(context.get('cate_list'))
+        #print('Valores')
+       # print(context.get('cate_list'))
         return context
 
 class ListarSubCategoria(ListView):
@@ -47,25 +47,24 @@ def register(request):#metodo register sirve para registrar un nuevo usuario
                 return redirect(url)
     return render(request, "superStore/registrar_usuario/reg_usu.html", {'form':form})
 
-
-
 def RegistrarPerfilCliente(request, username, tipo_usuario):
     form = None
     if request.method == 'POST':
         print("Funciona")
         if tipo_usuario=='Cliente':
-            form = CreatePerfilCliente(request.POST)
-            registrar_perfil(form)#llamada al metodo registrar perfil para registrar el perfil del usuario
-            usuario = User.objects.get(username=username)
-
-            cliente  = tbl_cliente.objects.get(user=usuario.id)
-            print("hhhaaaaa")
-            print(cliente.id)
-            url='/superStore/registrar/direccion/'+str(cliente.id)
+            form = CreatePerfilCliente(request.POST, request.FILES)
+            s = form.is_valid()
+            print("¿Funcionara?")
+            print(s)
+            if form.is_valid():
+                form.save()
+            cliente = tbl_cliente.objects.get(user__username=username)
+            url = "/superStore/registrar/direccion/"+str(cliente.id)
             return redirect(url)
         elif  tipo_usuario=='Proveedor':
-            form = CreatePerfilMayorista(request.POST)
-            registrar_perfil(form)
+            form = CreatePerfilMayorista(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
             return redirect('tienda:index')
     else: 
         if tipo_usuario == 'Cliente':#verificando si el usuario es cliente para pintar el formulario del cliete
@@ -79,9 +78,7 @@ def RegistrarPerfilCliente(request, username, tipo_usuario):
 
     return render(request, 'superStore/registrar_usuario/reg_perfil_cli.html',{'form':form})
 
-def registrar_perfil(form):#Funcion que servira para guardar formulario
-    if form.is_valid():
-        form.save()  
+
 
 def logiar(request):
     #Creamos el formulario de autenticacion vacio

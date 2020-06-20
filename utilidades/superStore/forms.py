@@ -27,13 +27,13 @@ class CreatePerfilCliente(forms.ModelForm):#Registra el perfil del cliente
             'fecha_nacimiento':'Fecha de nacimiento',
         }
         widgets={
-            'foto_perfil':forms.FileInput(attrs={'class':'form-control'}),
+            'foto_perfil':forms.FileInput(attrs={'class':'form-control', 'id':'foto'}),
             'user':forms.Select(attrs={'class':'form-control'}),
             'genero':forms.Select(attrs={'class':'form-control'}),
             'nombre_negocio':forms.TextInput(attrs={'class':'form-control'}),
-            'telefono':forms.DateInput(attrs={'class':'form-control'}),
+            'telefono':forms.TextInput(attrs={'class':'form-control'}),
             'pais_id':forms.Select(attrs={'class':'form-control'}),
-            'fecha_nacimiento':forms.TextInput(attrs={'class':'form-control'}),
+            'fecha_nacimiento':forms.DateInput(attrs={'class':'form-control vDateField'}),
         }
 
 class CreatePerfilMayorista(forms.ModelForm):#Registra el perfil del proveedor

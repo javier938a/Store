@@ -52,7 +52,7 @@ class User(AbstractUser):
         db_table = "auth_user"
 
 class tbl_cliente(models.Model):
-    foto_perfil = models.ImageField(upload_to='photos_perfil_cliente', null=True)
+    foto_perfil = models.ImageField(verbose_name="Imagen", upload_to="fotoPerfilCliente", blank=True, null=True)
     user = models.OneToOneField(User, on_delete = models.CASCADE)
     GEN = (
         ('M','Masculino'),
@@ -95,6 +95,7 @@ class tbl_mayorista(models.Model):
 
 class tbl_categoria(models.Model):#modelo de categoria que almacenara todas las categorias existentes
     categoria = models.TextField(max_length=50)
+    icono = models.ImageField(verbose_name="Imagen", upload_to="iconos_cate", null=True)
     def __str__(self):
         return self.categoria
 class tbl_sub_categoria(models.Model):
@@ -107,9 +108,9 @@ class tbl_sub_categoria(models.Model):
         return reverse("categoria-detalle",args=[str(self.id)])
 
 class tbl_producto(models.Model):#Tabla producto que almacenara todos los producto de todos los proveedores
-    foto_producto1 = models.ImageField(upload_to='foto_producto', null=True)
-    foto_producto2 = models.ImageField(upload_to='foto_producto', null=True)
-    foto_producto3 = models.ImageField(upload_to='foto_producto', null=True)
+    foto_producto1 = models.ImageField(verbose_name="Imagen", upload_to='foto_producto', null=True)
+    foto_producto2 = models.ImageField(verbose_name="Imagen", upload_to='foto_producto', null=True)
+    foto_producto3 = models.ImageField(verbose_name="Imagen", upload_to='foto_producto', null=True)
     mayorista = models.ForeignKey(tbl_mayorista, on_delete=models.CASCADE, blank=True)
     producto = models.CharField(max_length=100, help_text="Ingrese el nombre el producto")
     categoria = models.ForeignKey(tbl_categoria, on_delete=models.CASCADE)

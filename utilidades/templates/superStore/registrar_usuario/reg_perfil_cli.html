@@ -1,45 +1,56 @@
 {% extends "base.html" %}
 
 {% block contenido %}
-    <form method="post">
-        {% csrf_token %}
-        <div>
-            {{ form.foto_perfil.label_tag }}
-            {{ form.foto_perfil }}
+    <div class="container">
+        <div class="col-md-12">
+            <center><img id="fotoPerfil" width="200px" height="200px" src="" alt=""></center>
         </div>
-        <div>
-            {{ form.user.label_tag }}
-            {{ form.user }}
-        </div>
-        <div>
-            {{ form.genero.label_tag}}
-            {{ form.genero }}
-        </div>
-        <div>
-            {{ form.nombre_negocio.label_tag }}
-            {{ form.nombre_negocio }}
-        </div>
-        <div>
-            {{ form.telefono.label_tag }}
-            {{ form.telefono }}
-        </div>
-        <div>
-            {{ form.pais_id.label_tag }}
-            {{ form.pais_id }}
-        </div>
-        <div>
-            {{ form.fecha_nacimiento.label_tag }}
-            {{ form.fecha_nacimiento }}
-        </div>
-        <div>
-            {% if form.nombre_empresa %}
-                {{ form.direccion.label_tag }}
-                {{ form.direccion }}
-
-            {% endif %}
-        </div>
-        <div>
-            <button type="submit" >Guardar y siguiente</button> 
-        </div>
-    </form>
+        <form method="post" enctype="multipart/form-data" novalidate="">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {{ form.foto_perfil.label_tag }}
+                    {{ form.foto_perfil }}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ form.user.label_tag }}
+                    {{ form.user }}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ form.genero.label_tag}}
+                    {{ form.genero }}
+                </div class="form-group col-md-6">
+                <div class="form-group col-md-6">
+                    {{ form.nombre_negocio.label_tag }}
+                    {{ form.nombre_negocio }}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ form.telefono.label_tag }}
+                    {{ form.telefono }}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ form.pais_id.label_tag }}
+                    {{ form.pais_id }}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ form.fecha_nacimiento.label_tag }}
+                    {{ form.fecha_nacimiento }}
+                </div>
+                <div class="form-group col-md-6">
+                    {% if form.nombre_empresa %}
+                        {{ form.direccion.label_tag }}
+                        {{ form.direccion }}
+        
+                    {% endif %}
+                </div>
+                <div class="form-group col-md-12">
+                    <button class="btn btn-success" type="submit" >Guardar y siguiente</button> 
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block script %}
+    {% load static %}
+    <script src="{% static "js/perfilApp.js" %}"></script>
 {% endblock %}
