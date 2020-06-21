@@ -59,7 +59,6 @@ class tbl_cliente(models.Model):
         ('F','Femenino'),
     )
     genero = models.CharField(max_length=1, choices=GEN, blank=True, default='M',help_text='Ingrese su genero')
-    nombre_negocio = models.CharField(max_length=50, help_text="Ingrese el nombre de su negocio")
     telefono = models.CharField(max_length=8, help_text="Ingrese su numero de telefono")
     pais_id = models.ForeignKey(tbl_pais, on_delete=models.SET_NULL, null=True)
     fecha_nacimiento = models.DateField(null=True, blank=True)
@@ -76,7 +75,7 @@ class tbl_direccion(models.Model):
 
 
 class tbl_mayorista(models.Model):
-    foto_perfil = models.ImageField(upload_to='photos_perfil_proveedor', null=True)
+    foto_perfil = models.ImageField(verbose_name='Imagen', upload_to='foto_perfil_proveedor', null=True, blank=True)
     user = models.OneToOneField(User, on_delete = models.CASCADE)
     GEN = (
         ('M','Masculino'),
@@ -85,11 +84,11 @@ class tbl_mayorista(models.Model):
     genero = models.CharField(max_length=1, choices=GEN, blank=True, default='M',help_text='Ingrese su genero')
     nombre_empresa = models.CharField(max_length=50, help_text="Ingrese el nombre de su empresa")
     telefono = models.CharField(max_length=8, help_text="Ingrese su numero de telefono")
-    pais_id = models.ForeignKey(tbl_pais, on_delete=models.SET_NULL, null=True)
     fecha_nacimiento = models.DateField(null=True, blank=True)
-    barrio_canton = models.ForeignKey(tbl_barrio_canton ,on_delete=models.SET_NULL, null=True)
-    direccion = models.TextField(max_length=200, help_text='Ingrese la direccion de la empresa', blank=True, null=True)
-
+    pais = models.CharField(max_length=20, null=True)
+    departamento = models.CharField(max_length=50, null=True)
+    municipio = models.CharField(max_length=50, null=True)
+    barrio_caton = models.CharField(max_length=50, null=True)
     def __str__(self):
         return "%s" % (self.nombre_empresa)
 

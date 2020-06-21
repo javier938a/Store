@@ -5,7 +5,7 @@
         <div class="col-md-12">
             <center><img id="fotoPerfil" width="200px" height="200px" src="" alt=""></center>
         </div>
-        <form method="post" enctype="multipart/form-data" novalidate="">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -20,10 +20,6 @@
                     {{ form.genero.label_tag}}
                     {{ form.genero }}
                 </div class="form-group col-md-6">
-                <div class="form-group col-md-6">
-                    {{ form.nombre_negocio.label_tag }}
-                    {{ form.nombre_negocio }}
-                </div>
                 <div class="form-group col-md-6">
                     {{ form.telefono.label_tag }}
                     {{ form.telefono }}
@@ -40,7 +36,6 @@
                     {% if form.nombre_empresa %}
                         {{ form.direccion.label_tag }}
                         {{ form.direccion }}
-        
                     {% endif %}
                 </div>
                 <div class="form-group col-md-12">

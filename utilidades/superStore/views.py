@@ -41,44 +41,65 @@ def register(request):#metodo register sirve para registrar un nuevo usuario
             if user is not None:
                 do_login(request,user) 
                 username = form.cleaned_data.get('username')
-                tipo_usuario = form.cleaned_data.get('tipo_usuario_id')
-                print('valor: '+str(tipo_usuario))
-                url = '/superStore/registrar/perfil_reg/'+str(username)+'/'+str(tipo_usuario)
+                user = User.objects.get(username=username)#obteniendo una instancia del usuario recien registrado
+                pk = user.id #Id del el usuario
+                tipo = user.tipo_usuario_id #tipo de usuario
+                
+                print('valor del id Usuario: '+str(pk))
+                print("Imprimiendo tipo")
+                print(str(tipo))
+                url = None
+                if str(tipo) == "Cliente":#Verificando si el usuario es cliente o proveedor para si establecer su url
+                    url = '/superStore/registrar/perfil_clien/'+str(pk)
+                    print("Entro al url"+url)
+                elif str(tipo) == "Proveedor":
+                    url = '/superStore/registrar/perfil_provee/'+str(pk)
                 return redirect(url)
     return render(request, "superStore/registrar_usuario/reg_usu.html", {'form':form})
 
-def RegistrarPerfilCliente(request, username, tipo_usuario):
+def RegistrarPerfilCliente(request, pk):
     form = None
     if request.method == 'POST':
         print("Funciona")
-        if tipo_usuario=='Cliente':
-            form = CreatePerfilCliente(request.POST, request.FILES)
-            s = form.is_valid()
-            print("¿Funcionara?")
-            print(s)
-            if form.is_valid():
-                form.save()
-            cliente = tbl_cliente.objects.get(user__username=username)
-            url = "/superStore/registrar/direccion/"+str(cliente.id)
-            return redirect(url)
-        elif  tipo_usuario=='Proveedor':
-            form = CreatePerfilMayorista(request.POST, request.FILES)
-            if form.is_valid():
-                form.save()
-            return redirect('tienda:index')
-    else: 
-        if tipo_usuario == 'Cliente':#verificando si el usuario es cliente para pintar el formulario del cliete
-            form = CreatePerfilCliente()
-            print(form.Meta.model.user)
-            form.fields['user'].queryset=User.objects.filter(username=username)
-            print("esto guarda",User.objects.filter(username=username),form.fields['user'])
-        elif tipo_usuario=='Proveedor':
-            form = CreatePerfilMayorista()#verificand si el usuario es proveedor para pintar el formulario del proveedor en la plantilla
-            form.fields['user'].queryset = User.objects.filter(username=username)
+        form = CreatePerfilCliente(request.POST, request.FILES)
+        s = form.is_valid()
+        print("¿Funcionara?")
+        print(s)
+        if form.is_valid():
+            form.save()
+        cliente = tbl_cliente.objects.get(user__id=pk)
+        url = "/superStore/registrar/direccion/"+str(cliente.id)
+        return redirect(url)
+
+    else:
+        form = CreatePerfilCliente()
+        print(form.Meta.model.user)
+        form.fields['user'].queryset=User.objects.filter(id=pk)
+        print("esto guarda",User.objects.filter(id=pk),form.fields['user'])
 
     return render(request, 'superStore/registrar_usuario/reg_perfil_cli.html',{'form':form})
 
-
+def RegistrarPerfilProveedor(request, pk):
+    template = 'superStore/registrar_usuario/reg_perfil_provee.html'
+    form = None
+    if request.method == "POST":
+        form = CreatePerfilMayorista(request.POST, request.FILES)
+        s=form.is_valid()
+        print(form)
+        print("esto dice")
+        print(s)
+        if form.is_valid():
+            form.save()
+            return redirect("tienda:index")
+    else:
+        form = CreatePerfilMayorista()
+        form.fields['user'].queryset  = User.objects.filter(id=pk)
+    
+    return render(
+        request,
+        template,
+        context={'form':form}
+    )
 
 def logiar(request):
     #Creamos el formulario de autenticacion vacio

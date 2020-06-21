@@ -16,12 +16,11 @@ class CreateUserForm(UserCreationForm):#extienda de la clase UserCreationForm
 class CreatePerfilCliente(forms.ModelForm):#Registra el perfil del cliente
     class Meta:
         model = tbl_cliente
-        fields = ('foto_perfil','user','genero','nombre_negocio','telefono','pais_id','fecha_nacimiento')
+        fields = ('foto_perfil','user','genero','telefono','pais_id','fecha_nacimiento')
         labels = {
             'foto_perfil':'Foto de Perfil',
             'user':'Usuario',
             'genero':'Genero',
-            'nombre_negocio':'Nombre del negocio',
             'telefono':'Telefono',
             'pais_id':'Pais',
             'fecha_nacimiento':'Fecha de nacimiento',
@@ -30,7 +29,6 @@ class CreatePerfilCliente(forms.ModelForm):#Registra el perfil del cliente
             'foto_perfil':forms.FileInput(attrs={'class':'form-control', 'id':'foto'}),
             'user':forms.Select(attrs={'class':'form-control'}),
             'genero':forms.Select(attrs={'class':'form-control'}),
-            'nombre_negocio':forms.TextInput(attrs={'class':'form-control'}),
             'telefono':forms.TextInput(attrs={'class':'form-control'}),
             'pais_id':forms.Select(attrs={'class':'form-control'}),
             'fecha_nacimiento':forms.DateInput(attrs={'class':'form-control vDateField'}),
@@ -39,26 +37,30 @@ class CreatePerfilCliente(forms.ModelForm):#Registra el perfil del cliente
 class CreatePerfilMayorista(forms.ModelForm):#Registra el perfil del proveedor
     class Meta:
         model = tbl_mayorista
-        fields = ('foto_perfil','user','genero','nombre_empresa','telefono','pais_id','fecha_nacimiento','direccion')
+        fields = ('foto_perfil','user','genero','nombre_empresa','telefono','fecha_nacimiento','pais','departamento', 'municipio', 'barrio_caton',)
         labels = {
             'foto_perfil':'Foto de Perfil',
             'user':'Usuario',
             'genero':'Genero',
             'nombre_empresa':'Empresa',
             'telefono':'Telefono',
-            'pais_id':'Pais',
             'fecha_nacimiento':'Fecha de nacimiento',
-            'direccion':'Direccion de la empresa',
+            'pais':'Pais',
+            'departamento':'Departamento',
+            'municipio':'Municipio',
+            'barrio_caton':'Barrio o Canton'
         }
         widgets={
-            'foto_perfil':forms.FileInput(attrs={'class':'form-control'}),
+            'foto_perfil':forms.FileInput(attrs={'class':'form-control', 'id':'foto'}),
             'user':forms.Select(attrs={'class':'form-control'}),
             'genero':forms.Select(attrs={'class':'form-control'}),
             'nombre_empresa':forms.TextInput(attrs={'class':'form-control'}),
             'telefono':forms.TextInput(attrs={'class':'form-control'}),
-            'pais_id':forms.Select(attrs={'class':'form-control'}),
             'fecha_nacimiento':forms.DateInput(attrs={'class':'form-control'}),
-            'direccion':forms.TextInput(attrs={'class':'form-control'}),
+            'pais':forms.TextInput(attrs={'class':'form-control', 'placeholder':'Pais'}),
+            'departamento':forms.TextInput(attrs={'class':'form-control', 'placeholder':'Departamento'}),
+            'municipio':forms.TextInput(attrs={'class':'form-control', 'placeholder':'Municipio'}),
+            'barrio_caton':forms.TextInput(attrs={'class':'form-control', 'placeholder':'Barrio o Cantón'}),
         } 
 
 class FormCrearDireccion(forms.ModelForm):#para registrar las multiples direcciones que pueda tener un cliente

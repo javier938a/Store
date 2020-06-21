@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index, register, RegistrarPerfilCliente, logiar, UsuarioDetalle, RegistrarDireccion, RegistrarProducto, ListarProductos, EditarProducto, EliminarProducto
+from .views import index, register, RegistrarPerfilCliente, RegistrarPerfilProveedor, logiar, UsuarioDetalle, RegistrarDireccion, RegistrarProducto, ListarProductos, EditarProducto, EliminarProducto
 from .views import RegistrarVenta, ListarVenta
 from .views import ListarCesta, Agregar_a_Cesta, ActualizarCesta
 from .views import ListarSubCategoria
@@ -7,7 +7,8 @@ app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
     path('registrar', register, name='registrar'),
-    path('registrar/perfil_reg/<str:username>/<str:tipo_usuario>', RegistrarPerfilCliente, name='perfil'),
+    path('registrar/perfil_clien/<int:pk>', RegistrarPerfilCliente, name='perfil'),
+    path('registrar/perfil_provee/<int:pk>',RegistrarPerfilProveedor, name='reg_provee'),
     path('login', logiar, name='login'),
     path('perfil_info/<int:pk>/<str:tipo_usuario>',UsuarioDetalle.as_view(), name='infoUsuario'),
     path('registrar/direccion/<int:pk>',RegistrarDireccion.as_view(), name='dire'),
