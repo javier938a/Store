@@ -3,9 +3,11 @@ from .views import index, register, RegistrarPerfilCliente, RegistrarPerfilProve
 from .views import RegistrarVenta, ListarVenta
 from .views import ListarCesta, Agregar_a_Cesta, ActualizarCesta
 from .views import ListarSubCategoria
+from .views import usuario_index
 app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
+    path('<int:pk>',usuario_index, name='index_user'),
     path('registrar', register, name='registrar'),
     path('registrar/perfil_clien/<int:pk>', RegistrarPerfilCliente, name='perfil'),
     path('registrar/perfil_provee/<int:pk>',RegistrarPerfilProveedor, name='reg_provee'),

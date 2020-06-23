@@ -10,6 +10,10 @@ from .proces_venta.crud_venta import RegistrarVenta, ListarVenta #importanto la 
 from .proces_producto.crud_producto import RegistrarProducto, ListarProductos, EditarProducto, EliminarProducto
 from .proces_cesta.crud_cesta import ListarCesta, Agregar_a_Cesta, ActualizarCesta# importando la clase listar cesta en donde me lista todos productos de la cesta
 from .models import tbl_categoria, tbl_sub_categoria
+from .forms import FormCrearDireccion
+from django.db import DatabaseError, transaction
+from .inicio.inicio_usuario import UsuarioDetalle # este modulo se usara para cuando la persona inicie secion
+
 # Create your views here.
 
 class index(ListView):#Mostrando index Pagina Principal
@@ -35,6 +39,7 @@ def register(request):#metodo register sirve para registrar un nuevo usuario
     if request.method == "POST":#verificando si se ha revivido una peticion por el metodo post
         form = CreateUserForm(data=request.POST)#asignando los datos enviados a travez del metodo post
         print(form.is_valid())
+        print(form.errors)
         if form.is_valid():# si el formulario es valido
             user = form.save()#Guardar formulario
             print(user)
@@ -65,17 +70,36 @@ def RegistrarPerfilCliente(request, pk):
         s = form.is_valid()
         print("¿Funcionara?")
         print(s)
+        #print(form.errors)
         if form.is_valid():
             form.save()
-        cliente = tbl_cliente.objects.get(user__id=pk)
-        url = "/superStore/registrar/direccion/"+str(cliente.id)
-        return redirect(url)
+            cliente = tbl_cliente.objects.get(user__id=pk)
+            pais = form.cleaned_data.get('pais')
+            departamento = form.cleaned_data.get('departamento')
+            municipio = form.cleaned_data.get('municipio')
+            barrio_canton = form.cleaned_data.get('barrio_canton')
+            calle = form.cleaned_data.get('calle')
+            referencia = form.cleaned_data.get('referencia')
+            #print('direccion: '+pais+' '+departamento+' '+municipio+' '+barrio_canton+' '+calle+' '+referencia)
+
+            direccion  = tbl_direccion()#Creando un modelo direccion para guardar la direccion del usuario
+            direccion.cliente = cliente
+            direccion.pais = pais
+            direccion.departamento = departamento
+            direccion.municipio = municipio
+            direccion.barrio_canton = barrio_canton
+            direccion.calle = calle
+            direccion.referencia = referencia
+            direccion.estado = True
+            direccion.save()#Guardando la direccion
+
+            return redirect("tienda:index")
 
     else:
         form = CreatePerfilCliente()
-        print(form.Meta.model.user)
+        #print(form.Meta.model.user)
         form.fields['user'].queryset=User.objects.filter(id=pk)
-        print("esto guarda",User.objects.filter(id=pk),form.fields['user'])
+        #print("esto guarda",User.objects.filter(id=pk),form.fields['user'])
 
     return render(request, 'superStore/registrar_usuario/reg_perfil_cli.html',{'form':form})
 
@@ -132,22 +156,7 @@ def logiar(request):
 
 #Creando el formulario de informacion del usuario
 
-class UsuarioDetalle(DetailView):
-    model = User
-    template_name = 'info/perfil.html'
-    context_object_name='form'
-    def get_context_data(self, **kwargs):
-        context = super(UsuarioDetalle, self).get_context_data(**kwargs)
-        tipoUsuario = self.kwargs['tipo_usuario']
-        perfil = None # creando variable perfil para almacenar perfil
-        if tipoUsuario=='Cliente':#Verificando si es Cliente para registrar el perfil del cliente
-            perfil = tbl_cliente.objects.get(user=self.kwargs['pk'])
-        elif tipoUsuario=='Proveedor':#Verificando si es Proveedor para registrar el perfil del proveedor
-            perfil = tbl_mayorista.objects.get(user=self.kwargs['pk'])
-        context['perfil']=perfil # agregando el perfil al contexto
-        print(self.kwargs['pk'])
-        print(perfil.pais_id)
-        return context
+
 class RegistrarDireccion(CreateView):#sirve para registrar las direcciones del usuario
     template_name = 'superStore/registrar_usuario/registrar_direccion.html'
     form_class = FormCrearDireccion
@@ -176,3 +185,9 @@ class RegistrarVenta(RegistrarVenta):#sirve para heredar de registrar venta que 
 class ListarVenta(ListarVenta):#sirve para heredad de Listar venta
     pass
 
+#¡---------------------al iniciar secion el usuario-------------------------------!
+def usuario_index(request, pk):
+    template = 'superStore/perfil_usuario/index_user.html'
+    
+
+    return render(request, template,{'saludo':'Bienvenido Usuario'})

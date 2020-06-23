@@ -60,18 +60,22 @@ class tbl_cliente(models.Model):
     )
     genero = models.CharField(max_length=1, choices=GEN, blank=True, default='M',help_text='Ingrese su genero')
     telefono = models.CharField(max_length=8, help_text="Ingrese su numero de telefono")
-    pais_id = models.ForeignKey(tbl_pais, on_delete=models.SET_NULL, null=True)
     fecha_nacimiento = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return "%s" % (self.nombre_negocio)
+        return "Perfil %s" % self.user 
 
 class tbl_direccion(models.Model):
     cliente = models.ForeignKey(tbl_cliente, on_delete=models.SET_NULL, null=True)
-    direccion = models.TextField(max_length=200, help_text="ingresa la direccion del cliente")
+    pais = models.TextField(max_length=200, help_text="Ingrese el departamento", null=True)
+    departamento = models.TextField(max_length=200, help_text="Ingrese el departamento", null=True)
+    municipio = models.TextField(max_length=200, help_text="Ingrese el departamento", null=True)
+    barrio_canton = models.TextField(max_length=200, help_text="Ingrese el departamento", null=True)
+    calle = models.TextField(max_length=400, help_text="Ingrese el departamento", null=True)
+    referencia = models.TextField(max_length=200, help_text="Ingrese el departamento", null=True)
     estado = models.BooleanField(null=True, blank=True, help_text="seleccione si esta activo o no esta direccion")
     def __str__(self):
-        return self.direccion
+        return "%s %s %s %s %s %s %s" % (self.cliente, self.pais, self.departamento, self.municipio, self.barrio_canton, self.calle, self.referencia)
 
 
 class tbl_mayorista(models.Model):

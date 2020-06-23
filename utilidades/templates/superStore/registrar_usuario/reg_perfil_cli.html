@@ -25,18 +25,28 @@
                     {{ form.telefono }}
                 </div>
                 <div class="form-group col-md-6">
-                    {{ form.pais_id.label_tag }}
-                    {{ form.pais_id }}
-                </div>
-                <div class="form-group col-md-6">
                     {{ form.fecha_nacimiento.label_tag }}
                     {{ form.fecha_nacimiento }}
                 </div>
-                <div class="form-group col-md-6">
-                    {% if form.nombre_empresa %}
-                        {{ form.direccion.label_tag }}
-                        {{ form.direccion }}
-                    {% endif %}
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    {{ form.pais }}
+                </div>
+                <div class="form-group col-md-3">
+                    {{ form.departamento }}
+                </div>
+                <div class="form-group col-md-3">
+                    {{ form.municipio }}
+                </div>
+                <div class="form-group col-md-3">
+                    {{ form.barrio_canton }}
+                </div>
+                <div class="form-group col-md-9">
+                    {{ form.calle }}
+                </div>
+                <div class="form-group col-md-3">
+                    {{ form.referencia}}
                 </div>
                 <div class="form-group col-md-12">
                     <button class="btn btn-success" type="submit" >Guardar y siguiente</button> 

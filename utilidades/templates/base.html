@@ -39,12 +39,14 @@
                 <li class="nav-item">
                   <a href="nav-link"></a>
                 </li>
-                <li class="nav-item">
-                  <a id="registrar" class="nav-link" href="{% url 'tienda:registrar' %}" tabindex="-1" aria-disabled="true">Registrarse</a>
-                </li>
-                <li class="nav-item">
-                  <a href="{% url 'tienda:login' %}" class="nav-link">Identificarse</a>
-                </li>
+                {% block autenticacion %}{# botones de autenticacion en por donde el usuario se podra registrar tranquilamente #}
+                  <li class="nav-item">
+                    <a id="registrar" class="nav-link" href="{% url 'tienda:registrar' %}" tabindex="-1" aria-disabled="true">Registrarse</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'tienda:login' %}" class="nav-link">Identificarse</a>
+                  </li>
+                {% endblock %}
               </ul>
             </div>
           </nav>
