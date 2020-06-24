@@ -1,33 +1,76 @@
 {% extends "base.html" %}
 
-{% block contenido %}
-    <div>
-        <h1>{{ perfil.nombre_negocio }}</h1>
-    </div>
-    <div>Negocio:  {{ perfil.user.tipo_usuario_id }}</div>
-    <div>
-        Genero {{ perfil.genero }}
-    </div>
-    <div>
-        Usuario: {{ perfil.user }} 
-    </div>
-    <div>
-        Nombres: {{ perfil.user.first_name }}
-    </div>
-    <div>
-        Apellidos: {{ perfil.user.last_name }}
-    </div>
-    <div>
-        Pais: {{ perfil.pais_id }} 
-    </div>
-    <div>
-        Correo: {{ perfil.user.email }}
-    </div>
-    <div>
-        Telefono: {{ perfil.telefono }}
-    </div>
-    <a href="{% url 'tienda:index' %}">Regresar</a>
-    
+{% block encabezado %}
+    <header>
+       <h1>Informacion General</h1> 
+    </header>
+{% endblock %}
 
- 
+{% block contenido %}
+    {% if perfil_cliente %}
+        <div>Tipo de Usuario {{ perfil_cliente.user.tipo_usuario_id }}</div>
+        <div>
+            Genero {{ perfil_cliente.genero }}
+        </div>
+        <div>
+            Usuario: {{ perfil_cliente.user }} 
+        </div>
+        <div>
+            Nombres: {{ perfil_cliente.user.first_name }}
+        </div>
+        <div>
+            Apellidos: {{ perfil_cliente.user.last_name }}
+        </div>
+        <div>
+            Correo: {{ perfil_cliente.user.email }}
+        </div>
+        <div>
+            Telefono: {{ perfil_cliente.telefono }}
+        </div>
+        <div>
+            Fecha de nacimiento: {{ perfil_cliente.fecha_nacimiento }}
+        </div>
+        <div>
+            <a class="btn btn-success" href="">Direcciones</a>
+        </div>
+        <div>
+            <a class="btn btn-success" href="#">Editar Informacion</a>
+        </div>
+        <div>
+            <a class="btn btn-success" href="{% url 'tienda:index_user' perfil_cliente.user.id %}">Regresar</a>
+        </div>
+        
+    {% else %}
+        <div>
+            <h1>{{ perfil_proveedor.nombre_empresa }}</h1>
+        </div>
+        <div>Negocio:  {{ perfil_proveedor.user.tipo_usuario_id }}</div>
+        <div>
+            Genero {{ perfil_proveedor.genero }}
+        </div>
+        <div>
+            Usuario: {{ perfil_proveedor.user }} 
+        </div>
+        <div>
+            Nombres: {{ perfil_proveedor.user.first_name }}
+        </div>
+        <div>
+            Apellidos: {{ perfil_proveedor.user.last_name }}
+        </div>
+        <div>
+            Correo: {{ perfil_proveedor.user.email }}
+        </div>
+        <div>
+            Telefono: {{ perfil_proveedor.telefono }}
+        </div>
+        <div>
+            Direccion: {{ perfil_proveedor.pais }} {{ perfil_proveedor.departamento }} {{ perfil_proveedor.municipio }} {{ perfil_proveedor.barrio_canton }}
+        </div>
+        <div>   
+            <a class="btn btn-success" href="">Modificar informacion</a>
+        </div>
+        <div>
+            <a class="btn btn-success" href="{% url 'tienda:index_user' perfil_proveedor.user.id %}">Regresar</a>
+        </div>
+    {% endif %}
 {% endblock %}

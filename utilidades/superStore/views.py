@@ -13,7 +13,7 @@ from .models import tbl_categoria, tbl_sub_categoria
 from .forms import FormCrearDireccion
 from django.db import DatabaseError, transaction
 from .inicio.inicio_usuario import UsuarioDetalle # este modulo se usara para cuando la persona inicie secion
-
+from .inicio.inicio_usuario import usuario_index # este modulo de inicio de sesion de usuario
 # Create your views here.
 
 class index(ListView):#Mostrando index Pagina Principal
@@ -144,9 +144,10 @@ def logiar(request):
             if user is not None:
                 #hacemos el login manualmente
                 do_login(request, user)
-                
+                usuario = User.objects.get(username=user)
                 #redireccioamos a la portada
-                return redirect('/')
+                url = '/superStore/'+str(usuario.id)
+                return redirect(url)
         #Si llegamos al final renderizamos el formulario
     return render(
             request,
@@ -184,10 +185,3 @@ class RegistrarVenta(RegistrarVenta):#sirve para heredar de registrar venta que 
 
 class ListarVenta(ListarVenta):#sirve para heredad de Listar venta
     pass
-
-#¡---------------------al iniciar secion el usuario-------------------------------!
-def usuario_index(request, pk):
-    template = 'superStore/perfil_usuario/index_user.html'
-    
-
-    return render(request, template,{'saludo':'Bienvenido Usuario'})
