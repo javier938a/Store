@@ -3,7 +3,7 @@ from .models import User, tbl_tipo_usuario, tbl_pais, tbl_cliente, tbl_mayorista
 from .forms import CreatePerfilCliente, CreateUserForm, CreatePerfilMayorista, FormCrearDireccion, FormCrearProducto
 from django.views.generic import TemplateView, CreateView, DetailView, ListView, UpdateView, DeleteView
 from django.contrib.auth import login as do_login
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse_lazy, reverse
 from .proces_venta.crud_venta import RegistrarVenta, ListarVenta #importanto la clase de registrar Venta
@@ -13,7 +13,7 @@ from .models import tbl_categoria, tbl_sub_categoria
 from .forms import FormCrearDireccion
 from django.db import DatabaseError, transaction
 from .inicio.inicio_usuario import UsuarioDetalle # este modulo se usara para cuando la persona inicie secion
-from .inicio.inicio_usuario import usuario_index # este modulo de inicio de sesion de usuario
+from .inicio.inicio_usuario import EditarInformacionPerfil 
 # Create your views here.
 
 class index(ListView):#Mostrando index Pagina Principal
@@ -22,6 +22,17 @@ class index(ListView):#Mostrando index Pagina Principal
     context_object_name='cate_list'
     def get_context_data(self, **kwargs):
         context = super(index, self).get_context_data(**kwargs)
+        user = self.request.user
+        if user.is_authenticated:#Verifica si el usuario esta autenticado
+            print("El Valor de request.user")
+            if user.tipo_usuario_id.tipo_usuario =="Cliente":#verifica si es cliente
+                print("Entro al if")
+                id_cli = tbl_cliente.objects.get(user=user.id).id#obtiene el id del cliente en base al id del usuario
+                context['id_cli']=id_cli #agrega al contexto el id del cliente
+            else:
+                id_prove = tbl_mayorista.objects.get(user=user.id).id#obtiene el id del mayorista en dado caso sea mayorista
+                context['id_provee'] = id_prove #agrega al contexto el id del proveedor
+        
         #print('Valores')
        # print(context.get('cate_list'))
         return context
@@ -139,15 +150,16 @@ def logiar(request):
             
             #verificamos las credenciales del usuario
             user = authenticate(username=username, password=password)
-
+            print("este es el login")
+            print(user)
             #si existe un usuario con ese nombre y contraseña 
             if user is not None:
-                #hacemos el login manualmente
-                do_login(request, user)
-                usuario = User.objects.get(username=user)
-                #redireccioamos a la portada
-                url = '/superStore/'+str(usuario.id)
-                return redirect(url)
+                if user.is_active:
+                    #hacemos rastreamos el usuario logeado
+                    do_login(request, user)
+                    #redireccioamos a la portada
+                    #url = '/superStore/'+str(usuario.id)
+                    return redirect('tienda:index')
         #Si llegamos al final renderizamos el formulario
     return render(
             request,
@@ -157,7 +169,14 @@ def logiar(request):
 
 #Creando el formulario de informacion del usuario
 
+# aqui se definiria el logout 
+def logout_user(request):
+    logout(request)
+    template = 'superStore/registrar_usuario/logout.html'
+    return render(request, template)
 
+
+# fin del logout 
 class RegistrarDireccion(CreateView):#sirve para registrar las direcciones del usuario
     template_name = 'superStore/registrar_usuario/registrar_direccion.html'
     form_class = FormCrearDireccion

@@ -41,12 +41,14 @@
                   <li class="nav-item">
                     <a class="nav-link" href="#">Cesta</a>
                   </li>
+                  {% block autenticacion %}
                   <li class="nav-item">
                     <a id="registrar" class="nav-link" href="{% url 'tienda:registrar' %}" tabindex="-1" aria-disabled="true">Registrarse</a>
                   </li>
                   <li class="nav-item">
                     <a href="{% url 'tienda:login' %}" class="nav-link">Identificarse</a>
                   </li>
+                  {% endblock %}
               </ul>
               {% endblock %}
               {% block logout%}

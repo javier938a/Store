@@ -34,10 +34,10 @@
             <a class="btn btn-success" href="">Direcciones</a>
         </div>
         <div>
-            <a class="btn btn-success" href="#">Editar Informacion</a>
+            <a class="btn btn-success" href="{% url 'tienda:editarUsuario' perfil_cliente.id %}">Editar Informacion</a>
         </div>
         <div>
-            <a class="btn btn-success" href="{% url 'tienda:index_user' perfil_cliente.user.id %}">Regresar</a>
+            <a class="btn btn-success" href="{% url 'tienda:index' %}">Regresar</a>
         </div>
         
     {% else %}
@@ -70,7 +70,7 @@
             <a class="btn btn-success" href="">Modificar informacion</a>
         </div>
         <div>
-            <a class="btn btn-success" href="{% url 'tienda:index_user' perfil_proveedor.user.id %}">Regresar</a>
+            <a class="btn btn-success" href="{% url 'tienda:index' %}">Regresar</a>
         </div>
     {% endif %}
 {% endblock %}

@@ -3,16 +3,18 @@ from .views import index, register, RegistrarPerfilCliente, RegistrarPerfilProve
 from .views import RegistrarVenta, ListarVenta
 from .views import ListarCesta, Agregar_a_Cesta, ActualizarCesta
 from .views import ListarSubCategoria
-from .views import usuario_index, UsuarioDetalle
+from .views import UsuarioDetalle, EditarInformacionPerfil
+from .views import logout_user
 app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
-    path('<int:pk>',usuario_index, name='index_user'),
     path('perfil_info/<int:pk>/<str:tipo_usuario>',UsuarioDetalle.as_view(), name='infoUsuario'),
+    path('perfil_info/editar/<int:pk>', EditarInformacionPerfil.as_view(), name='editarUsuario'),
     path('registrar', register, name='registrar'),
     path('registrar/perfil_clien/<int:pk>', RegistrarPerfilCliente, name='perfil'),
     path('registrar/perfil_provee/<int:pk>',RegistrarPerfilProveedor, name='reg_provee'),
     path('login', logiar, name='login'),
+    path('logout', logout_user, name='logout'),
     path('registrar/direccion/<int:pk>',RegistrarDireccion.as_view(), name='dire'),
     path('producto/<int:pk>', ListarProductos.as_view(), name='listar_prod'), # el pk es el id del proveedor que esta viendo su listado de productos registrados
     path('producto/editar_producto/<int:pk>',EditarProducto.as_view(), name='edit_prod'),#el pk hace referencia al id del producto que se va a editar

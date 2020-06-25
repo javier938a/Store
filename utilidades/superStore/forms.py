@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import User, tbl_mayorista, tbl_cliente, tbl_direccion, tbl_producto, tbl_venta
 from .models import tbl_cesta
+
 class CreateUserForm(UserCreationForm):#extienda de la clase UserCreationForm
    class Meta:
         model = User
