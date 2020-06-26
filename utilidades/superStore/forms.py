@@ -15,40 +15,9 @@ class CreateUserForm(UserCreationForm):#extienda de la clase UserCreationForm
             'tipo_usuario_id':'Tipo de Usuario',
         }
 class CreatePerfilCliente(forms.ModelForm):#Registra el perfil del cliente
-    pais = forms.CharField(label="Pais", widget=forms.TextInput(
-        attrs={
-            'class':'form-control',
-             'placeholder':'Pais'
-        }
-    ))
-    departamento = forms.CharField(label="Departamento", widget=forms.TextInput(
-        attrs={
-            'class':'form-control',
-            'placeholder':'Departamento'
-        }
-    ))
-    municipio = forms.CharField(label="Municipio", widget=forms.TextInput(
-        attrs={
-            'class':'form-control',
-            'placeholder':'Municipio'
-        }
-    ))
-    barrio_canton = forms.CharField(label="Barrio o Canton", widget=forms.TextInput(attrs={
-        'class':'form-control',
-        'placeholder':'Barrio o Canton'
-    }))
-    calle = forms.CharField(label='calle o avenida', widget=forms.TextInput(attrs={
-            'class':'form-control',
-            'placeholder':'Calle o avenida'
-        }
-    ))
-    referencia = forms.CharField(label= "Referencia de su ubicacion exacta", widget=forms.TextInput(attrs={
-        'class':'form-control',
-        'placeholder':'Referencia de su ubicacion'
-    }))
     class Meta:
         model = tbl_cliente
-        fields = ('foto_perfil','user','genero','telefono','fecha_nacimiento','pais')
+        fields = ('foto_perfil','user','genero','telefono','fecha_nacimiento')
         labels = {
             'foto_perfil':'Foto de Perfil',
             'user':'Usuario',

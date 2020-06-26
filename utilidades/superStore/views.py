@@ -14,24 +14,31 @@ from .forms import FormCrearDireccion
 from django.db import DatabaseError, transaction
 from .inicio.inicio_usuario import UsuarioDetalle # este modulo se usara para cuando la persona inicie secion
 from .inicio.inicio_usuario import EditarInformacionPerfil 
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
-
 class index(ListView):#Mostrando index Pagina Principal
+    #login_url ='tienda:login'
+    #redirect_field_name='redirect_to'
     template_name ='superStore/index.html'
     model = tbl_categoria
     context_object_name='cate_list'
     def get_context_data(self, **kwargs):
         context = super(index, self).get_context_data(**kwargs)
         user = self.request.user
+        '''print("aqui empieza")
+        print(tbl_cliente.objects.filter(user=user.id))
+        print(user.id)'''
         if user.is_authenticated:#Verifica si el usuario esta autenticado
+            pass
             print("El Valor de request.user")
             if user.tipo_usuario_id.tipo_usuario =="Cliente":#verifica si es cliente
-                print("Entro al if")
-                id_cli = tbl_cliente.objects.get(user=user.id).id#obtiene el id del cliente en base al id del usuario
-                context['id_cli']=id_cli #agrega al contexto el id del cliente
+                if tbl_cliente.objects.filter(user=user).exists():#si el usuario esta en la tabla cliente significa que tiene perfil registrado
+                    id_cli = tbl_cliente.objects.get(user=user).id#obtiene el id del cliente en base al id del usuario
+                    context['id_cli']=id_cli #agrega al contexto el id del cliente
             else:
-                id_prove = tbl_mayorista.objects.get(user=user.id).id#obtiene el id del mayorista en dado caso sea mayorista
-                context['id_provee'] = id_prove #agrega al contexto el id del proveedor
+                if tbl_mayorista.objects.filter(user=user).exists():
+                    id_prove = tbl_mayorista.objects.get(user=user).id#obtiene el id del mayorista en dado caso sea mayorista
+                    context['id_provee'] = id_prove #agrega al contexto el id del proveedor
         
         #print('Valores')
        # print(context.get('cate_list'))
@@ -84,28 +91,10 @@ def RegistrarPerfilCliente(request, pk):
         #print(form.errors)
         if form.is_valid():
             form.save()
-            cliente = tbl_cliente.objects.get(user__id=pk)
-            pais = form.cleaned_data.get('pais')
-            departamento = form.cleaned_data.get('departamento')
-            municipio = form.cleaned_data.get('municipio')
-            barrio_canton = form.cleaned_data.get('barrio_canton')
-            calle = form.cleaned_data.get('calle')
-            referencia = form.cleaned_data.get('referencia')
-            #print('direccion: '+pais+' '+departamento+' '+municipio+' '+barrio_canton+' '+calle+' '+referencia)
-
-            direccion  = tbl_direccion()#Creando un modelo direccion para guardar la direccion del usuario
-            direccion.cliente = cliente
-            direccion.pais = pais
-            direccion.departamento = departamento
-            direccion.municipio = municipio
-            direccion.barrio_canton = barrio_canton
-            direccion.calle = calle
-            direccion.referencia = referencia
-            direccion.estado = True
-            direccion.save()#Guardando la direccion
-
-            return redirect("tienda:index")
-
+            id_cliente = tbl_cliente.objects.get(user__id=pk).id
+            print(id_cliente)
+            url ='/superStore/registrar/direccion/'+str(id_cliente)
+            return redirect(url)
     else:
         form = CreatePerfilCliente()
         #print(form.Meta.model.user)
@@ -177,6 +166,20 @@ def logout_user(request):
 
 
 # fin del logout 
+
+class ListarDireccion(ListView):
+    template_name ='superStore/registrar_usuario/listar_direccion.html'
+    model = tbl_direccion
+    context_object_name='dire_list'
+    def get_context_data(self, **kwargs):
+        context = super(ListarDireccion, self).get_context_data(**kwargs)
+        context['id_cliente']=self.kwargs['pk']
+        return context
+    
+    def get_queryset(self):
+        return self.model.objects.filter(cliente__id=self.kwargs['pk'])
+
+
 class RegistrarDireccion(CreateView):#sirve para registrar las direcciones del usuario
     template_name = 'superStore/registrar_usuario/registrar_direccion.html'
     form_class = FormCrearDireccion
@@ -185,7 +188,43 @@ class RegistrarDireccion(CreateView):#sirve para registrar las direcciones del u
     def get_context_data(self, **kwargs):
         context = super(RegistrarDireccion, self).get_context_data(**kwargs)
         context.get('form').fields['cliente'].queryset = tbl_cliente.objects.filter(id=self.kwargs['pk'])# validando que solo aparesca el Cliente pueda ingresar direccion
+        context['id_cliente']=self.kwargs['pk']
         return context
+    def get_success_url(self):
+        return reverse_lazy('tienda:dire_list', args=[str(self.kwargs['pk'])])
+
+class EditarDireccion(UpdateView):
+    template_name = 'superStore/registrar_usuario/editar_direccion.html'
+    form_class = FormCrearDireccion
+    context_object_name = 'form'
+    model = tbl_direccion
+
+    def get_context_data(self, **kwargs):
+        context = super(EditarDireccion, self).get_context_data(**kwargs)
+        direccion = self.model.objects.get(id=self.kwargs['pk'])
+        print("Imprime cliente")
+        print(direccion.cliente.id)
+        context.get('form').fields['cliente'].queryset = tbl_cliente.objects.filter(id = direccion.cliente.id )
+        direccion = self.model.objects.get(id = self.kwargs['pk'])
+        context['id_cliente']=direccion.cliente.id
+        return context
+    def get_success_url(self):
+        direccion = self.model.objects.get(id=self.kwargs['pk'])
+        #id_cliente = tbl_cliente
+        return reverse_lazy('tienda:dire_list', args=[str(direccion.cliente.id)])
+
+class EliminarDireccion(DeleteView):
+    template_name = 'superStore/registrar_usuario/eliminar_direccion.html'
+    model = tbl_direccion
+    context_object_name='delete_dire'
+    def get_context_data(self, **kwargs):
+        context = super(EliminarDireccion, self).get_context_data(**kwargs)
+        print(context)
+        return context
+
+    def get_success_url(self):
+        direccion = self.model.objects.get(id=self.kwargs['pk'])
+        return reverse_lazy('tienda:dire_list', args=[str(direccion.cliente.id)])
 
 class RegistrarProducto(RegistrarProducto):#esta vista sirve para registrar producto se pasa el ID del Mayorista para filtrar que sea el mayorista ingresado
     pass

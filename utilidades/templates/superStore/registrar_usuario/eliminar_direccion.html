@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+    <title>¡Eliminar Dirección!</title>
+{% endblock %}
+{% block contenido %}
+<form action="" method="post">
+    {% csrf_token %}
+    <div>
+        <h1>¿Desea Eliminar esta direccion <br> "{{ delete_dire.pais }} {{delete_dire.departamento}} {{ delete_dire.municipio }} {{ delete_dire.barrio_canton }}" ?</h1>
+    </div>
+    <button class="btn btn-danger" type="submit">Eliminar</button>
+    <a class="btn btn-success" href="{% url 'tienda:dire_list' delete_dire.cliente.id %}">Cancelar</a>
+</form>
+{% endblock %}

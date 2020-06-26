@@ -42,7 +42,7 @@ class EliminarProducto(DeleteView):
     context_object_name = 'delete_prod'
     def get_context_data(self, **kwargs):
         context = super(EliminarProducto, self).get_context_data(**kwargs)
-        context['producto'] = self.get_object()#agrego 
+        context['producto'] = self.get_object()#agrego el objetto
         print("Esto es")
         print(self.get_object().mayorista.id)
         return context

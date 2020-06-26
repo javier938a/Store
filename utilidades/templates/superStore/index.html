@@ -11,9 +11,9 @@
             </li>
             <li class="nav-item">
                 {% if user.is_authenticated %}{# verificando que el usuario este autenticado para colocar iten de registrar #}
-                    {% ifequal user.tipo_usuario_id.tipo_usuario 'Cliente' %}{# verificando si el tipo de usuario sea cliente para ubicar la opcion de cesta en el menu #}
+                    {% ifequal user.tipo_usuario_id.tipo_usuario 'Cliente' %}{# verificando si el tipo de usuario sea cliente para ubicar la opcion de cesta en el menu #}    
                         {% if id_cli %}
-                            <a class="nav-link" href="{% url 'tienda:list_cesta' id_cli %}">Cesta</a>
+                                <a class="nav-link" href="{% url 'tienda:list_cesta' id_cli %}">Cesta</a>    
                         {% endif %}
                     {% endifequal %}
                     {% ifequal user.tipo_usuario_id.tipo_usuario 'Proveedor' %}{# en dado caso no se cliente, sera proveedor y se verifica para ubicar por cesta las ventas de ese proveedor #}
@@ -26,7 +26,11 @@
             <li class="nav-item">
                 {% if user.is_authenticated %}
                     {% ifequal user.tipo_usuario_id.tipo_usuario 'Cliente' %}
-                        <a class="nav-link" href="/superStore/perfil_info/{{ user.id }}/Cliente">Perfil <br> {{ user.username }} </a>                        
+                        {% if id_cli %}{# verificando que exista el id del cliente #}
+                            <a class="nav-link" href="/superStore/perfil_info/{{ user.id }}/Cliente">Perfil <br> {{ user.username }} </a> 
+                        {% else %}
+                            <a class=" nav-link" href="{% url 'tienda:perfil' user.id %}">Perfil <br> {{ user.username }}</a>
+                        {% endif %}                        
                     {% endifequal %}
                     {% ifequal user.tipo_usuario_id.tipo_usuario 'Proveedor' %}
                         <a class="nav-link" href="/superStore/perfil_info/{{ user.id }}/Proveedor">Perfil <br> {{ user.username }} </a>

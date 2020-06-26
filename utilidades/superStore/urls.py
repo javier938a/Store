@@ -3,7 +3,7 @@ from .views import index, register, RegistrarPerfilCliente, RegistrarPerfilProve
 from .views import RegistrarVenta, ListarVenta
 from .views import ListarCesta, Agregar_a_Cesta, ActualizarCesta
 from .views import ListarSubCategoria
-from .views import UsuarioDetalle, EditarInformacionPerfil
+from .views import UsuarioDetalle, EditarInformacionPerfil, EditarDireccion, ListarDireccion, EliminarDireccion
 from .views import logout_user
 app_name='tienda'
 urlpatterns=[
@@ -15,7 +15,10 @@ urlpatterns=[
     path('registrar/perfil_provee/<int:pk>',RegistrarPerfilProveedor, name='reg_provee'),
     path('login', logiar, name='login'),
     path('logout', logout_user, name='logout'),
-    path('registrar/direccion/<int:pk>',RegistrarDireccion.as_view(), name='dire'),
+    path('registrar/direccion/<int:pk>', ListarDireccion.as_view(), name='dire_list'),
+    path('registrar/direccion/reg_dire/<int:pk>', RegistrarDireccion.as_view(), name='dire'),#pk seria el id de el cliente al que se le va registrar la direccion
+    path('registrar/direccion/editar_dire/<int:pk>', EditarDireccion.as_view(), name='dire_edi'),#pk seria el id de la direccion que se quiere editar
+    path('registrar/direccion/eliminar_dire/<int:pk>', EliminarDireccion.as_view(), name='del_dire'),#pk el id de la direccion que se desea eliminar
     path('producto/<int:pk>', ListarProductos.as_view(), name='listar_prod'), # el pk es el id del proveedor que esta viendo su listado de productos registrados
     path('producto/editar_producto/<int:pk>',EditarProducto.as_view(), name='edit_prod'),#el pk hace referencia al id del producto que se va a editar
     path('producto/guardar_producto/<int:pk>', RegistrarProducto.as_view(), name='prod'),#el pk argumento hace referencia al id del mayorista que esta guardando su producto
