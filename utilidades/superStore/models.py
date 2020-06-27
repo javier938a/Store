@@ -53,7 +53,7 @@ class User(AbstractUser):
 
 class tbl_cliente(models.Model):
     foto_perfil = models.ImageField(verbose_name="Imagen", upload_to="fotoPerfilCliente", blank=True, null=True)
-    user = models.OneToOneField(User, on_delete = models.CASCADE)
+    user = models.OneToOneField(User, on_delete = models.CASCADE, blank=True, null=True)
     GEN = (
         ('M','Masculino'),
         ('F','Femenino'),

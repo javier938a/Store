@@ -1,9 +1,30 @@
 {% extends "base.html" %}
 
 {% block contenido %}
-    <form method="post">
+    <form action="{% url 'tienda:editarUsuario' id_cliente %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        <div class="form-control">
+            <input type="file" accept="image/*" value="{{cliente.foto_perfil}}"  name="foto_perfil" id="foto_perfil">
+        </div>
+        <div class="form-control">
+            <select name="genero">
+                {% ifequal cliente.genero "M" %}
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                {% endifequal %}
+                {% ifequal cliente.genero "F" %}
+                    <option value="F">Femenino</option>
+                    <option value="M">Masculino</option>
+                {% endifequal %}
+            </select>
+        </div>
+        <div class="form-control">
+            <input type="text" name="telefono" placeholder="telefono">
+        </div>
+        <div class="form-control">
+            <input type="date" name="fecha_nacimiento" placeholder="fecha de nacimiento">
+        </div>
+
         <button type="submit">Guardar</button>
     </form>
 {% endblock %}
