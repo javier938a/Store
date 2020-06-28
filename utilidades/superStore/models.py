@@ -52,7 +52,7 @@ class User(AbstractUser):
         db_table = "auth_user"
 
 class tbl_cliente(models.Model):
-    foto_perfil = models.ImageField(verbose_name="Imagen", upload_to="fotoPerfilCliente", blank=True, null=True)
+    foto_perfil = models.ImageField(verbose_name="Imagen", max_length=300, upload_to="fotoPerfilCliente", blank=True, null=True)
     user = models.OneToOneField(User, on_delete = models.CASCADE, blank=True, null=True)
     GEN = (
         ('M','Masculino'),
@@ -79,7 +79,7 @@ class tbl_direccion(models.Model):
 
 
 class tbl_mayorista(models.Model):
-    foto_perfil = models.ImageField(verbose_name='Imagen', upload_to='foto_perfil_proveedor', null=True, blank=True)
+    foto_perfil = models.ImageField(verbose_name='Imagen', max_length=300 , upload_to='foto_perfil_proveedor', null=True, blank=True)
     user = models.OneToOneField(User, on_delete = models.CASCADE)
     GEN = (
         ('M','Masculino'),

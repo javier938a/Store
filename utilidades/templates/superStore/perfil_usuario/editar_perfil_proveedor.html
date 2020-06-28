@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+    <h1>{{ usuario.username }}</h1>
+    <img id="fotoPerfil" src="{{ MEDIA_URL }}{{ proveedor.foto_perfil }}" width="200px" height="200px" alt="">
+    <form action="{% url 'tienda:editarProveedor' id_proveedor %}" enctype="multipart/form-data" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="text" name="nombres" value="{{ usuario.first_name }}" placeholder="Nombres">
+        </div>
+        <div class="form-group">
+            <input type="text" name="apellidos" value="{{ usuario.last_name }}" placeholder="Apellidos">
+        </div>
+        <div class="form-group">
+            <input type="text" name="correo" value="{{ usuario.email}}" placeholder="Correo">
+        </div>
+        <div class="form-group">
+            <input type="file" name="foto_perfil" accept="image/*" id="foto">
+        </div>
+        <div class="form-group">
+            <select name="genero">
+                {% ifequal proveedor.genero "M" %}
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                {% endifequal %}
+                {% ifequal proveedor.genero "F" %}
+                    <option value="M">Femenino/option>
+                    <option value="F">Masculino</option>
+                {% endifequal %}
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="text" name="nombre_empresa" value="{{ proveedor.nombre_empresa }}" placeholder="Nombre de la Empresa">
+        </div>
+        <div class="form-group">
+            <input type="text" name="telefono" value="{{ proveedor.telefono }}" placeholder="Telefono">
+        </div>
+        <div class="form-group">
+            <input type="date" name="fecha_nacimiento" value="{{ proveedor.fecha_nacimiento | date:"Y-m-d" }}">
+        </div>
+        <div class="form-group">
+            Direccion
+            <input type="text" name="pais" value="{{ proveedor.pais }}" placeholder="Pais">
+            <input type="text" name="departamento" value="{{ proveedor.departamento }}" placeholder="Departamento">
+            <input type="text" name="municipio" value="{{ proveedor.municipio }}" placeholder="Municipio">
+            <input type="text" name="barrio_canton" value="{{ proveedor.barrio_caton }}" placeholder="Barrio o Canton">
+        </div>
+        <div class="form-group">
+            <button type="submit">Guardar</button>
+        </div>
+        <div class="form-group">
+            <a class="btn btn-success" href="{% url 'tienda:index' %}">Inicio</a>
+        </div>
+        
+    </form>
+
+{% endblock %}
+
+{% block script %}
+    {% load static %}
+    <script src="{% static "js/perfilApp.js" %}"></script>
+{% endblock %}

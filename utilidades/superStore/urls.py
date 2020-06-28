@@ -3,13 +3,14 @@ from .views import index, register, RegistrarPerfilCliente, RegistrarPerfilProve
 from .views import RegistrarVenta, ListarVenta
 from .views import ListarCesta, Agregar_a_Cesta, ActualizarCesta
 from .views import ListarSubCategoria
-from .views import UsuarioDetalle, EditarInformacionPerfil, EditarDireccion, ListarDireccion, EliminarDireccion
+from .views import UsuarioDetalle, EditarInformacionPerfilCliente,EditarInformacionPerfilProveedor, EditarDireccion, ListarDireccion, EliminarDireccion
 from .views import logout_user
 app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
     path('perfil_info/<int:pk>/<str:tipo_usuario>',UsuarioDetalle.as_view(), name='infoUsuario'),
-    path('perfil_info/editar/<int:pk>', EditarInformacionPerfil.as_view(), name='editarUsuario'),#pk es el ID del perfil
+    path('perfil_info/editar_cliente/<int:pk>', EditarInformacionPerfilCliente.as_view(), name='editarUsuario'),#pk es el ID del perfil
+    path('perfil_info/editar_provee/<int:pk>', EditarInformacionPerfilProveedor.as_view(), name="editarProveedor"),
     path('registrar', register, name='registrar'),
     path('registrar/perfil_clien/<int:pk>', RegistrarPerfilCliente, name='perfil'),
     path('registrar/perfil_provee/<int:pk>',RegistrarPerfilProveedor, name='reg_provee'),

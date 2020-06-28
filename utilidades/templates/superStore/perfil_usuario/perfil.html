@@ -67,7 +67,7 @@
             Direccion: {{ perfil_proveedor.pais }} {{ perfil_proveedor.departamento }} {{ perfil_proveedor.municipio }} {{ perfil_proveedor.barrio_canton }}
         </div>
         <div>   
-            <a class="btn btn-success" href="">Modificar informacion</a>
+            <a class="btn btn-success" href="{% url 'tienda:editarProveedor' perfil_proveedor.id %}">Modificar informacion</a>
         </div>
         <div>
             <a class="btn btn-success" href="{% url 'tienda:index' %}">Regresar</a>

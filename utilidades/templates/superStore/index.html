@@ -5,7 +5,9 @@
             <li class="nav-item">
                 {% if user.is_authenticated %}
                     {% ifequal user.tipo_usuario_id.tipo_usuario 'Proveedor'  %}
-                        <a class="nav-link" href="">Inventario</a>
+                        {% if id_provee %}
+                            <a class="nav-link" href="{% url 'tienda:listar_prod' id_provee %}">Inventario</a>
+                        {% endif %}
                     {% endifequal %}
                 {% endif %}
             </li>

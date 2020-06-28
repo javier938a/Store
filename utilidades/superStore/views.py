@@ -13,7 +13,7 @@ from .models import tbl_categoria, tbl_sub_categoria
 from .forms import FormCrearDireccion
 from django.db import DatabaseError, transaction
 from .inicio.inicio_usuario import UsuarioDetalle # este modulo se usara para cuando la persona inicie secion
-from .inicio.inicio_usuario import EditarInformacionPerfil 
+from .inicio.inicio_usuario import EditarInformacionPerfilCliente, EditarInformacionPerfilProveedor
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 class index(ListView):#Mostrando index Pagina Principal

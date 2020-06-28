@@ -1,10 +1,22 @@
 {% extends "base.html" %}
 
 {% block contenido %}
+    <h1>{{ Usuario.username}}</h1>
+    {# cargando la imagen de media#}
+    <img id="fotoPerfil" width="200px" height="200px" src="{{ MEDIA_URL }}{{ cliente.foto_perfil }}" alt="">
     <form action="{% url 'tienda:editarUsuario' id_cliente %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
         <div class="form-control">
-            <input type="file" accept="image/*" value="{{cliente.foto_perfil}}"  name="foto_perfil" id="foto_perfil">
+            <input type="text" name="first_name" placeholder="Nombres" value="{{ Usuario.first_name }}">
+        </div>
+        <div class="form-control">
+            <input type="text" name="last_name" placeholder="Apellidos" value="{{ Usuario.last_name }}">
+        </div>
+        <div class="form-control">
+            <input type="text" name="email" placeholder="Correo" value="{{ Usuario.email }}">
+        </div>
+        <div class="form-control">
+            <input type="file" accept="image/*"  name="foto_perfil" id="foto">
         </div>
         <div class="form-control">
             <select name="genero">
@@ -19,12 +31,22 @@
             </select>
         </div>
         <div class="form-control">
-            <input type="text" name="telefono" placeholder="telefono">
+            <input type="text" name="telefono" placeholder="Telefono" value="{{ cliente.telefono }}" placeholder="telefono">
         </div>
         <div class="form-control">
-            <input type="date" name="fecha_nacimiento" placeholder="fecha de nacimiento">
+            <input type="date" name="fecha_nacimiento" value="{{ cliente.fecha_nacimiento | date:"Y-m-d" }}">
         </div>
-
-        <button type="submit">Guardar</button>
+        <div class="form-control">
+            <button class="btn btn-success" type="submit">Guardar</button>
+        </div>
+        <div class="form-control">
+            <a class="btn btn-success" href="{% url 'tienda:index' %}">Inicio</a>
+        </div>
+        
     </form>
+{% endblock %}
+
+{% block script %}
+    {% load static %}
+    <script src="{% static "js/perfilApp.js" %}"></script>
 {% endblock %}
