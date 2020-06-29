@@ -119,7 +119,7 @@ class tbl_producto(models.Model):#Tabla producto que almacenara todos los produc
     categoria = models.ForeignKey(tbl_categoria, on_delete=models.CASCADE)
     cantidad = models.IntegerField(help_text="Ingrese la cantidad del producto")
     precio_unitario = models.FloatField(help_text="Ingrese el precio unitario del producto")
-    precio_total = models.FloatField(help_text="precio total en inventario")
+    precio_total = models.FloatField(help_text="precio total en inventario", blank=True, null=True)
 
     def __str__(self):
         return self.producto
@@ -133,7 +133,7 @@ class tbl_venta(models.Model):#almacenara las ventas efectuadas por los mayorist
     fecha_hora_realizada = models.DateTimeField(null=True, blank = True)
     cantidad = models.IntegerField(help_text="Ingrese la cantida vendida")
     precio_unitario = models.DecimalField(decimal_places=3, max_digits=10, help_text="Ingrese el precio unitario del producto")
-    precio_total = models.DecimalField(decimal_places=3, max_digits=10, help_text="Ingrese el precio total de la venta")
+    precio_total = models.DecimalField(decimal_places=3, max_digits=10, help_text="Ingrese el precio total de la venta", null=True, blank=True)
 
     def __str__(self):
         return "producto %s " % self.producto_id

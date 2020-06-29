@@ -5,8 +5,8 @@
             <li class="nav-item">
                 {% if user.is_authenticated %}
                     {% ifequal user.tipo_usuario_id.tipo_usuario 'Proveedor'  %}
-                        {% if id_provee %}
-                            <a class="nav-link" href="{% url 'tienda:listar_prod' id_provee %}">Inventario</a>
+                        {% if id_prove %}
+                            <a class="nav-link" href="{% url 'tienda:listar_prod' id_prove %}">Productos</a>
                         {% endif %}
                     {% endifequal %}
                 {% endif %}
@@ -19,7 +19,9 @@
                         {% endif %}
                     {% endifequal %}
                     {% ifequal user.tipo_usuario_id.tipo_usuario 'Proveedor' %}{# en dado caso no se cliente, sera proveedor y se verifica para ubicar por cesta las ventas de ese proveedor #}
-                        <a class="nav-link" href="#">Ventas</a>
+                        {% if id_prove %}
+                            <a class="nav-link" href="{% url 'tienda:list_venta' id_prove %}">Ventas</a>
+                        {% endif %}
                     {% endifequal %}
                 {% else %}{# en dado caso de que no este autenticado no esta registrado se procede a poner el iten de registrar #}
                     <a id="registrar" class="nav-link" href="{% url 'tienda:registrar' %}" tabindex="-1" aria-disabled="true">Registrarse</a>
@@ -35,7 +37,11 @@
                         {% endif %}                        
                     {% endifequal %}
                     {% ifequal user.tipo_usuario_id.tipo_usuario 'Proveedor' %}
-                        <a class="nav-link" href="/superStore/perfil_info/{{ user.id }}/Proveedor">Perfil <br> {{ user.username }} </a>
+                        {% if id_prove %}
+                            <a class="nav-link" href="/superStore/perfil_info/{{ user.id }}/Proveedor">Perfil <br> {{ user.username }} </a>
+                        {% else %}
+                            <a class="nav-link" href="{% url 'tienda:reg_provee' user.id %}">Perfil <br> {{ user.username }}</a>
+                        {% endif %}
                     {% endifequal %}
                 {% else %}
                     <a class="nav-link" href="{% url 'tienda:login' %}">Identificate</a>

@@ -7,16 +7,29 @@ class RegistrarProducto(CreateView):#esta vista sirve para registrar producto se
     template_name = 'superStore/procesos_producto/registrar_productos.html'
     form_class = FormCrearProducto
     context_object_name = 'form'
-    success_url='/'
     def get_context_data(self,**kwargs):
         context = super(RegistrarProducto, self).get_context_data(**kwargs)
         context.get('form').fields['mayorista'].queryset = tbl_mayorista.objects.filter(id=self.kwargs['pk'])#Validando que solo el mayorista que ha ingresado seccion vea sus productos en inventario
         return context
+    def form_valid(self, form):
+        precio_unitario = form.cleaned_data.get('precio_unitario')#Obteniendo el precio unitario del formulario
+        cantidad = form.cleaned_data.get('cantidad')#Obteniendo la cantidad total de producto
+        total = int(precio_unitario)*float(cantidad)#Obteniendo el precio total del producto
+        form.instance.precio_total = total#Agregandolo a el campo del formulario
+        form_valid = super(RegistrarProducto, self).form_valid(form)
+
+        return form_valid
+    def get_success_url(self):#Definiendo la direccion a donde se tiene que regresar cuando se guarde un producto que es al listado de producto
+        return reverse_lazy('tienda:listar_prod', args=[str(self.kwargs['pk'])])
 
 class ListarProductos(ListView):
     template_name = 'superStore/procesos_producto/listar_productos.html'
     model = tbl_producto
     context_object_name = 'prod_list'
+    def get_context_data(self, **kwargs):
+        context = super(ListarProductos, self).get_context_data(**kwargs)
+        context['id_prove']=self.kwargs['pk']
+        return context
     
     def get_queryset(self):
         return self.model.objects.filter(mayorista=self.kwargs['pk'])#filtrando que solo sean los productos del mayorista que acaba de iniciar secion sean los que se vean

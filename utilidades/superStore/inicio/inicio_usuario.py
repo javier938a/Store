@@ -41,6 +41,7 @@ def subir_image(image_bit, tipo_usuario, imagen_name="img.jpg" ):
     with open(ubi_writer,'wb+') as ubicasion:
         for bin in image_bit.chunks():
             ubicasion.write(bin)
+#Fin del metodo de subir imagen
 
 class EditarInformacionPerfilCliente(UpdateView):#vista para editar la informacion del perfil del cliente
     template_name = 'superStore/perfil_usuario/editar_perfil_usuario.html'
