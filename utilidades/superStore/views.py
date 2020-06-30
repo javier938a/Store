@@ -39,7 +39,7 @@ class index(ListView):#Mostrando index Pagina Principal
                 if tbl_mayorista.objects.filter(user=user).exists():
                     id_prove = tbl_mayorista.objects.get(user=user).id#obtiene el id del mayorista en dado caso sea mayorista
                     context['id_prove'] = id_prove #agrega al contexto el id del proveedor
-        
+        context['producto']=tbl_producto.objects.all()
         #print('Valores')
        # print(context.get('cate_list'))
         return context

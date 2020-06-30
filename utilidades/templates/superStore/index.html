@@ -83,28 +83,42 @@
         {% else %}
             <p>No hay categorias que mostrar</p>
         {% endif %}
+    </div>
+{% endblock %}
+{% block anuncios %}
+
 {% endblock %}
 {# se mostraran todas las ventas de los usuarios #}
 {% block ventas %}
     <div class="row">
-        <div class="col-sm-6">
-        <div class="card">
-            <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+        {% if producto %}
+            <div class="container-fluid">
+                <div class="row row-cols-5 row-cols-md-4 row-cols-lg-4">
+                    {% for prod in producto %}
+                        <div class="col mb-4">
+                            <div class="card">
+                                {# Titulo Vendedor#}
+                                <h5 class="card-title">Tienda {{ prod.mayorista }}</h5>
+                                {#titulo de producto#}
+                                <h5 class="card-title">{{ prod.producto }}</h5>
+                                {#Imagen del producto#}
+                                <a href="">
+                                    <img src="{{ MEDIA_URL }}{{ prod.foto_producto1 }}" width="265em" height="200em" alt="">
+                                </a>
+                                
+                                <div class="card-body">
+                                    {# precio por unidad del producto#}
+                                    <h4 class="card-title">${{ prod.precio_unitario }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-        </div>
-        <div class="col-sm-6">
-        <div class="card">
-            <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-        </div>
-        </div>
+        {% else %}
+            <p>No hay datos que mostrar</p>
+        {% endif %}
+
     </div> 
 
 {% endblock %}
