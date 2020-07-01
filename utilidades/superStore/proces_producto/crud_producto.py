@@ -1,4 +1,4 @@
-from django.views.generic import CreateView, ListView, UpdateView, DeleteView
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
 from superStore.forms import FormCrearProducto
 from superStore.models import tbl_producto, tbl_mayorista
@@ -62,3 +62,13 @@ class EliminarProducto(DeleteView):
     #el metodo get_object() obtiene el objeto del get_queryset() el objeto espeficio seleccionado
     def get_success_url(self):
         return reverse_lazy('tienda:listar_prod', args=[str(self.get_object().mayorista.id)])
+    
+class DetalleProducto(DetailView):
+    #Recibe como parametro por la url el pk id de un producto especifico
+    template_name='superStore/procesos_producto/detalle_producto.html'
+    model = tbl_producto
+    context_object_name = 'detalle_producto'
+    def get_context_data(self, **kwargs):
+        context = super(DetalleProducto, self).get_context_data(**kwargs)
+        print(context)
+        return context

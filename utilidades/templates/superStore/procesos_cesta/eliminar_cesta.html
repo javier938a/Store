@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+    <title>Eliminar titulo</title>
+{% endblock %}
+
+{% block contenido %}
+    
+    <form method="POST">
+        {% csrf_token %}
+        <h1>Esta seguro que desea eliminar de la cesta el producto  {{ cesta.producto }}</h1>
+        <button class="btn btn-danger" type="submit">Eliminar</button>
+        <a class="btn btn-primary" href="{% url 'tienda:list_cesta' cesta.cliente.id %}">Cancelar</a>
+    </form>
+
+{% endblock %}

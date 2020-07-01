@@ -1,7 +1,9 @@
-from django.views.generic import ListView, CreateView, UpdateView
-from superStore.models import tbl_cesta, tbl_cliente
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from superStore.models import tbl_cesta, tbl_cliente, tbl_producto
 from superStore.forms import FormCrearCesta 
 from django.urls import reverse_lazy
+import datetime
+from django.utils import timezone
 
 class ListarCesta(ListView):
     template_name = 'superStore/procesos_cesta/listar_cesta.html'
@@ -17,16 +19,21 @@ class Agregar_a_Cesta(CreateView):
     context_object_name = 'form'
     form_class = FormCrearCesta
     def get_context_data(self, **kwargs):
-        context = super(Agregar_a_Cesta, self).get_context_data()
+        context = super(Agregar_a_Cesta, self).get_context_data(**kwargs)
         context.get('form').fields['cliente'].queryset = tbl_cliente.objects.filter(id=self.kwargs['pk'])
+        context.get('form').fields['producto'].queryset = tbl_producto.objects.filter(id=self.kwargs['pk1'])
+        context.get('form').initial = {'precio_unitario':self.kwargs['precio'],}
         return context
     
     def form_valid(self, form):
-        precio_unitario = form.cleaned_data['precio_unitario']
+        precio_unitario = form.cleaned_data['precio_unitario']#Obteniendo el precio unitario
+        fecha_transaccion = timezone.now() #Obteniendo la fecha de transaccion
+        print(fecha_transaccion)
         cantidad = form.cleaned_data['cantidad']
         print("esta es la cantidad: "+str(cantidad))
         total = float(precio_unitario)*int(cantidad)
         form.instance.precio_total =total
+        form.instance.fecha_hora_realizado = fecha_transaccion
 
         form_valid = super(Agregar_a_Cesta,self).form_valid(form)
         print("Sera que guarda? "+str(total))
@@ -42,14 +49,26 @@ class ActualizarCesta(UpdateView):
     form_class = FormCrearCesta
 
     def form_valid(self, form):
-        precio_unitario = form.cleaned_data['precio_unitario']#obteniendo el precio unitario del formulario
+        precio_unitario = form.cleaned_data['precio_unitario']#Obteniendo el precio unitario
+        fecha_transaccion = timezone.now() #Obteniendo la fecha de transaccion
+        print(fecha_transaccion)
         cantidad = form.cleaned_data['cantidad']
+        print("esta es la cantidad: "+str(cantidad))
         total = float(precio_unitario)*int(cantidad)
-        form.instance.precio_total = total
+        form.instance.precio_total =total
+        form.instance.fecha_hora_realizado = fecha_transaccion
 
-        form_valid = super(ActualizarCesta, self).form_valid(form)
+        form_valid = super(ActualizarCesta,self).form_valid(form)
+        print("Sera que guarda? "+str(total))
         return form_valid
 
+    def get_success_url(self):
+        return reverse_lazy('tienda:list_cesta', args=[str(self.object.cliente.id)])
 
+class EliminarCesta(DeleteView):
+    template_name='superStore/procesos_cesta/eliminar_cesta.html'
+    model=tbl_cesta
+    form_class=FormCrearCesta
+    context_object_name='cesta'
     def get_success_url(self):
         return reverse_lazy('tienda:list_cesta', args=[str(self.object.cliente.id)])

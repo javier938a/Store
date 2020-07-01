@@ -7,8 +7,8 @@ from django.contrib.auth import authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse_lazy, reverse
 from .proces_venta.crud_venta import RegistrarVenta, ListarVenta #importanto la clase de registrar Venta
-from .proces_producto.crud_producto import RegistrarProducto, ListarProductos, EditarProducto, EliminarProducto
-from .proces_cesta.crud_cesta import ListarCesta, Agregar_a_Cesta, ActualizarCesta# importando la clase listar cesta en donde me lista todos productos de la cesta
+from .proces_producto.crud_producto import RegistrarProducto, ListarProductos, EditarProducto, EliminarProducto, DetalleProducto #todos los procesos de producto
+from .proces_cesta.crud_cesta import ListarCesta, Agregar_a_Cesta, ActualizarCesta, EliminarCesta# importando la clase listar cesta en donde me lista todos productos de la cesta
 from .models import tbl_categoria, tbl_sub_categoria
 from .forms import FormCrearDireccion
 from django.db import DatabaseError, transaction

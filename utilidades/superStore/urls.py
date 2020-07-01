@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import index, register, RegistrarPerfilCliente, RegistrarPerfilProveedor, logiar, RegistrarDireccion, RegistrarProducto, ListarProductos, EditarProducto, EliminarProducto
+from .views import index, register, RegistrarPerfilCliente, RegistrarPerfilProveedor, logiar, RegistrarDireccion, RegistrarProducto, ListarProductos, EditarProducto, EliminarProducto, DetalleProducto
 from .views import RegistrarVenta, ListarVenta
-from .views import ListarCesta, Agregar_a_Cesta, ActualizarCesta
+from .views import ListarCesta, Agregar_a_Cesta, ActualizarCesta, EliminarCesta
 from .views import ListarSubCategoria
 from .views import UsuarioDetalle, EditarInformacionPerfilCliente,EditarInformacionPerfilProveedor, EditarDireccion, ListarDireccion, EliminarDireccion
 from .views import logout_user
@@ -24,10 +24,12 @@ urlpatterns=[
     path('producto/editar_producto/<int:pk>',EditarProducto.as_view(), name='edit_prod'),#el pk hace referencia al id del producto que se va a editar
     path('producto/guardar_producto/<int:pk>', RegistrarProducto.as_view(), name='prod'),#el pk argumento hace referencia al id del mayorista que esta guardando su producto
     path('producto/eliminar_producto/<int:pk>', EliminarProducto.as_view(), name='del_prod'),
+    path('producto/detalle_producto/<int:pk>', DetalleProducto.as_view(), name='detalle_prod'),#muestra informacion de un producto especifico
     path('venta/registrar_venta/<int:pk>/<int:pk1>/<str:precio>', RegistrarVenta.as_view(), name='reg_venta'),#pk es el id de cliente que relizara la compra
     path('venta/<int:pk>', ListarVenta.as_view(), name='list_venta'),#pk es el id del cliente que realiza la venta y el pk2 es el id del producto a comprar
     path('cesta/<int:pk>', ListarCesta.as_view(), name='list_cesta'),#pk es el id del cliente al que esta asociada la cesta
-    path('cesta/agregar_cesta/<int:pk>',Agregar_a_Cesta.as_view(), name='agregar_cesta'),#pk es el id del cliente asociado a la cesta
+    path('cesta/agregar_cesta/<int:pk>/<int:pk1>/<str:precio>',Agregar_a_Cesta.as_view(), name='agregar_cesta'),#pk es el id del cliente asociado a la cesta pk1 es el id del producto asociado y precio es el precio del producto
     path('cesta/actualizar_cesta/<int:pk>', ActualizarCesta.as_view(), name='actualizar_cesta'),#pk recive el id de la cesta a editar
+    path('cesta/eliminar_cesta/<int:pk>', EliminarCesta.as_view(), name='eliminar_cesta'),#pk es el id del articulo a eliminar
     path('sub_categoria/<int:pk>', ListarSubCategoria.as_view(), name='sub_categoria'), #pk seria el valor de la Categia padre
 ]

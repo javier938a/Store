@@ -11,7 +11,7 @@
             <th scope="col">Cantidad</th>
             <th scope="col">Precio Unitario</th>
             <th scope="col">Precio Total</th>
-            <th scope="col" colspan="2">Opciones</th>
+            <th scope="col" colspan="3">Opciones</th>
         </tr>
         </thead>
         <tbody>
@@ -26,7 +26,8 @@
                     <td>{{ cesta.precio_unitario }}</td>
                     <td>{{ cesta.precio_total }}</td>
                     <td><a class="btn btn-success" href="{% url 'tienda:actualizar_cesta' cesta.id %}">Editar</a></td>
-                    <td><a class="btn btn-danger" href="">Eliminar</a></td>
+                    <td><a class="btn btn-primary" href="">Comprar</a></td>
+                    <td><a class="btn btn-danger" href="{% url 'tienda:eliminar_cesta' cesta.id %}">Eliminar</a></td>
                 </tr>
                 {% endfor %}
 

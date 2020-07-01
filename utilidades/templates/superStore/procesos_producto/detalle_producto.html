@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+    <title>Detalle de producto</title>
+{% endblock %}
+
+{% block contenido %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <center><h1>Informacion del Producto</h1></center>
+        </div>
+    </div>
+    <div class="row">{#dividiendo la dila en 2#}
+        <div class="col-md-6 col-lg-6 col-xl-6">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <img id="foto_producto" src="" width="500px" height="300px" alt="">{# muestra imagen del producto #}
+                    </div>
+                </div>
+                <div class="row">{# dividiendo la fila en 4#}
+                    <div class="col-md-4 col-lg-4 col-xl-4">
+                        {# imagen en miniatura 1#}
+                        <div id="foto1" class="card" style="width: 5rem;">
+                            <img class="foto" src="{{ MEDIA_URL }}{{ detalle_producto.foto_producto1 }}" class="card-img-top" width="80px" height="80" alt="...">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4 col-xl-4">
+                        {# imagen en miniatura 2#}
+                        <div id="foto2" class="card" style="width: 5rem;">
+                            <img class="foto" src="{{ MEDIA_URL }}{{ detalle_producto.foto_producto2 }}" class="card-img-top" width="80px" height="80" alt="...">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4 col-xl-4">
+                        {# imagen en miniatura 3#}
+                        <div id="foto3" class="card" style="width: 5rem;">
+                            <img class="foto" src="{{ MEDIA_URL }}{{ detalle_producto.foto_producto3 }}" class="card-img-top" width="80px" height="80" alt="...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-6 col-xl-6">
+            <div class="container">
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action active">
+                      <div class="d-flex w-100 justify-content-between">
+                        <h5>Descripcion del producto</h5>
+                      </div>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                      <div class="d-flex w-100 justify-content-between">
+                        <h5>Vendedor</h5>
+                      </div>
+                      <p class="mb-1">{{ detalle_producto.mayorista }}</p>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5>Producto</h5>
+                        </div>
+                        <p class="mb-1">{{ detalle_producto.producto }}</p>
+                      </a>
+                      <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5>Descripcion</h5>
+                        </div>
+                        <p class="mb-1">{{ detalle_producto.info_producto }}</p>
+                      </a>
+                      <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5>Costo de Envio</h5>
+                        </div>
+                        <p class="mb-1">${{ detalle_producto.costo_envio }}</p>
+                      </a>
+                      <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5>Medio de Envío</h5>
+                        </div>
+                        <p class="mb-1">${{ detalle_producto.medio_de_envio}}</p>
+                      </a>
+                      <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5>Categoria</h5>
+                        </div>
+                        <p class="mb-1">${{ detalle_producto.categoria}}</p>
+                      </a>
+                      <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5>Cantidad disponible</h5>
+                        </div>
+                        <p class="mb-1">${{ detalle_producto.cantidad}} unidades</p>
+                      </a>
+                      <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5>Precio por unidad</h5>
+                        </div>
+                        <p class="mb-1">${{ detalle_producto.precio_unitario}}</p>
+                      </a>
+                  </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-lg-6 col-xl-6">
+            <a href="" class="btn btn-primary">Agregar a Cesta</a>
+        </div>
+        <div class="col-md-6 col-lg-6 col-xl-6">
+            <a href="" class="btn btn-primary">Comprar</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+    {% load static %}
+    <script src="{% static "js/appProducto.js" %}"></script>
+{% endblock %}
