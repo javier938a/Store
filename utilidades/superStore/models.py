@@ -137,7 +137,8 @@ class tbl_venta(models.Model):#almacenara las ventas efectuadas por los mayorist
     cantidad = models.IntegerField(help_text="Ingrese la cantida vendida")
     precio_unitario = models.DecimalField(decimal_places=3, max_digits=10, help_text="Ingrese el precio unitario del producto")
     precio_total = models.DecimalField(decimal_places=3, max_digits=10, help_text="Ingrese el precio total de la venta", null=True, blank=True)
-
+    direccion = models.ForeignKey(tbl_direccion, on_delete=models.SET_NULL, null=True)
+    
     def __str__(self):
         return "producto %s " % self.producto_id
 
@@ -148,6 +149,6 @@ class tbl_cesta(models.Model):
     cantidad = models.IntegerField(help_text="Ingrese la cantidad de unidades")
     precio_unitario = models.DecimalField(decimal_places=3, max_digits=10, help_text="Ingrese el precio unitario de venta")
     precio_total = models.DecimalField(decimal_places=3, max_digits=10, help_text="Ingrese el precio total", blank=True, null=True)
-
+    direccion = models.ForeignKey(tbl_direccion, on_delete=models.SET_NULL, null=True)
     def __str__(self):
         return "%s, %s" % (self.producto, self.cliente)

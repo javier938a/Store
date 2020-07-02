@@ -1,5 +1,5 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from superStore.models import tbl_cesta, tbl_cliente, tbl_producto
+from superStore.models import tbl_cesta, tbl_cliente, tbl_producto, tbl_direccion
 from superStore.forms import FormCrearCesta 
 from django.urls import reverse_lazy
 import datetime
@@ -11,7 +11,7 @@ class ListarCesta(ListView):
     model = tbl_cesta
 
     def get_queryset(self):
-        return self.model.objects.filter(cliente=self.kwargs['pk'])#pk es el cliente al que esta asociada la cesta
+        return self.model.objects.filter(cliente__user__id=self.request.user.id)#pk es el cliente al que esta asociada la cesta
 
 class Agregar_a_Cesta(CreateView):
     model = tbl_cesta
@@ -20,9 +20,14 @@ class Agregar_a_Cesta(CreateView):
     form_class = FormCrearCesta
     def get_context_data(self, **kwargs):
         context = super(Agregar_a_Cesta, self).get_context_data(**kwargs)
-        context.get('form').fields['cliente'].queryset = tbl_cliente.objects.filter(id=self.kwargs['pk'])
-        context.get('form').fields['producto'].queryset = tbl_producto.objects.filter(id=self.kwargs['pk1'])
-        context.get('form').initial = {'precio_unitario':self.kwargs['precio'],}
+        producto = tbl_producto.objects.filter(id=self.kwargs['pk'])
+        print("Heloo")
+        print(self.request.user.id)
+        context.get('form').fields['cliente'].queryset = tbl_cliente.objects.filter(user__id=self.request.user.id)
+        context.get('form').fields['producto'].queryset = producto
+        precio = producto[0].precio_unitario
+        context.get('form').initial = {'precio_unitario':precio,}
+        context.get('form').fields['direccion'].queryset = tbl_direccion.objects.filter(cliente__user__id=self.request.user.id)
         return context
     
     def form_valid(self, form):
@@ -40,7 +45,7 @@ class Agregar_a_Cesta(CreateView):
         return form_valid
         
     def get_success_url(self):
-        return reverse_lazy('tienda:list_cesta', args=[str(self.kwargs['pk'])])
+        return reverse_lazy('tienda:list_cesta')
 
 class ActualizarCesta(UpdateView):
     model = tbl_cesta
@@ -71,4 +76,4 @@ class EliminarCesta(DeleteView):
     form_class=FormCrearCesta
     context_object_name='cesta'
     def get_success_url(self):
-        return reverse_lazy('tienda:list_cesta', args=[str(self.object.cliente.id)])
+        return reverse_lazy('tienda:list_cesta')

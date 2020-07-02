@@ -111,13 +111,14 @@ class FormCrearProducto(forms.ModelForm):
 class FormCrearVenta(forms.ModelForm):
     class Meta:
         model = tbl_venta
-        fields = ('cliente_id', 'producto_id','cantidad', 'precio_unitario', 'precio_total',)
+        fields = ('cliente_id', 'producto_id','cantidad', 'precio_unitario', 'precio_total','direccion',)
         labels = {
             'cliente_id':'Cliente',
             'producto_id':'Producto',
             'cantidad':'Cantidad',
             'precio_unitario':'Precio Unitario',
             'precio_total':'Precio Total',
+            'direccion':'Direccion',
         }
         widgets = {
             'cliente_id':forms.Select(attrs={'class':'form-control'}),
@@ -125,12 +126,13 @@ class FormCrearVenta(forms.ModelForm):
             'cantidad':forms.NumberInput(attrs={'class':'form-control'}),
             'precio_unitario':forms.NumberInput(attrs={'class':'form-control'}),
             'precio_total':forms.NumberInput(attrs={'class':'form-control'}),
+            'direccion':forms.Select(attrs={'class':'form-control'}),
         }
 
 class FormCrearCesta(forms.ModelForm):
     class Meta:
         model = tbl_cesta
-        fields = ('producto', 'cliente', 'fecha_hora_realizado', 'cantidad', 'precio_unitario', 'precio_total')
+        fields = ('producto', 'cliente', 'fecha_hora_realizado', 'cantidad', 'precio_unitario', 'precio_total', 'direccion',)
         labels = {
             'producto':'Producto',
             'cliente':'Cliente',
@@ -138,6 +140,7 @@ class FormCrearCesta(forms.ModelForm):
             'cantidad':'Cantidad',
             'precio_unitario':'Precio Unitario',
             'precio_total':'Precio Total',
+            'direccion':'Direccion',
         }
         widgets = {
             'producto':forms.Select(attrs={'class':'form-control'}),
@@ -146,6 +149,7 @@ class FormCrearCesta(forms.ModelForm):
             'cantidad':forms.NumberInput(attrs={'class':'form-control'}),
             'precio_unitario':forms.NumberInput(attrs={'class':'form-control'}),
             'precio_total':forms.NumberInput(attrs={'class':'form-control'}),
+            'direccion':forms.Select(attrs={'class':'form-control'}),
         }
         
 

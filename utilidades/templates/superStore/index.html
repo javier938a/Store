@@ -15,17 +15,22 @@
                 {% if user.is_authenticated %}{# verificando que el usuario este autenticado para colocar iten de registrar #}
                     {% ifequal user.tipo_usuario_id.tipo_usuario 'Cliente' %}{# verificando si el tipo de usuario sea cliente para ubicar la opcion de cesta en el menu #}    
                         {% if id_cli %}
-                                <a class="nav-link" href="{% url 'tienda:list_cesta' id_cli %}">Cesta</a>    
+                                <a class="nav-link" href="{% url 'tienda:list_cesta' %}">Cesta</a>    
                         {% endif %}
                     {% endifequal %}
                     {% ifequal user.tipo_usuario_id.tipo_usuario 'Proveedor' %}{# en dado caso no se cliente, sera proveedor y se verifica para ubicar por cesta las ventas de ese proveedor #}
                         {% if id_prove %}
-                            <a class="nav-link" href="{% url 'tienda:list_venta' id_prove %}">Ventas</a>
+                            <a class="nav-link" href="{% url 'tienda:list_venta' %}">Ventas</a>
                         {% endif %}
                     {% endifequal %}
                 {% else %}{# en dado caso de que no este autenticado no esta registrado se procede a poner el iten de registrar #}
                     <a id="registrar" class="nav-link" href="{% url 'tienda:registrar' %}" tabindex="-1" aria-disabled="true">Registrarse</a>
                 {% endif %}
+            </li>
+            <li class="nav-item">
+                {% ifequal user.tipo_usuario_id.tipo_usuario 'Cliente' %}
+                    <a href="{% url 'tienda:list_venta' %}" class="nav-link">Compras</a>
+                {% endifequal %}
             </li>
             <li class="nav-item">
                 {% if user.is_authenticated %}
