@@ -48,6 +48,9 @@ class tbl_tipo_usuario(models.Model):
 
 class User(AbstractUser):
     tipo_usuario_id = models.ForeignKey(tbl_tipo_usuario, on_delete=models.SET_NULL, null=True)
+    #email = models.EmailField('email address', unique=True)
+    #USERNAME_FIELD='email'
+    #REQUIRED_FIELDS=['username']
     class Meta:
         db_table = "auth_user"
 
@@ -129,6 +132,10 @@ class tbl_producto(models.Model):#Tabla producto que almacenara todos los produc
 
     def get_absolute_url(self):
         return reverse('producto', args=[str(self.id)])
+class tbl_estado_envio(models.Model):#Se define al tabla estado del envio 
+    estado = models.CharField(max_length=115)
+    def __str__(self):
+        return self.estado
 
 class tbl_venta(models.Model):#almacenara las ventas efectuadas por los mayoristas por parte de los clientes
     cliente_id = models.ForeignKey(tbl_cliente, on_delete=models.CASCADE)
@@ -138,9 +145,10 @@ class tbl_venta(models.Model):#almacenara las ventas efectuadas por los mayorist
     precio_unitario = models.DecimalField(decimal_places=3, max_digits=10, help_text="Ingrese el precio unitario del producto")
     precio_total = models.DecimalField(decimal_places=3, max_digits=10, help_text="Ingrese el precio total de la venta", null=True, blank=True)
     direccion = models.ForeignKey(tbl_direccion, on_delete=models.SET_NULL, null=True)
-    
+    estado_envio = models.ForeignKey(tbl_estado_envio, on_delete=models.SET_NULL, null=True, blank=True)
     def __str__(self):
         return "producto %s " % self.producto_id
+
 
 class tbl_cesta(models.Model):
     producto = models.ForeignKey(tbl_producto, on_delete=models.SET_NULL, null=True)

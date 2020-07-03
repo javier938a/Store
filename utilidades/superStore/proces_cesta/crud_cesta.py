@@ -53,6 +53,14 @@ class ActualizarCesta(UpdateView):
     context_object_name = 'form'
     form_class = FormCrearCesta
 
+    def get_context_data(self, **kwargs):
+        context = super(ActualizarCesta, self).get_context_data(**kwargs)
+        cesta = tbl_cesta.objects.get(id=self.kwargs['pk'])#Obteniendo el registro de la cesta por medio de su ID
+        producto = tbl_producto.objects.filter(id=cesta.producto.id)#Obteniendo el producto que se quiere editar en base al producto de la cesta
+        context.get('form').fields['cliente'].queryset = tbl_cliente.objects.filter(user__id=self.request.user.id)#especificando que solo el usuario logiado podra poner como el que agrego esa cesta nadie mas
+        context.get('form').fields['producto'].queryset=producto#filtrando que sea el producto que se esta en cesta el que se pueda agregar
+        context.get('form').fields['direccion'].queryset = tbl_direccion.objects.filter(cliente__user__id=self.request.user.id)
+        return context
     def form_valid(self, form):
         precio_unitario = form.cleaned_data['precio_unitario']#Obteniendo el precio unitario
         fecha_transaccion = timezone.now() #Obteniendo la fecha de transaccion
@@ -68,7 +76,7 @@ class ActualizarCesta(UpdateView):
         return form_valid
 
     def get_success_url(self):
-        return reverse_lazy('tienda:list_cesta', args=[str(self.object.cliente.id)])
+        return reverse_lazy('tienda:list_cesta')
 
 class EliminarCesta(DeleteView):
     template_name='superStore/procesos_cesta/eliminar_cesta.html'

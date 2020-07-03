@@ -5,6 +5,9 @@ from django.views.generic import TemplateView, CreateView, DetailView, ListView,
 from django.contrib.auth import login as do_login
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import get_user_model#obtiene el modelo de usuario personalizado
+from django.contrib.auth.backends import ModelBackend#Obteniendo el modelo backend
+from django.db.models import Q
 from django.urls import reverse_lazy, reverse
 from .proces_venta.crud_venta import RegistrarVenta, ListarVenta #importanto la clase de registrar Venta
 from .proces_producto.crud_producto import RegistrarProducto, ListarProductos, EditarProducto, EliminarProducto, DetalleProducto #todos los procesos de producto
@@ -15,6 +18,8 @@ from django.db import DatabaseError, transaction
 from .inicio.inicio_usuario import UsuarioDetalle # este modulo se usara para cuando la persona inicie secion
 from .inicio.inicio_usuario import EditarInformacionPerfilCliente, EditarInformacionPerfilProveedor
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .proces_venta.crud_venta import ModificarEstadoEnvio
+from .proces_venta.crud_venta import EliminarVenta
 # Create your views here.
 class index(ListView):#Mostrando index Pagina Principal
     #login_url ='tienda:login'
@@ -33,7 +38,7 @@ class index(ListView):#Mostrando index Pagina Principal
             print("El Valor de request.user")
             if user.tipo_usuario_id.tipo_usuario =="Cliente":#verifica si es cliente
                 if tbl_cliente.objects.filter(user=user).exists():#si el usuario esta en la tabla cliente significa que tiene perfil registrado
-                    id_cli = tbl_cliente.objects.get(user=user).id#obtiene el id del cliente en base al id del usuario
+                    id_cli = tbl_cliente.objects.get(user=user).id#Verifica si se a creado el perfil del cliente no existe hay que crearlo
                     context['id_cli']=id_cli #agrega al contexto el id del cliente
             else:
                 if tbl_mayorista.objects.filter(user=user).exists():
@@ -57,74 +62,28 @@ def register(request):#metodo register sirve para registrar un nuevo usuario
     if request.method == "POST":#verificando si se ha revivido una peticion por el metodo post
         form = CreateUserForm(data=request.POST)#asignando los datos enviados a travez del metodo post
         print(form.is_valid())
-        print(form.errors)
         if form.is_valid():# si el formulario es valido
-            user = form.save()#Guardar formulario
+            form.save()#Guardar formulario
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            print(str(username)+' '+str(password))
+            user = authenticate(username=username, password=password)#Autenticando el usuario
+            #user = User.objects.get(username=username)#obteniendo una instancia del usuario recien registrado
+            print("Valor de user:")
             print(user)
+            #print(retorno)
             if user is not None:
-                do_login(request,user) 
-                username = form.cleaned_data.get('username')
-                user = User.objects.get(username=username)#obteniendo una instancia del usuario recien registrado
-                pk = user.id #Id del el usuario
-                tipo = user.tipo_usuario_id #tipo de usuario
-                
-                print('valor del id Usuario: '+str(pk))
-                print("Imprimiendo tipo")
-                print(str(tipo))
+                do_login(request,user) #Logiando al usuario al sistema
+                tipo = request.user.tipo_usuario_id.tipo_usuario #
+            
                 url = None
                 if str(tipo) == "Cliente":#Verificando si el usuario es cliente o proveedor para si establecer su url
-                    url = '/superStore/registrar/perfil_clien/'+str(pk)
+                    url = 'tienda:perfil_cli'
                     print("Entro al url"+url)
                 elif str(tipo) == "Proveedor":
-                    url = '/superStore/registrar/perfil_provee/'+str(pk)
+                    url = 'tienda:reg_provee'
                 return redirect(url)
     return render(request, "superStore/registrar_usuario/reg_usu.html", {'form':form})
-
-def RegistrarPerfilCliente(request, pk):
-    form = None
-    if request.method == 'POST':
-        print("Funciona")
-        form = CreatePerfilCliente(request.POST, request.FILES)
-        s = form.is_valid()
-        print("¿Funcionara?")
-        print(s)
-        #print(form.errors)
-        if form.is_valid():
-            form.save()
-            id_cliente = tbl_cliente.objects.get(user__id=pk).id
-            print(id_cliente)
-            url ='/superStore/registrar/direccion/'+str(id_cliente)
-            return redirect(url)
-    else:
-        form = CreatePerfilCliente()
-        #print(form.Meta.model.user)
-        form.fields['user'].queryset=User.objects.filter(id=pk)
-        #print("esto guarda",User.objects.filter(id=pk),form.fields['user'])
-
-    return render(request, 'superStore/registrar_usuario/reg_perfil_cli.html',{'form':form})
-
-def RegistrarPerfilProveedor(request, pk):
-    template = 'superStore/registrar_usuario/reg_perfil_provee.html'
-    form = None
-    if request.method == "POST":
-        form = CreatePerfilMayorista(request.POST, request.FILES)
-        s=form.is_valid()
-        print(form)
-        print("esto dice")
-        print(s)
-        if form.is_valid():
-            form.save()
-            return redirect("tienda:index")
-    else:
-        form = CreatePerfilMayorista()
-        form.fields['user'].queryset  = User.objects.filter(id=pk)
-    
-    return render(
-        request,
-        template,
-        context={'form':form}
-    )
-
 def logiar(request):
     #Creamos el formulario de autenticacion vacio
     form = AuthenticationForm()
@@ -164,8 +123,51 @@ def logout_user(request):
     template = 'superStore/registrar_usuario/logout.html'
     return render(request, template)
 
+def RegistrarPerfilCliente(request):
+    form = None
+    if request.method == 'POST':
+        print("Funciona")
+        form = CreatePerfilCliente(request.POST, request.FILES)
+        s = form.is_valid()
+        print("¿Funcionara?")
+        print(s)
+        #print(form.errors)
+        if form.is_valid():
+            form.save()
+            id_cliente = tbl_cliente.objects.get(user__id=request.user.id).id
+            print(id_cliente)
+            url ='/superStore/registrar/direccion/'+str(id_cliente)
+            return redirect(url)
+    else:
+        form = CreatePerfilCliente()
+        #print(form.Meta.model.user)
+        form.fields['user'].queryset=User.objects.filter(id=request.user.id)
+        #print("esto guarda",User.objects.filter(id=pk),form.fields['user'])
 
-# fin del logout 
+    return render(request, 'superStore/registrar_usuario/reg_perfil_cli.html',{'form':form})
+
+def RegistrarPerfilProveedor(request):
+    template = 'superStore/registrar_usuario/reg_perfil_provee.html'
+    form = None
+    if request.method == "POST":
+        form = CreatePerfilMayorista(request.POST, request.FILES)
+        s=form.is_valid()
+        print(form)
+        print("esto dice")
+        print(s)
+        if form.is_valid():
+            form.save()
+            return redirect("tienda:index")
+    else:
+        form = CreatePerfilMayorista()
+        form.fields['user'].queryset  = User.objects.filter(id=request.user.id)
+    
+    return render(
+        request,
+        template,
+        context={'form':form}
+    )
+
 
 class ListarDireccion(ListView):
     template_name ='superStore/registrar_usuario/listar_direccion.html'

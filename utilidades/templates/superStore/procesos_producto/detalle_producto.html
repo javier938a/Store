@@ -77,19 +77,19 @@
                         <div class="d-flex w-100 justify-content-between">
                           <h5>Medio de Envío</h5>
                         </div>
-                        <p class="mb-1">${{ detalle_producto.medio_de_envio}}</p>
+                        <p class="mb-1">{{ detalle_producto.medio_de_envio}}</p>
                       </a>
                       <a href="#" class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between">
                           <h5>Categoria</h5>
                         </div>
-                        <p class="mb-1">${{ detalle_producto.categoria}}</p>
+                        <p class="mb-1">{{ detalle_producto.categoria}}</p>
                       </a>
                       <a href="#" class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between">
                           <h5>Cantidad disponible</h5>
                         </div>
-                        <p class="mb-1">${{ detalle_producto.cantidad}} unidades</p>
+                        <p class="mb-1">{{ detalle_producto.cantidad}} unidades</p>
                       </a>
                       <a href="#" class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between">
@@ -102,10 +102,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6 col-lg-6 col-xl-6">
+        <div class="col-md-6 col-lg-6 col-xl-6 float-right">
             <a href="{% url 'tienda:agregar_cesta' detalle_producto.id %}" class="btn btn-primary">Agregar a Cesta</a>
-        </div>
-        <div class="col-md-6 col-lg-6 col-xl-6">
             <a href="{% url 'tienda:reg_venta' detalle_producto.id  %}" class="btn btn-primary">Comprar</a>
         </div>
     </div>

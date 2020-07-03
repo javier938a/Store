@@ -34,18 +34,18 @@
             </li>
             <li class="nav-item">
                 {% if user.is_authenticated %}
-                    {% ifequal user.tipo_usuario_id.tipo_usuario 'Cliente' %}
-                        {% if id_cli %}{# verificando que exista el id del cliente #}
-                            <a class="nav-link" href="/superStore/perfil_info/{{ user.id }}/Cliente">Perfil <br> {{ user.username }} </a> 
-                        {% else %}
-                            <a class=" nav-link" href="{% url 'tienda:perfil' user.id %}">Perfil <br> {{ user.username }}</a>
-                        {% endif %}                        
+                    {% ifequal user.tipo_usuario_id.tipo_usuario 'Cliente' %}{#Verifica si el usuario logeado es un cliente#}
+                        {% if id_cli %}{# id_cli contiene el id del cliente logeado previamente asignado y verificado en el contexto y verifica si existe un id cliente que este relacionado con el usuario logueado muestra el detalle del cliente  si no existe lo redirigira al formulario de creacion de perfil del cliente#}
+                            <a class="nav-link" href="{% url 'tienda:infoUsuario' 1 %}">Perfil <br> {{ user.username }} </a>
+                        {% else %}{# si no existe se redirigira al formulario de registro de cliente o perfil del cliente #}
+                            <a class=" nav-link" href="{% url 'tienda:perfil_cli' %}">Perfil <br> {{ user.username }}</a>
+                        {% endif %}
                     {% endifequal %}
-                    {% ifequal user.tipo_usuario_id.tipo_usuario 'Proveedor' %}
-                        {% if id_prove %}
-                            <a class="nav-link" href="/superStore/perfil_info/{{ user.id }}/Proveedor">Perfil <br> {{ user.username }} </a>
+                    {% ifequal user.tipo_usuario_id.tipo_usuario 'Proveedor' %}{# verifica si el usuario logueado es un proveedor #}
+                        {% if id_prove %}{# id_prove contiene el id del proveedor logeado y verifica si existe un id proveedor que este relacionado con el usuario proveedor logeado si no existe lo redirigira al formulario de registro de proveedor #}
+                            <a class="nav-link" href="{% url 'tienda:infoUsuario' 2 %}">Perfil <br> {{ user.username }} </a>
                         {% else %}
-                            <a class="nav-link" href="{% url 'tienda:reg_provee' user.id %}">Perfil <br> {{ user.username }}</a>
+                            <a class="nav-link" href="{% url 'tienda:reg_provee' %}">Perfil <br> {{ user.username }}</a>
                         {% endif %}
                     {% endifequal %}
                 {% else %}

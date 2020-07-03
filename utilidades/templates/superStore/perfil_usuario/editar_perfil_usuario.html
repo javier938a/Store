@@ -1,25 +1,18 @@
 {% extends "base.html" %}
 
 {% block contenido %}
+<div class="container">
     <h1>{{ Usuario.username}}</h1>
     {# cargando la imagen de media#}
     <img id="fotoPerfil" width="200px" height="200px" src="{{ MEDIA_URL }}{{ cliente.foto_perfil }}" alt="">
     <form action="{% url 'tienda:editarUsuario' id_cliente %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
-        <div class="form-control">
-            <input type="text" name="first_name" placeholder="Nombres" value="{{ Usuario.first_name }}">
-        </div>
-        <div class="form-control">
-            <input type="text" name="last_name" placeholder="Apellidos" value="{{ Usuario.last_name }}">
-        </div>
-        <div class="form-control">
-            <input type="text" name="email" placeholder="Correo" value="{{ Usuario.email }}">
-        </div>
-        <div class="form-control">
-            <input type="file" accept="image/*"  name="foto_perfil" id="foto">
-        </div>
-        <div class="form-control">
-            <select name="genero">
+        <div class="form-group">
+            <input class="form-control" type="text" name="first_name" placeholder="Nombres" value="{{ Usuario.first_name }}">
+            <input class="form-control" type="text" name="last_name" placeholder="Apellidos" value="{{ Usuario.last_name }}">
+            <input class="form-control" type="text" name="email" placeholder="Correo" value="{{ Usuario.email }}">
+            <input class="form-control" type="file" accept="image/*"  name="foto_perfil" id="foto">
+            <select class="form-control" name="genero">
                 {% ifequal cliente.genero "M" %}
                     <option value="M">Masculino</option>
                     <option value="F">Femenino</option>
@@ -29,21 +22,16 @@
                     <option value="M">Masculino</option>
                 {% endifequal %}
             </select>
+            <input class="form-control" type="text" name="telefono" placeholder="Telefono" value="{{ cliente.telefono }}" placeholder="telefono">
+            <input class="form-control" type="date" name="fecha_nacimiento" value="{{ cliente.fecha_nacimiento | date:"Y-m-d" }}">
+            <div class="float-right">
+                <button class="btn btn-success" type="submit">Guardar</button>
+                <a class="btn btn-success" href="{% url 'tienda:index' %}">Inicio</a>
+            </div>
         </div>
-        <div class="form-control">
-            <input type="text" name="telefono" placeholder="Telefono" value="{{ cliente.telefono }}" placeholder="telefono">
-        </div>
-        <div class="form-control">
-            <input type="date" name="fecha_nacimiento" value="{{ cliente.fecha_nacimiento | date:"Y-m-d" }}">
-        </div>
-        <div class="form-control">
-            <button class="btn btn-success" type="submit">Guardar</button>
-        </div>
-        <div class="form-control">
-            <a class="btn btn-success" href="{% url 'tienda:index' %}">Inicio</a>
-        </div>
-        
     </form>
+</div>
+
 {% endblock %}
 
 {% block script %}

@@ -16,6 +16,13 @@
               <th scope="col">Precio Unitario</th>
               <th scope="col">Precio Total</th>
               <th colspan="3" scope="col">Direccion</th>
+              <th scope="col">Estado de Envio</th>
+              {% ifequal user.tipo_usuario_id.tipo_usuario "Cliente" %}
+                <th scope="col" colspan="1">Opciones</th>
+              {% endifequal %}
+              {% ifequal user.tipo_usuario_id.tipo_usuario "Proveedor" %}
+                <th colspan="2" scope="col">Opciones</th>
+              {% endifequal %}
             </tr>
           </thead>
           <tbody>
@@ -31,6 +38,14 @@
                           <th>{{ venta.precio_unitario }}</th>
                           <th>{{ venta.precio_total }}</th>
                           <th colspan="3">{{ venta.direccion }}</th>
+                          <th>{{ venta.estado_envio }}</th>
+                          {% ifequal user.tipo_usuario_id.tipo_usuario "Cliente" %}{# verifica si el usuario logeado es cliente si es cliente solo le dara la opcion de confirmar de recivido#}
+                            <th><a class="btn btn-success" href="{% url 'tienda:mod_estado' venta.id %}">Confirmar de recivido</a></th>
+                          {% endifequal %}
+                          {% ifequal user.tipo_usuario_id.tipo_usuario "Proveedor" %}
+                            <th><a class="btn btn-success" href="{% url 'tienda:mod_estado' venta.id %}">Cambiar estado<br>de Envio</a></th>{#Verifica si el usuario logueado es proveedor si es proveedor le da la opcion de eliminar la venta y de modificar su estado de envio pero solo tiene que permitir 2 opciones #}
+                            <th><a class="btn btn-danger" href="{% url 'tienda:del_venta' venta.id %}">Eliminar <br>Venta</a></th>
+                          {% endifequal %}
                       </tr>
                   {% endfor %}
               {% else %}

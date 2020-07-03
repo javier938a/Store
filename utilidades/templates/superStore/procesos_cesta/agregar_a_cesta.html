@@ -2,11 +2,16 @@
 {% block titulo %}
     <title>Agregar a Cesta</title>
 {% endblock %}
-
+{% load crispy_forms_tags %}{#llamando a crispy#}
 {% block contenido %}
+<div class="container">
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">agregar</button>
+        {{ form|crispy }}
+        <div class="float-right">
+            <button class="btn btn-primary" type="submit">agregar</button>
+        </div>
     </form>
+</div>
+
 {% endblock %}

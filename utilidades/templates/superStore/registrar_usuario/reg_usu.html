@@ -2,54 +2,24 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
 {% block contenido %}
-
+{% load crispy_forms_tags %}
 <div class="container">
   <div>
     <h1><center>REGISTRAR NUEVO USUARIO</center></h1>
 </div>
-<form method="post">
+<div class="container">
+  <form method="post">
     {% csrf_token %}
-    <div class="form-row">
-      <div class="form-group col-md-12">
-        {{ form.username.label_tag }}
-        {{ form.username}}
-      </div>
-      <div class="form-group col-md-6">
-        {{ form.first_name.label_tag }}
-        {{ form.first_name }}
-      </div>
-      <div class="form-group col-md-6">
-        {{ form.last_name.label_tag }}
-        {{ form.last_name }}
-      </div>
-      <div class="form-group col-md-6">
-        {{ form.email.label_tag }}
-        {{ form.email }}
-      </div>
-      <div class="form-group col-md-6">
-        {{ form.tipo_usuario_id.label_tag }}
-        {{ form.tipo_usuario_id }}
-      </div>
-      <div class="form-group col-md-6">
-        {{ form.password1.label_tag }}
-        {{ form.password1 }}
-      </div>
-      <div class="form-group col-md-6">
-        {{ form.password2.label_tag }}
-        {{ form.password2 }}
-      </div>
-      <div class="form-group col-md-6">
-        <br>
-        <button type="submit" class="btn btn-primary">Siguiente</button>
-      </div>
-      <div class="form-group col-md-6">
-        <br>
-        <a class="btn btn-success" href="{% url 'tienda:index' %}">Inicio</a>
-      </div>
-    </div>
+    {{ form|crispy }}
 
+    <div class="float-right">
+      <button type="submit" class="btn btn-primary">Siguiente</button>
+      <a class="btn btn-success" href="{% url 'tienda:index' %}">Inicio</a>
+    </div>
   </form>
 </div>
+</div>
+
 
 
 {% endblock %}

@@ -1,8 +1,9 @@
-from superStore.models import tbl_venta, tbl_cliente, tbl_producto, tbl_direccion
+from superStore.models import tbl_venta, tbl_cliente, tbl_producto, tbl_direccion, tbl_estado_envio
 from superStore.forms import FormCrearVenta
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, UpdateView, TemplateView, DeleteView
 from django.urls import reverse_lazy
 from django.utils import timezone
+from django.shortcuts import render, redirect
 
 class RegistrarVenta(CreateView):
     template_name = 'superStore/procesos_venta/registrar_venta.html'
@@ -27,6 +28,7 @@ class RegistrarVenta(CreateView):
         fecha_hora = timezone.now()
         form.instance.precio_total = total
         form.instance.fecha_hora_realizada=fecha_hora
+        form.instance.estado_envio=tbl_estado_envio.objects.get(estado='Pendiente')#Poniendo en estado de pendiente cuando se realiza la compra
         form_valid = super(RegistrarVenta, self).form_valid(form)
         return form_valid
 
@@ -48,3 +50,24 @@ class ListarVenta(ListView):#metodo sirve para listar las ventas del proveedor y
             print("Entro al if")
             return tbl_venta.objects.filter(cliente_id__user__id=self.request.user.id)
         return tbl_venta.objects.filter(producto_id__mayorista__user__id=self.request.user.id)#filtrando que solo se muestren las ventas realizada de un determinado proveedor que se especifica con su pk id respectivamente 
+
+class EliminarVenta(DeleteView):
+    model = tbl_venta
+    template_name = 'superStore/procesos_venta/eliminar_venta.html'
+    context_object_name='venta'
+    form_class = FormCrearVenta
+    def get_context_data(self, **kwargs):
+        context = super(EliminarVenta, self).get_context_data(**kwargs)
+        print(context)
+        return context
+    def get_success_url(self):
+        return reverse_lazy('tienda:list_venta')
+
+class ModificarEstadoEnvio(TemplateView):
+    template_name = 'superStore/procesos_venta/modificar_estado_envio.html'
+    def post(self, request, *args, **kwargs):
+        cambio = tbl_estado_envio.objects.filter(estado=request.POST['estados'])#Obteniendo el estado del option seleccionadpo
+        resultado =tbl_venta.objects.filter(id=self.kwargs['pk']).update(estado_envio=cambio[0].id)#Actualizando el campo utiliano ese estado
+        print(resultado)
+        return redirect('tienda:list_venta')
+  

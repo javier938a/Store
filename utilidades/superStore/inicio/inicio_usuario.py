@@ -17,16 +17,18 @@ class UsuarioDetalle(DetailView):
     context_object_name='form'
     def get_context_data(self, **kwargs):
         context = super(UsuarioDetalle, self).get_context_data(**kwargs)
-        tipoUsuario = self.kwargs['tipo_usuario']#Obteniendo el tipo de usuario de la url
+        tipoUsuario = self.kwargs['pk']#Obteniendo el tipo de usuario de la url
+        print("Algo da")
+        print(type(self.kwargs['pk']))
         perfil = None # creando variable perfil para almacenar perfil
-        if tipoUsuario=='Cliente':#Verificando si es Cliente para registrar el perfil del cliente
-            perfil_cliente = tbl_cliente.objects.get(user=self.kwargs['pk'])
+        if tipoUsuario==1:#Verificando si es Cliente para registrar el perfil del cliente
+            perfil_cliente = tbl_cliente.objects.get(user=self.request.user.id)
             context['perfil_cliente']=perfil_cliente
-        elif tipoUsuario=='Proveedor':#Verificando si es Proveedor para registrar el perfil del proveedor
-            perfil_proveedor = tbl_mayorista.objects.get(user=self.kwargs['pk'])#pk es el id del usuario
+        elif tipoUsuario==2:#Verificando si es Proveedor para registrar el perfil del proveedor
+            perfil_proveedor = tbl_mayorista.objects.get(user=self.request.user.id)#pk es el id del usuario
             context['perfil_proveedor']=perfil_proveedor
+        
          # agregando el perfil al contexto
-        print(self.kwargs['pk'])
         return context
 #Metodo para subir archivo recibe como parametro la imagen en bit recogida por el request.FILES.get('foto_perfil')
 def subir_image(image_bit, tipo_usuario, imagen_name="img.jpg" ):

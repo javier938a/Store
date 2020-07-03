@@ -2,44 +2,37 @@
 
 {% block encabezado %}
     <header>
-       <h1>Informacion General</h1> 
+      
     </header>
 {% endblock %}
 
 {% block contenido %}
+<div class="container ">
     {% if perfil_cliente %}
-        <div>Tipo de Usuario {{ perfil_cliente.user.tipo_usuario_id }}</div>
-        <div>
-            Genero {{ perfil_cliente.genero }}
+    <div class="card" style="width: 25rem;">
+        <div><center><h1>Informacion General</h1> </center> </div>
+        <img src="{{ MEDIA_URL }}{{ perfil_cliente.foto_perfil }}" class="card-img-top" width="200" height="300" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{perfil_cliente.user}}</h5>
         </div>
-        <div>
-            Usuario: {{ perfil_cliente.user }} 
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><h5>Tipo de Usuario</h5> {{ perfil_cliente.user.tipo_usuario_id }}</li>
+          <li class="list-group-item"><h5>Genero</h5> {{ perfil_cliente.genero }}</li>
+          <li class="list-group-item"><h5>Nombres</h5> {{ perfil_cliente.user.first_name }}</li>
+          <li class="list-group-item"><h5>Apellidos</h5> {{ perfil_cliente.user.last_name }}</li>
+          <li class="list-group-item"><h5>Correo</h5> {{ perfil_cliente.user.email }}</li>
+          <li class="list-group-item"><h5>Telefono</h5> {{ perfil_cliente.telefono }}</li>
+          <li class="list-group-item"><h5>Fecha de nacimiento</h5> {{ perfil_cliente.fecha_nacimiento }}</li>
+        </ul>
+        <div class="card-body float-center">
+            <div class="float-left">
+                <a class="btn btn-success card-link" href="{% url 'tienda:dire_list' perfil_cliente.id %}">Direcciones</a>
+                <a class="btn btn-success card-link" href="{% url 'tienda:editarUsuario' perfil_cliente.id %}">Editar<br>Informacion</a>          
+                <a class="btn btn-success card-link" href="{% url 'tienda:index' %}">Regresar <br></a>
+            </div>
+
         </div>
-        <div>
-            Nombres: {{ perfil_cliente.user.first_name }}
-        </div>
-        <div>
-            Apellidos: {{ perfil_cliente.user.last_name }}
-        </div>
-        <div>
-            Correo: {{ perfil_cliente.user.email }}
-        </div>
-        <div>
-            Telefono: {{ perfil_cliente.telefono }}
-        </div>
-        <div>
-            Fecha de nacimiento: {{ perfil_cliente.fecha_nacimiento }}
-        </div>
-        <div>
-            <a class="btn btn-success" href="{% url 'tienda:dire_list' perfil_cliente.id %}">Direcciones</a>
-        </div>
-        <div>
-            <a class="btn btn-success" href="{% url 'tienda:editarUsuario' perfil_cliente.id %}">Editar Informacion</a>
-        </div>
-        <div>
-            <a class="btn btn-success" href="{% url 'tienda:index' %}">Regresar</a>
-        </div>
-        
+      </div>        
     {% else %}
         <div>
             <h1>{{ perfil_proveedor.nombre_empresa }}</h1>
@@ -73,4 +66,6 @@
             <a class="btn btn-success" href="{% url 'tienda:index' %}">Regresar</a>
         </div>
     {% endif %}
+</div>
+
 {% endblock %}

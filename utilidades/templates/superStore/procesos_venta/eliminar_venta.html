@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+    <title>Eliminar venta</title>
+{% endblock %}
+
+{% block contenido %}   
+    <form method="post">
+        {% csrf_token %}
+        ¿Esta seguro que desea eliminar la venta del producto {{ venta.producto }} ?
+        <button class="btn btn-danger" type="submit">Eliminar</button>
+        <a class="btn btn-success" href="{% url 'tienda:list_venta' %}">Cancelar</a>
+    </form>
+{% endblock %}

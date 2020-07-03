@@ -42,7 +42,8 @@ class EditarProducto(UpdateView):
     
     def get_context_data(self, **kwargs):
         context = super(EditarProducto, self).get_context_data(**kwargs)
-        context['editar']=1 #servira para validar si se esta usando para registrar o editar
+        context.get('form').fields['mayorista'].queryset = tbl_mayorista.objects.filter(user__id=self.request.user.id)
+        #context['editar']=1 #servira para validar si se esta usando para registrar o editar
         return context
     
     def get_success_url(self):

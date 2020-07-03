@@ -5,15 +5,16 @@ from .views import ListarCesta, Agregar_a_Cesta, ActualizarCesta, EliminarCesta
 from .views import ListarSubCategoria
 from .views import UsuarioDetalle, EditarInformacionPerfilCliente,EditarInformacionPerfilProveedor, EditarDireccion, ListarDireccion, EliminarDireccion
 from .views import logout_user
+from .views import ModificarEstadoEnvio, EliminarVenta
 app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
-    path('perfil_info/<int:pk>/<str:tipo_usuario>',UsuarioDetalle.as_view(), name='infoUsuario'),
+    path('perfil_info/<int:pk>',UsuarioDetalle.as_view(), name='infoUsuario'),
     path('perfil_info/editar_cliente/<int:pk>', EditarInformacionPerfilCliente.as_view(), name='editarUsuario'),#pk es el ID del perfil
     path('perfil_info/editar_provee/<int:pk>', EditarInformacionPerfilProveedor.as_view(), name="editarProveedor"),
     path('registrar', register, name='registrar'),
-    path('registrar/perfil_clien/<int:pk>', RegistrarPerfilCliente, name='perfil'),
-    path('registrar/perfil_provee/<int:pk>',RegistrarPerfilProveedor, name='reg_provee'),
+    path('registrar/perfil_clien', RegistrarPerfilCliente, name='perfil_cli'),
+    path('registrar/perfil_provee',RegistrarPerfilProveedor, name='reg_provee'),
     path('login', logiar, name='login'),
     path('logout', logout_user, name='logout'),
     path('registrar/direccion/<int:pk>', ListarDireccion.as_view(), name='dire_list'),
@@ -25,7 +26,9 @@ urlpatterns=[
     path('producto/guardar_producto/<int:pk>', RegistrarProducto.as_view(), name='prod'),#el pk argumento hace referencia al id del mayorista que esta guardando su producto
     path('producto/eliminar_producto/<int:pk>', EliminarProducto.as_view(), name='del_prod'),
     path('producto/detalle_producto/<int:pk>', DetalleProducto.as_view(), name='detalle_prod'),#muestra informacion de un producto especifico
+    path('venta/eliminar_venta/<int:pk>', EliminarVenta.as_view(), name='del_venta'),#Elimina la venta reaizada por un cliente sirve para que no se llene de ventas el proveedor
     path('venta/registrar_venta/<int:pk>', RegistrarVenta.as_view(), name='reg_venta'),# pk es el pk del producto el id del usuario se obtiene por medio de la variable request
+    path('venta/modi_envio/<int:pk>',ModificarEstadoEnvio.as_view(), name='mod_estado'),#pk seria el id de la cesta que se requiere modificar el estado de envio
     path('venta', ListarVenta.as_view(), name='list_venta'),#el id del cliente de la venta se proporciona por medio del request en la vista 
     path('cesta', ListarCesta.as_view(), name='list_cesta'),#el id del cliente se obtiende por medio del request.user
     path('cesta/agregar_cesta/<int:pk>',Agregar_a_Cesta.as_view(), name='agregar_cesta'),#el id del usuario se proporciona por el request variable pk es el id del producto asociado

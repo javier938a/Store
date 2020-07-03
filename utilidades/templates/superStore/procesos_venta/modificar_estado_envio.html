@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block titulo %}
+    <title>Modificar estado de envio</title>
+{% endblock %}
+{% block contenido %}
+    <div>
+        {% ifequal user.tipo_usuario_id.tipo_usuario "Cliente" %}
+            <h1>¿Esta seguro que desea confirmar el envio? <br> si confirma de recivido significa que ya tiene el producto en mano</h1>
+            <p>Si por error ha precionado el boton seleccione cancelar</p>
+        {% endifequal %}
+        {% ifequal user.tipo_usuario_id.tipo_usuario "Proveedor" %}
+            <h1>¿Esta seguro que desea cambiar el estado?</h1>
+        {% endifequal %}
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <select name="estados" id="">
+                {% ifequal user.tipo_usuario_id.tipo_usuario "Cliente" %}
+                <option value="----">----</option>
+                    <option value="Recibido">Recibido</option>
+                {% endifequal %}
+                {% ifequal user.tipo_usuario_id.tipo_usuario "Proveedor" %}
+                    <option value="----">----</option>
+                    <option value="Enviado">Enviado</option>
+                    <option value="Pendiente">Pendiente</option>
+                {% endifequal %}
+            </select>
+        </div>
+        <button type="submit">Cambiar</button>
+    </form>
+{% endblock %}
