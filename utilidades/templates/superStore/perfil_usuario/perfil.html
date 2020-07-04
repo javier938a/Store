@@ -34,37 +34,27 @@
         </div>
       </div>        
     {% else %}
-        <div>
-            <h1>{{ perfil_proveedor.nombre_empresa }}</h1>
+    <div class="card" style="width: 25rem;">
+        <center><h1>Informacion General</h1></center>
+        <img src="{{ MEDIA_URL }}{{ perfil_proveedor.foto_perfil }}" class="card-img-top" width="200" height="300" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{ perfil_proveedor.nombre_empresa }}</h5>
         </div>
-        <div>Negocio:  {{ perfil_proveedor.user.tipo_usuario_id }}</div>
-        <div>
-            Genero {{ perfil_proveedor.genero }}
-        </div>
-        <div>
-            Usuario: {{ perfil_proveedor.user }} 
-        </div>
-        <div>
-            Nombres: {{ perfil_proveedor.user.first_name }}
-        </div>
-        <div>
-            Apellidos: {{ perfil_proveedor.user.last_name }}
-        </div>
-        <div>
-            Correo: {{ perfil_proveedor.user.email }}
-        </div>
-        <div>
-            Telefono: {{ perfil_proveedor.telefono }}
-        </div>
-        <div>
-            Direccion: {{ perfil_proveedor.pais }} {{ perfil_proveedor.departamento }} {{ perfil_proveedor.municipio }} {{ perfil_proveedor.barrio_canton }}
-        </div>
-        <div>   
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h5>Tipo de Usuario</h5>{{ perfil_proveedor.user.tipo_usuario_id }}</li>
+            <li class="list-group-item"><h5>Genero</h5>{{ perfil_proveedor.genero }}</li>
+            <li class="list-group-item"><h5>Usuario</h5>{{ perfil_proveedor.user }} </li>
+            <li class="list-group-item"><h5>Nombres</h5>{{ perfil_proveedor.user.first_name }}</li>
+            <li class="list-group-item"><h5>Apellidos</h5>{{ perfil_proveedor.user.last_name }}</li>
+            <li class="list-group-item"><h5>Correo</h5>{{ perfil_proveedor.user.email }}</li>
+            <li class="list-group-item"><h5>Telefono</h5>{{ perfil_proveedor.telefono }}</li>
+            <li class="list-group-item"><h5>Direccion</h5>{{ perfil_proveedor.pais }} {{ perfil_proveedor.departamento }} {{ perfil_proveedor.municipio }} {{ perfil_proveedor.barrio_canton }}</li>
+        </ul>
+        <div class="card-body">
             <a class="btn btn-success" href="{% url 'tienda:editarProveedor' perfil_proveedor.id %}">Modificar informacion</a>
-        </div>
-        <div>
             <a class="btn btn-success" href="{% url 'tienda:index' %}">Regresar</a>
         </div>
+    </div>
     {% endif %}
 </div>
 

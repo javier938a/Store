@@ -71,5 +71,6 @@ class DetalleProducto(DetailView):
     context_object_name = 'detalle_producto'
     def get_context_data(self, **kwargs):
         context = super(DetalleProducto, self).get_context_data(**kwargs)
+        context['producto_id']=self.kwargs['pk']
         print(context)
         return context

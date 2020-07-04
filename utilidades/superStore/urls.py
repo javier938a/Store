@@ -6,6 +6,7 @@ from .views import ListarSubCategoria
 from .views import UsuarioDetalle, EditarInformacionPerfilCliente,EditarInformacionPerfilProveedor, EditarDireccion, ListarDireccion, EliminarDireccion
 from .views import logout_user
 from .views import ModificarEstadoEnvio, EliminarVenta
+from .views import ListarComentario, EscribirComentario
 app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
@@ -26,6 +27,8 @@ urlpatterns=[
     path('producto/guardar_producto/<int:pk>', RegistrarProducto.as_view(), name='prod'),#el pk argumento hace referencia al id del mayorista que esta guardando su producto
     path('producto/eliminar_producto/<int:pk>', EliminarProducto.as_view(), name='del_prod'),
     path('producto/detalle_producto/<int:pk>', DetalleProducto.as_view(), name='detalle_prod'),#muestra informacion de un producto especifico
+    path('venta/comentarios', ListarComentario, name='comentario'),#pk es el id del producto especifico 
+    path('venta/comentar', EscribirComentario, name='w_coment'),
     path('venta/eliminar_venta/<int:pk>', EliminarVenta.as_view(), name='del_venta'),#Elimina la venta reaizada por un cliente sirve para que no se llene de ventas el proveedor
     path('venta/registrar_venta/<int:pk>', RegistrarVenta.as_view(), name='reg_venta'),# pk es el pk del producto el id del usuario se obtiene por medio de la variable request
     path('venta/modi_envio/<int:pk>',ModificarEstadoEnvio.as_view(), name='mod_estado'),#pk seria el id de la cesta que se requiere modificar el estado de envio

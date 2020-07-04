@@ -129,9 +129,10 @@ class tbl_producto(models.Model):#Tabla producto que almacenara todos los produc
 
     def __str__(self):
         return self.producto
-
+    
     def get_absolute_url(self):
         return reverse('producto', args=[str(self.id)])
+
 class tbl_estado_envio(models.Model):#Se define al tabla estado del envio 
     estado = models.CharField(max_length=115)
     def __str__(self):
@@ -149,6 +150,13 @@ class tbl_venta(models.Model):#almacenara las ventas efectuadas por los mayorist
     def __str__(self):
         return "producto %s " % self.producto_id
 
+class tbl_comentario_producto(models.Model):
+    cliente = models.ForeignKey(tbl_cliente, on_delete=models.SET_NULL, null=True)
+    producto = models.ForeignKey(tbl_producto, on_delete=models.SET_NULL, null=True)
+    comentario = models.TextField(max_length=500, help_text="Ingrese un comentario sobre su experiencia de compra")
+    puntaje = models.IntegerField(help_text="Ingrese un puntaja evaluando al vendedor de esta manera ayuda a que otras personas tengan mas confianza para comprar en la tienda")
+    def __str__(self):
+        return " %s: %s" % (self.cliente, self.comentario)
 
 class tbl_cesta(models.Model):
     producto = models.ForeignKey(tbl_producto, on_delete=models.SET_NULL, null=True)
@@ -160,3 +168,4 @@ class tbl_cesta(models.Model):
     direccion = models.ForeignKey(tbl_direccion, on_delete=models.SET_NULL, null=True)
     def __str__(self):
         return "%s, %s" % (self.producto, self.cliente)
+    

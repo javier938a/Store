@@ -107,6 +107,22 @@
             <a href="{% url 'tienda:reg_venta' detalle_producto.id  %}" class="btn btn-primary">Comprar</a>
         </div>
     </div>
+    <div class="row">
+      <div class="col-12" id="comentarios">
+
+      </div>
+      <form method="POST" id="cargar" action="{% url 'tienda:comentario' %}">
+        {% csrf_token %}
+        <input id="producto_id" type="hidden" value="{{ producto_id }}">
+      </form>
+      <form id="" action="" method="POST">
+        
+        <textarea name="coment" id="coment" cols="100" rows="3">
+
+        </textarea>
+        <button class="btn btn-primary" type="submit">Comentar</button>
+      </form>
+    </div>
 </div>
 {% endblock %}
 
