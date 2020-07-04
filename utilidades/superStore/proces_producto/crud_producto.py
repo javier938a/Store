@@ -1,7 +1,7 @@
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
 from superStore.forms import FormCrearProducto
-from superStore.models import tbl_producto, tbl_mayorista
+from superStore.models import tbl_producto, tbl_mayorista, tbl_comentario_producto
 
 class RegistrarProducto(CreateView):#esta vista sirve para registrar producto se pasa el ID del Mayorista para filtrar que sea el mayorista ingresado
     template_name = 'superStore/procesos_producto/registrar_productos.html'
@@ -71,6 +71,8 @@ class DetalleProducto(DetailView):
     context_object_name = 'detalle_producto'
     def get_context_data(self, **kwargs):
         context = super(DetalleProducto, self).get_context_data(**kwargs)
+        coment = tbl_comentario_producto.objects.filter(producto__id=self.kwargs['pk']).order_by('id')#obteniendo todos los comentarios de este producto
+        context['list_coment']=coment#Asignandolo al contexto
         context['producto_id']=self.kwargs['pk']
         print(context)
         return context

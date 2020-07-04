@@ -20,7 +20,7 @@ from .inicio.inicio_usuario import EditarInformacionPerfilCliente, EditarInforma
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .proces_venta.crud_venta import ModificarEstadoEnvio
 from .proces_venta.crud_venta import EliminarVenta
-from .proces_comentario.crud_comentario import ListarComentario, EscribirComentario
+from .proces_comentario.crud_comentario import EscribirComentario, EliminarComentario
 # Create your views here.
 class index(ListView):#Mostrando index Pagina Principal
     #login_url ='tienda:login'
