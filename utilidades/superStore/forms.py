@@ -111,13 +111,12 @@ class FormCrearProducto(forms.ModelForm):
 class FormCrearVenta(forms.ModelForm):
     class Meta:
         model = tbl_venta
-        fields = ('cliente_id', 'producto_id','cantidad', 'precio_unitario', 'precio_total','direccion',)
+        fields = ('cliente_id', 'producto_id','cantidad', 'precio_unitario','direccion',)
         labels = {
             'cliente_id':'Cliente',
             'producto_id':'Producto',
             'cantidad':'Cantidad',
             'precio_unitario':'Precio Unitario',
-            'precio_total':'Precio Total',
             'direccion':'Direccion',
         }
         widgets = {
@@ -125,30 +124,26 @@ class FormCrearVenta(forms.ModelForm):
             'producto_id':forms.Select(attrs={'class':'form-control'}),
             'cantidad':forms.NumberInput(attrs={'class':'form-control'}),
             'precio_unitario':forms.NumberInput(attrs={'class':'form-control'}),
-            'precio_total':forms.NumberInput(attrs={'class':'form-control'}),
             'direccion':forms.Select(attrs={'class':'form-control'}),
         }
 
 class FormCrearCesta(forms.ModelForm):
     class Meta:
         model = tbl_cesta
-        fields = ('producto', 'cliente', 'fecha_hora_realizado', 'cantidad', 'precio_unitario', 'precio_total', 'direccion',)
+        fields = ('producto', 'cliente', 'cantidad', 'precio_unitario', 'direccion',)
         labels = {
             'producto':'Producto',
             'cliente':'Cliente',
-            'fecha_hora_realizado':'Fecha de transaccion',
             'cantidad':'Cantidad',
             'precio_unitario':'Precio Unitario',
             'precio_total':'Precio Total',
             'direccion':'Direccion',
         }
         widgets = {
-            'producto':forms.Select(attrs={'class':'form-control'}),
+            'producto':forms.Select(attrs={'class':'form-control', }),
             'cliente':forms.Select(attrs={'class':'form-control'}),
-            'fecha_hora_realizado':forms.DateTimeInput(attrs={'class':'form-control'}),
             'cantidad':forms.NumberInput(attrs={'class':'form-control'}),
-            'precio_unitario':forms.NumberInput(attrs={'class':'form-control'}),
-            'precio_total':forms.NumberInput(attrs={'class':'form-control'}),
+            'precio_unitario':forms.NumberInput(attrs={'class':'form-control','readonly':'readonly'}),
             'direccion':forms.Select(attrs={'class':'form-control'}),
         }
         

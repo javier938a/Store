@@ -4,6 +4,7 @@ from django.views.generic import CreateView, ListView, UpdateView, TemplateView,
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.shortcuts import render, redirect
+from django import forms
 
 class RegistrarVenta(CreateView):
     template_name = 'superStore/procesos_venta/registrar_venta.html'
@@ -14,9 +15,12 @@ class RegistrarVenta(CreateView):
         context = super(RegistrarVenta, self).get_context_data(**kwargs)
         producto = tbl_producto.objects.filter(id=self.kwargs['pk'])#Obteniendo el producto que el cliente desea comprar
         context.get('form').fields['cliente_id'].queryset = tbl_cliente.objects.filter(user__id=self.request.user.id)#obteniendo el cliente que va comprar el producto
+        context.get('form').fields['cliente_id'].empty_label=None
         context.get('form').fields['producto_id'].queryset = producto#obteniendo el producto que va comprar el cliente
+        context.get('form').fields['producto_id'].empty_label=None#eliminando el ------ vacio que se guarda en el formulario y se genera por default
         context.get('form').initial={'precio_unitario':producto[0].precio_unitario,}
         context.get('form').fields['direccion'].queryset = tbl_direccion.objects.filter(cliente__user__id=self.request.user.id, estado=True)
+        context.get('form').fields['direccion'].empty_label=None
         print(context.get('form')['precio_unitario'].value())
         return context
     

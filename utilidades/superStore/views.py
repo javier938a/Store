@@ -21,6 +21,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .proces_venta.crud_venta import ModificarEstadoEnvio
 from .proces_venta.crud_venta import EliminarVenta
 from .proces_comentario.crud_comentario import EscribirComentario, EliminarComentario
+from django.db.models import Q
 # Create your views here.
 class index(ListView):#Mostrando index Pagina Principal
     #login_url ='tienda:login'
@@ -31,9 +32,8 @@ class index(ListView):#Mostrando index Pagina Principal
     def get_context_data(self, **kwargs):
         context = super(index, self).get_context_data(**kwargs)
         user = self.request.user
-        '''print("aqui empieza")
-        print(tbl_cliente.objects.filter(user=user.id))
-        print(user.id)'''
+        clave = self.request.GET.get('clave')
+        print("Esta es la clave"+str(clave))
         if user.is_authenticated:#Verifica si el usuario esta autenticado
             pass
             print("El Valor de request.user")
@@ -45,7 +45,15 @@ class index(ListView):#Mostrando index Pagina Principal
                 if tbl_mayorista.objects.filter(user=user).exists():
                     id_prove = tbl_mayorista.objects.get(user=user).id#obtiene el id del mayorista en dado caso sea mayorista
                     context['id_prove'] = id_prove #agrega al contexto el id del proveedor
-        context['producto']=tbl_producto.objects.all()
+        
+        print(clave)
+        
+        if clave==None:#se verifica que exista clave si no existe se muestran todos
+            print("Esta es la clave!")
+            context['producto']=tbl_producto.objects.all()
+        else:
+            context['producto']=tbl_producto.objects.filter(Q(producto__icontains=clave))
+        
         #print('Valores')
        # print(context.get('cate_list'))
         return context

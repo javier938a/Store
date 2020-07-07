@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block contenido %}
+<div class="container">
   <div class="row">
     <div class="col-md-12">
         {# recivo el contexto venta_list #}
@@ -60,6 +61,8 @@
       <a class="btn btn-success" href="{% url 'tienda:index' %}">Inicio</a>
     </div>
   </div>
+</div>
+
 
   
 {% endblock %}

@@ -19,7 +19,7 @@ $(document).ready(function(){
         //alert(ubi);
         $("#foto_producto").attr("src",ubi);
     })
-    //formulario de producto
+    //formulario de comentario
     $("#comentar").submit(function(evt){//Enviando el formulario
         const csrftoken = getCookie('csrftoken');
         //alert($("#cmt").val());

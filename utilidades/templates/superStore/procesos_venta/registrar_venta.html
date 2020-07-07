@@ -1,13 +1,17 @@
 {% extends "base.html" %}
 
-{% block contenido %}
+{% load crispy_forms_tags %}
 
+{% block contenido %}
+<div class="container">
     <form method="post">
         {% csrf_token %}
         <div>
-            {{ form.as_p }}
+            {{ form|crispy }}
         </div>
         <button type="submit">Guardar venta</button>
     </form>
+</div>
+
 
 {% endblock %}

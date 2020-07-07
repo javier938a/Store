@@ -24,10 +24,13 @@ class Agregar_a_Cesta(CreateView):
         print("Heloo")
         print(self.request.user.id)
         context.get('form').fields['cliente'].queryset = tbl_cliente.objects.filter(user__id=self.request.user.id)
+        context.get('form').fields['cliente'].empty_label=None
         context.get('form').fields['producto'].queryset = producto
+        context.get('form').fields['producto'].empty_label=None
         precio = producto[0].precio_unitario
         context.get('form').initial = {'precio_unitario':precio,}
         context.get('form').fields['direccion'].queryset = tbl_direccion.objects.filter(cliente__user__id=self.request.user.id)
+        context.get('form').fields['direccion'].empty_label=None
         return context
     
     def form_valid(self, form):
@@ -58,8 +61,11 @@ class ActualizarCesta(UpdateView):
         cesta = tbl_cesta.objects.get(id=self.kwargs['pk'])#Obteniendo el registro de la cesta por medio de su ID
         producto = tbl_producto.objects.filter(id=cesta.producto.id)#Obteniendo el producto que se quiere editar en base al producto de la cesta
         context.get('form').fields['cliente'].queryset = tbl_cliente.objects.filter(user__id=self.request.user.id)#especificando que solo el usuario logiado podra poner como el que agrego esa cesta nadie mas
+        context.get('form').fields['cliente'].empty_label=None #eliminando el valor de ------ que se genera por default
         context.get('form').fields['producto'].queryset=producto#filtrando que sea el producto que se esta en cesta el que se pueda agregar
+        context.get('form').fields['producto'].empty_label=None
         context.get('form').fields['direccion'].queryset = tbl_direccion.objects.filter(cliente__user__id=self.request.user.id)
+        context.get('form').fields['direccion'].empty_label=None
         return context
     def form_valid(self, form):
         precio_unitario = form.cleaned_data['precio_unitario']#Obteniendo el precio unitario
