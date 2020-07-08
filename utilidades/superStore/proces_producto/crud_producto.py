@@ -2,6 +2,10 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView, D
 from django.urls import reverse_lazy
 from superStore.forms import FormCrearProducto
 from superStore.models import tbl_producto, tbl_mayorista, tbl_comentario_producto
+from django.http import JsonResponse
+from django.core.serializers import serialize
+from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import Q
 
 class RegistrarProducto(CreateView):#esta vista sirve para registrar producto se pasa el ID del Mayorista para filtrar que sea el mayorista ingresado
     template_name = 'superStore/procesos_producto/registrar_productos.html'
@@ -74,5 +78,27 @@ class DetalleProducto(DetailView):
         coment = tbl_comentario_producto.objects.filter(producto__id=self.kwargs['pk']).order_by('id')#obteniendo todos los comentarios de este producto
         context['list_coment']=coment#Asignandolo al contexto
         context['producto_id']=self.kwargs['pk']
-        print(context)
+        context['lista_productos']=self.model.objects.filter(mayorista=self.object.mayorista)
+        print("Listado de productos...")
+        print(context['lista_productos'])
+        #print(context)
         return context
+
+def buscar_producto_tienda(request):
+    clave = None
+    prove = None
+    producto = None
+    if request.is_ajax():
+        print(request.POST)
+        clave = request.POST['clave']
+        prove = request.POST['prove']
+        print("Valor de clave")
+        print(clave)
+        if clave!='':
+            producto = tbl_producto.objects.filter(Q(producto__icontains=clave) & Q(mayorista=prove))
+        else:
+            producto = tbl_producto.objects.filter(Q(mayorista=prove))#producto = tbl_producto.objects.filter()
+    return JsonResponse(
+        serialize('json',producto),
+        safe=False
+    )

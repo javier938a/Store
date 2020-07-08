@@ -68,4 +68,83 @@ $(document).ready(function(){
         }
 
     });
+    //pestañas 
+    $("#ver_perfil_tienda").click(function(evt){
+        evt.preventDefault();
+        if($("#ver_perfil_tienda").hasClass('active')==false){//verificando si existe la clase active
+            $("#ver_perfil_tienda").addClass('active');
+            $("#ver_detalle_producto").removeClass('active');
+            $("#ver_tienda_prove").removeClass('active');
+        }else{
+            $("#ver_perfil_tienda").addClass('active');
+        }
+        $("#producto_detalle").css('display','none');//hace invisible el elemento producto detalle
+        $("#perfil_tienda").css('display', 'block');//hace invisible el elemento tienda
+        $("#ver_tienda").css('display','none');//ocultando el div de tienda
+    });
+    $("#ver_detalle_producto").click(function(evt){
+        evt.preventDefault();
+        if($("#ver_detalle_producto").hasClass('active')==false){
+            $("#ver_detalle_producto").addClass('active');
+            $("#ver_perfil_tienda").removeClass('active');
+            $("#ver_tienda_prove").removeClass('active');
+        }else{
+            $("#ver_detalle_producto").removeClass("active");
+        }
+        $("#perfil_tienda").css('display','none');
+        $("#producto_detalle").css('display','block');
+        $("#ver_tienda").css('display','none');
+        
+    });
+
+    $("#ver_tienda_prove").click(function(evt){
+        if($("#ver_tienda_prove").hasClass('active')==false){
+            $("#ver_tienda_prove").addClass('active');
+            $("#ver_detalle_producto").removeClass('active');
+            $("#ver_perfil_tienda").removeClass('active');
+        }else{
+            $("#ver_tienda_prove").removeClass('active');
+        }
+        $("#producto_detalle").css('display','none');//hace invisible el elemento producto detalle
+        $("#perfil_tienda").css('display','none');
+        $("#ver_tienda").css('display','block');
+    });
+    //formulario de buscar en la tienda
+    $("#buscar").submit(function(){
+        var clave = $("#clave").val();
+        var prove = $("#prove").val();
+        const csrftoken = getCookie("csrftoken");
+        $.ajax({
+            url:$("#buscar").attr('action'),
+            type:$("#buscar").attr('method'),
+            dataType: "json",
+            data:{
+                csrfmiddlewaretoken:csrftoken,
+                'prove':prove,
+                'clave':clave,
+            },
+            success:function(data){
+                var prod = JSON.parse(data);
+                tmp = '';
+               
+
+            for(let i in prod){
+                var id = prod[i].pk;
+                var foto_producto1 = prod[i].fields.foto_producto1;
+                var mayorista_id = prod[i].fields.mayorista;
+                var producto = prod[i].fields.producto;
+                var precio_unitario = prod[i].fields.precio_unitario;
+
+                parte_tmp='<div class="col mb-4"><div class="card"><h5 class="card-title">'+producto+'</h5><a href="/superStore/producto/detalle_producto/'+id+'"><img src="/media/'+foto_producto1+'" width="265em" height="200em" alt=""></a><div class="card-body"><h4 class="card-title">$'+precio_unitario+'</h4></div></div></div>';
+                tmp +=parte_tmp;
+                console.log(precio_unitario); 
+            }
+            
+            $("#listado").html(tmp);
+
+                //alert(data[0].model);
+            }
+        });
+        return false;
+    });
 });

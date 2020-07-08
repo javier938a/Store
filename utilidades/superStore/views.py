@@ -10,7 +10,7 @@ from django.contrib.auth.backends import ModelBackend#Obteniendo el modelo backe
 from django.db.models import Q
 from django.urls import reverse_lazy, reverse
 from .proces_venta.crud_venta import RegistrarVenta, ListarVenta #importanto la clase de registrar Venta
-from .proces_producto.crud_producto import RegistrarProducto, ListarProductos, EditarProducto, EliminarProducto, DetalleProducto #todos los procesos de producto
+from .proces_producto.crud_producto import RegistrarProducto, ListarProductos, EditarProducto, EliminarProducto, DetalleProducto, buscar_producto_tienda #todos los procesos de producto
 from .proces_cesta.crud_cesta import ListarCesta, Agregar_a_Cesta, ActualizarCesta, EliminarCesta# importando la clase listar cesta en donde me lista todos productos de la cesta
 from .models import tbl_categoria, tbl_sub_categoria
 from .forms import FormCrearDireccion

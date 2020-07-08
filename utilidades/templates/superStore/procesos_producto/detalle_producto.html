@@ -1,11 +1,91 @@
 {% extends "base.html" %}
 
+{% block css %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static "css/estilos.css" %}">
+{% endblock %}
+
 {% block titulo %}
     <title>Detalle de producto</title>
 {% endblock %}
 
 {% block contenido %}
+{# Informacion del producto a comprar #}
 <div class="container">
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a id="ver_perfil_tienda" class="nav-link" href="#">Informacion<br>de Vendedor</a>
+    </li>
+    <li class="nav-item">
+      <a id="ver_detalle_producto" class="nav-link active" href="#">Detalle <br> producto</a>
+    </li>
+    <li class="nav-item">
+      <a id="ver_tienda_prove" class="nav-link" href="#">Tienda</a>
+    </li>
+  </ul>
+</div>
+{# tienda y listado de productos de ese mayorista#}
+<div id="ver_tienda" class="container visible">
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+      <form id="buscar" action="{% url 'tienda:prod_search' %}"  method="POST">
+        {% csrf_token %}
+        <input id="prove" type="hidden" name="prove_id" value="{{ detalle_producto.mayorista.id }}">
+        <input id="clave" type="text">
+        <button class="btn btn-primary" name="clave">Buscar</button>
+      </form>
+    </div>
+  </div>
+  <div id="listado" class="row">
+    {% if lista_productos %}
+        <div class="container-fluid">
+            <div class="row row-cols-5 row-cols-md-4 row-cols-lg-4">
+                {% for prod in lista_productos %}
+                    <div class="col mb-4">
+                        <div class="card">
+                            {# Titulo Vendedor#}
+                            <h5 class="card-title">Tienda {{ prod.mayorista }}</h5>
+                            {#titulo de producto#}
+                            <h5 class="card-title">{{ prod.producto }}</h5>
+                            {#Imagen del producto#}
+                            <a href="{% url 'tienda:detalle_prod' prod.id %}">
+                                <img src="{{ MEDIA_URL }}{{ prod.foto_producto1 }}" width="265em" height="200em" alt="">
+                            </a>
+                            
+                            <div class="card-body">
+                                {# precio por unidad del producto#}
+                                <h4 class="card-title">${{ prod.precio_unitario }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <p>No hay datos que mostrar</p>
+    {% endif %}
+
+</div> 
+</div>
+{# informacion del perfil de la tienda #}
+<div id="perfil_tienda" class="container visible">{# la clase visible oculta inicialmente el div #}
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="card" style="width: 35rem;">
+          <img src="{{ MEDIA_URL }}{{ detalle_producto.mayorista.foto_perfil }}" class="card-img-top" alt="">
+          <div class="card-body">
+            <h5 class="card-title">{{ detalle_producto.mayorista.nombre_empresa }}</h5>
+            <p class="card-text">{{ detalle_producto.mayorista.objetivo }}</p>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h5>Registrado desde:</h5>{{ detalle_producto.mayorista.user.date_joined }}</li>
+            <li class="list-group-item"><button class="btn btn-primary active" >Seguir</button></li>
+          </ul>
+        </div> 
+      </div>
+    </div>
+</div>
+<div id="producto_detalle" class="container">
     <div class="row">
         <div class="col-12">
             <center><h1>Informacion del Producto</h1></center>
@@ -38,6 +118,14 @@
                             <img class="foto" src="{{ MEDIA_URL }}{{ detalle_producto.foto_producto3 }}" class="card-img-top" width="80px" height="80" alt="...">
                         </div>
                     </div>
+                </div>
+                <div style="margin-top: 20px; " class="row">
+                  <div class="col-md-6 col-lg-6 col-xl-6">
+                    <div>
+                      <a href="{% url 'tienda:agregar_cesta' detalle_producto.id %}" class="btn btn-primary">Agregar a Cesta</a>
+                      <a href="{% url 'tienda:reg_venta' detalle_producto.id  %}" class="btn btn-primary">Comprar</a>
+                    </div>
+                  </div>
                 </div>
             </div>
         </div>
@@ -99,12 +187,6 @@
                       </a>
                   </div>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6 col-lg-6 col-xl-6 float-right">
-            <a href="{% url 'tienda:agregar_cesta' detalle_producto.id %}" class="btn btn-primary">Agregar a Cesta</a>
-            <a href="{% url 'tienda:reg_venta' detalle_producto.id  %}" class="btn btn-primary">Comprar</a>
         </div>
     </div>
     <div class="row">

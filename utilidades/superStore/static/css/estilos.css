@@ -13,3 +13,6 @@
 .estiloCategora{
     display: none;   
 }
+.visible{
+    display: none;
+}

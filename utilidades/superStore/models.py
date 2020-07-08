@@ -84,6 +84,7 @@ class tbl_direccion(models.Model):
 class tbl_mayorista(models.Model):
     foto_perfil = models.ImageField(verbose_name='Imagen', max_length=300 , upload_to='foto_perfil_proveedor', null=True, blank=True)
     user = models.OneToOneField(User, on_delete = models.CASCADE)
+    objetivo = models.TextField(max_length=300, help_text="Ingrese informacion de su empresa al sector a que se dedica y su objetivo", null=True)
     GEN = (
         ('M','Masculino'),
         ('F','Femenino'),

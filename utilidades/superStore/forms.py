@@ -123,7 +123,7 @@ class FormCrearVenta(forms.ModelForm):
             'cliente_id':forms.Select(attrs={'class':'form-control'}),
             'producto_id':forms.Select(attrs={'class':'form-control'}),
             'cantidad':forms.NumberInput(attrs={'class':'form-control'}),
-            'precio_unitario':forms.NumberInput(attrs={'class':'form-control'}),
+            'precio_unitario':forms.NumberInput(attrs={'class':'form-control', 'readonly':'readonly'}),
             'direccion':forms.Select(attrs={'class':'form-control'}),
         }
 
