@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import index, register, RegistrarPerfilCliente, RegistrarPerfilProveedor, logiar, RegistrarDireccion
-from .views import RegistrarProducto, ListarProductos, EditarProducto, EliminarProducto, DetalleProducto, buscar_producto_tienda
+from .views import RegistrarProducto, ListarProductos, EditarProducto, EliminarProducto, DetalleProducto, buscar_producto_tienda, cargar_todos_productos_tienda
 from .views import RegistrarVenta, ListarVenta
 from .views import ListarCesta, Agregar_a_Cesta, ActualizarCesta, EliminarCesta
 from .views import ListarSubCategoria
@@ -8,12 +8,15 @@ from .views import UsuarioDetalle, EditarInformacionPerfilCliente,EditarInformac
 from .views import logout_user
 from .views import ModificarEstadoEnvio, EliminarVenta
 from .views import EscribirComentario, EliminarComentario
+from .views import verificar_existe_seguidor, agregar_nuevo_seguidor
 app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
     path('perfil_info/<int:pk>',UsuarioDetalle.as_view(), name='infoUsuario'),
     path('perfil_info/editar_cliente/<int:pk>', EditarInformacionPerfilCliente.as_view(), name='editarUsuario'),#pk es el ID del perfil
     path('perfil_info/editar_provee/<int:pk>', EditarInformacionPerfilProveedor.as_view(), name="editarProveedor"),
+    path('seguidores/verifica_seguidor/<int:pk>', verificar_existe_seguidor, name='verifica_seguidor'),# pk es id del proveedor #}
+    path('seguidores/nuevo_seguidor/<int:pk>',agregar_nuevo_seguidor, name="nuevo_seguidor"),
     path('registrar', register, name='registrar'),
     path('registrar/perfil_clien', RegistrarPerfilCliente, name='perfil_cli'),
     path('registrar/perfil_provee',RegistrarPerfilProveedor, name='reg_provee'),
@@ -31,6 +34,7 @@ urlpatterns=[
     path('producto/comentario', EscribirComentario, name='w_coment'),
     path('producto/comentario/<int:pk>', EliminarComentario, name='del_coment'),
     path('producto/buscar_tienda', buscar_producto_tienda, name='prod_search'),#para buscar ten la tienda del proveedor
+    path('producto/cargar_todos_prod', cargar_todos_productos_tienda, name='prod_all'),
     path('venta/eliminar_venta/<int:pk>', EliminarVenta.as_view(), name='del_venta'),#Elimina la venta reaizada por un cliente sirve para que no se llene de ventas el proveedor
     path('venta/registrar_venta/<int:pk>', RegistrarVenta.as_view(), name='reg_venta'),# pk es el pk del producto el id del usuario se obtiene por medio de la variable request
     path('venta/modi_envio/<int:pk>',ModificarEstadoEnvio.as_view(), name='mod_estado'),#pk seria el id de la cesta que se requiere modificar el estado de envio

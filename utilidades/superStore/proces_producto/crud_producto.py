@@ -84,7 +84,7 @@ class DetalleProducto(DetailView):
         #print(context)
         return context
 
-def buscar_producto_tienda(request):
+def buscar_producto_tienda(request):#metodo que sirve para buscar el producto en la tienda del cliente
     clave = None
     prove = None
     producto = None
@@ -102,3 +102,11 @@ def buscar_producto_tienda(request):
         serialize('json',producto),
         safe=False
     )
+def cargar_todos_productos_tienda(request):#metodo que sirve para cargar todos los productos del proveedor en su tienda 
+    producto = None
+    if request.is_ajax():
+        id_prove = request.POST['id_prove']
+        productos = tbl_producto.objects.filter(mayorista__id=id_prove)
+
+    
+    return JsonResponse(serialize('json',productos), safe=False)

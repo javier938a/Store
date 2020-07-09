@@ -100,6 +100,13 @@ class tbl_mayorista(models.Model):
     def __str__(self):
         return "%s" % (self.nombre_empresa)
 
+class tbl_seguidores(models.Model):
+    mayorista = models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True)
+    cliente = models.ForeignKey(tbl_cliente, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return "%s %s"%(self.mayorista, self.cliente)
+
 class tbl_categoria(models.Model):#modelo de categoria que almacenara todas las categorias existentes
     categoria = models.TextField(max_length=50)
     icono = models.ImageField(verbose_name="Imagen", upload_to="iconos_cate", null=True)

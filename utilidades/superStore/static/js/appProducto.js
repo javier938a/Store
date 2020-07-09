@@ -81,6 +81,47 @@ $(document).ready(function(){
         $("#producto_detalle").css('display','none');//hace invisible el elemento producto detalle
         $("#perfil_tienda").css('display', 'block');//hace invisible el elemento tienda
         $("#ver_tienda").css('display','none');//ocultando el div de tienda
+        //verificando si el cliente que ha ingresado es un seguidor del proveedor
+        $.ajax({
+            url:$("#ver_perfil_tienda").attr("href"),
+            type:'GET',
+            dataType:'json',
+            success:function(data){
+                //si el resultado es falso significa que no tiene amigos pero le agregara al boton el primary y mostrara el numero de seguidores
+                if(data.res==false){
+                    $("#btnSeguir").addClass('btn btn-primary');
+                    $("#numero_amigos").html(data.numero_amigos);
+                }else{//de lo contrario significa que tiene amigos y agregara el succes al boton y mostrara el numero de amigos 
+                    $("#btnSeguir").addClass('btn btn-success');
+                    $("#numero_amigos").html(data.numero_amigos);
+                }
+            }
+        });
+    });
+    //al dar click en el boton seguir se agregara un nuevo seguidor al proveedor
+    $("#btnSeguir").click(function(evt){
+        evt.preventDefault();
+        $.ajax({
+            url:$("#btnSeguir").attr("href"),
+            type:'GET',
+            dataType:'json',
+            success:function(data){
+                if(data.res==true){
+                    if($("#btnSeguir").hasClass("btn-primary")==true){//si el resultado da true se verifica si el boton tiene el color btn-primary si esta se elimina ese color y se agrega el success
+                        $("#btnSeguir").removeClass("btn-primary");
+                        $("#btnSeguir").addClass('btn-success');
+                    }
+                    $("#btnSeguir").addClass('btn btn-success');//si no esta primary se agrega succes y se actualiza el numero de amigos que se recibe del servidor
+                    $("#numero_amigos").html(data.numero_amigos);
+                }else{//si es falso el resultado significa que se elimino el seguidor
+                    if($("#btnSeguir").hasClass('btn-success')==true){
+                        $("#btnSeguir").removeClass("btn-success");
+                        $("#btnSeguir").addClass('btn-primary');
+                    }
+                    $("#numero_amigos").html(data.numero_amigos);
+                }
+            }
+        });
     });
     $("#ver_detalle_producto").click(function(evt){
         evt.preventDefault();
@@ -98,6 +139,7 @@ $(document).ready(function(){
     });
 
     $("#ver_tienda_prove").click(function(evt){
+        evt.preventDefault();
         if($("#ver_tienda_prove").hasClass('active')==false){
             $("#ver_tienda_prove").addClass('active');
             $("#ver_detalle_producto").removeClass('active');
@@ -108,6 +150,35 @@ $(document).ready(function(){
         $("#producto_detalle").css('display','none');//hace invisible el elemento producto detalle
         $("#perfil_tienda").css('display','none');
         $("#ver_tienda").css('display','block');
+        //despues de eso cargar los productos en la tienda
+        vacio = null;
+        const csrftoken = getCookie('csrftoken');
+        $.ajax({
+            url:$('#ver_tienda_prove').attr('href'),
+            type:'POST',
+            data:{
+                csrfmiddlewaretoken:csrftoken,
+                'id_prove':$('#mayo').val(),
+            },
+            success:function(data){
+               //alert(data); 
+               prod = JSON.parse(data);
+               tmp = '';
+               for(let i in prod){
+                   var id = prod[i].pk;
+                   var foto_producto1 = prod[i].fields.foto_producto1;
+                   var mayorista_id = prod[i].fields.mayorista;
+                   var producto = prod[i].fields.producto;
+                   var precio_unitario = prod[i].fields.precio_unitario;
+   
+                   parte_tmp='<div class="col mb-4"><div class="card"><h5 class="card-title">'+producto+'</h5><a href="/superStore/producto/detalle_producto/'+id+'"><img src="/media/'+foto_producto1+'" width="265em" height="200em" alt=""></a><div class="card-body"><h4 class="card-title">$'+precio_unitario+'</h4></div></div></div>';
+                   tmp +=parte_tmp;
+                   console.log(precio_unitario); 
+               }
+               
+               $("#listado").html(tmp);
+            }
+        });
     });
     //formulario de buscar en la tienda
     $("#buscar").submit(function(){
@@ -128,7 +199,7 @@ $(document).ready(function(){
                 tmp = '';
                
 
-            for(let i in prod){
+            for(let i in prod){//extrayendo todos los datos de los productos enpaquedados con joson
                 var id = prod[i].pk;
                 var foto_producto1 = prod[i].fields.foto_producto1;
                 var mayorista_id = prod[i].fields.mayorista;

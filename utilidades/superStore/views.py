@@ -10,7 +10,7 @@ from django.contrib.auth.backends import ModelBackend#Obteniendo el modelo backe
 from django.db.models import Q
 from django.urls import reverse_lazy, reverse
 from .proces_venta.crud_venta import RegistrarVenta, ListarVenta #importanto la clase de registrar Venta
-from .proces_producto.crud_producto import RegistrarProducto, ListarProductos, EditarProducto, EliminarProducto, DetalleProducto, buscar_producto_tienda #todos los procesos de producto
+from .proces_producto.crud_producto import RegistrarProducto, ListarProductos, EditarProducto, EliminarProducto, DetalleProducto, buscar_producto_tienda, cargar_todos_productos_tienda #todos los procesos de producto
 from .proces_cesta.crud_cesta import ListarCesta, Agregar_a_Cesta, ActualizarCesta, EliminarCesta# importando la clase listar cesta en donde me lista todos productos de la cesta
 from .models import tbl_categoria, tbl_sub_categoria
 from .forms import FormCrearDireccion
@@ -21,6 +21,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .proces_venta.crud_venta import ModificarEstadoEnvio
 from .proces_venta.crud_venta import EliminarVenta
 from .proces_comentario.crud_comentario import EscribirComentario, EliminarComentario
+from .proces_seguidores.crud_seguidores import verificar_existe_seguidor, agregar_nuevo_seguidor#metodo que verificara si existen seguidores
 from django.db.models import Q
 # Create your views here.
 class index(ListView):#Mostrando index Pagina Principal
