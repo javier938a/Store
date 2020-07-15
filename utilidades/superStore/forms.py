@@ -90,22 +90,32 @@ class FormCrearDireccion(forms.ModelForm):#para registrar las multiples direccio
 class FormCrearProducto(forms.ModelForm):
     class Meta:
         model = tbl_producto
-        fields = ('mayorista', 'producto', 'categoria', 'cantidad', 'precio_unitario','precio_total',)
+        fields = ('foto_producto1','foto_producto2','foto_producto3','mayorista', 'producto','info_producto', 'categoria','medio_de_envio', 'cantidad', 'precio_unitario','costo_envio',)
         labels = {
+            'foto_producto1':'Foto del producto No1',
+            'foto_producto2':'Foto del producto No2',
+            'foto_producto3':'Foto del producto No3',
             'mayorista':'Proveedor',
             'producto':'Producto',
+            'info_producto':'Descripcion',
             'categoria':'Categorida',
+            'medio_de_envio':'Medio de envio',
             'cantidad':'Cantidad',
             'precio_unitario':'Precio por Unidad',
-            'precio_total':'Precio total',
+            'costo_envio':'Costo de envio',
         }
         widgets = {
+            'foto_producto1':forms.FileInput(attrs={'class':'form-control'}),
+            'foto_producto2':forms.FileInput(attrs={'class':'form-control'}),
+            'foto_producto3':forms.FileInput(attrs={'class':'form-control'}),
             'mayorista':forms.Select(attrs={'class':'form-control'}),
             'producto':forms.TextInput(attrs={'class':'form-control'}),
+            'info_producto':forms.TextInput(attrs={'class':'form-control'}),   
             'categoria':forms.Select(attrs={'class':'form-control'}),
+            'medio_de_envio':forms.TextInput(attrs={'class':'form-control'}),
             'cantidad':forms.NumberInput(attrs={'class':'form-control'}),
             'precio_unitario':forms.NumberInput(attrs={'class':'form-control'}),
-            'precio_total':forms.NumberInput(attrs={'class':'form-control'}),
+            'costo_envio':forms.NumberInput(attrs={'class':'form-control'}),
         }
 
 class FormCrearVenta(forms.ModelForm):

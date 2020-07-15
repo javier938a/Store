@@ -13,12 +13,13 @@ class RegistrarProducto(CreateView):#esta vista sirve para registrar producto se
     context_object_name = 'form'
     def get_context_data(self,**kwargs):
         context = super(RegistrarProducto, self).get_context_data(**kwargs)
+        context.get('form').fields['mayorista'].empty_label=None
         context.get('form').fields['mayorista'].queryset = tbl_mayorista.objects.filter(id=self.kwargs['pk'])#Validando que solo el mayorista que ha ingresado seccion vea sus productos en inventario
         return context
     def form_valid(self, form):
         precio_unitario = form.cleaned_data.get('precio_unitario')#Obteniendo el precio unitario del formulario
         cantidad = form.cleaned_data.get('cantidad')#Obteniendo la cantidad total de producto
-        total = int(precio_unitario)*float(cantidad)#Obteniendo el precio total del producto
+        total = float(precio_unitario)*float(cantidad)#Obteniendo el precio total del producto
         form.instance.precio_total = total#Agregandolo a el campo del formulario
         form_valid = super(RegistrarProducto, self).form_valid(form)
 
@@ -31,8 +32,13 @@ class ListarProductos(ListView):
     model = tbl_producto
     context_object_name = 'prod_list'
     def get_context_data(self, **kwargs):
+        prod = self.request.GET.get('prod')
+        print("Este es el producto "+str(prod))
         context = super(ListarProductos, self).get_context_data(**kwargs)
         context['id_prove']=self.kwargs['pk']
+        if prod!=None and prod!='':
+            context['prod_list']=tbl_producto.objects.filter(Q(mayorista__id=self.kwargs['pk']) & Q(producto__icontains=prod))
+            print(context['prod_list'])
         return context
     
     def get_queryset(self):
@@ -50,8 +56,18 @@ class EditarProducto(UpdateView):
         #context['editar']=1 #servira para validar si se esta usando para registrar o editar
         return context
     
+    def form_valid(self, form):
+        precio_unitario = form.cleaned_data.get('precio_unitario')#Obteniendo el precio unitario del formulario
+        cantidad = form.cleaned_data.get('cantidad')#Obteniendo la cantidad total de producto
+        total = float(precio_unitario)*float(cantidad)#Obteniendo el precio total del producto
+        print("Total es: "+str(precio_unitario)+" * "+str(cantidad)+" = "+str(total))
+        form.instance.precio_total = total#Agregandolo a el campo del formulario
+        form_valid = super(EditarProducto, self).form_valid(form)
+
+        return form_valid
+    
     def get_success_url(self):
-        return reverse_lazy('tienda:listar_prod', args=[str(self.kwargs['pk'])] )
+        return reverse_lazy('tienda:listar_prod', args=[str(self.object.mayorista.id)] )
 
 class EliminarProducto(DeleteView):
     template_name='superStore/procesos_producto/eliminar_producto.html'

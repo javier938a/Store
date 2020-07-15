@@ -39,7 +39,7 @@
   </div>
   <div class="row">{# aqui se mostrara todo el contenido de la tienda cuando el usuario le de en la opcion tienda arriba #}
       <div class="container-fluid">
-          <div id="listado" class="row row-cols-5 row-cols-md-4 row-cols-lg-4">
+          <div id="listado" class="row row-cols-5 row-cols-sm-1 row-cols-md-1 row-cols-lg-4">
               {# se mostrara todo el contenido de la tienda con javascript #}
           </div>
     </div>
@@ -136,6 +136,18 @@
                       </a>
                       <a href="#" class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between">
+                          <h5>Cantidad disponible</h5>
+                        </div>
+                        <p class="mb-1">{{ detalle_producto.cantidad}} unidades</p>
+                      </a>
+                      <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5>Precio por unidad</h5>
+                        </div>
+                        <p class="mb-1">${{ detalle_producto.precio_unitario}}</p>
+                      </a>
+                      <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
                           <h5>Costo de Envio</h5>
                         </div>
                         <p class="mb-1">${{ detalle_producto.costo_envio }}</p>
@@ -151,18 +163,6 @@
                           <h5>Categoria</h5>
                         </div>
                         <p class="mb-1">{{ detalle_producto.categoria}}</p>
-                      </a>
-                      <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                          <h5>Cantidad disponible</h5>
-                        </div>
-                        <p class="mb-1">{{ detalle_producto.cantidad}} unidades</p>
-                      </a>
-                      <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                          <h5>Precio por unidad</h5>
-                        </div>
-                        <p class="mb-1">${{ detalle_producto.precio_unitario}}</p>
                       </a>
                   </div>
             </div>

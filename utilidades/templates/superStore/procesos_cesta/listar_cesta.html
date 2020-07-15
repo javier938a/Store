@@ -2,45 +2,38 @@
 {# cesta_list es el nombre del contexto que recibo#}
 {% block contenido %}
 <div class="container">
-    <table class="table">
-        <thead class="thead-dark">
-        <tr>
-            <th scope="col">No</th>
-            <th scope="col">Producto</th>
-            <th scope="col">Cliente</th>
-            <th scope="col">Fecha y hora de transaccion</th>
-            <th scope="col">Cantidad</th>
-            <th scope="col">Precio Unitario</th>
-            <th scope="col">Precio Total</th>
-            <th colspan="3" scope="col">Direccion</th>
-            <th scope="col" colspan="3">Opciones</th>
-        </tr>
-        </thead>
-        <tbody>
-            {% if cesta_list %}
-                {% for cesta in cesta_list%}
-                <tr>
-                    <th scope="row">{{ cesta.id }}</th>
-                    <td>{{ cesta.producto }}</td>
-                    <td>{{ cesta.cliente }}</td>
-                    <td>{{ cesta.fecha_hora_realizado }}</td>
-                    <td>{{ cesta.cantidad }}</td>
-                    <td>{{ cesta.precio_unitario }}</td>
-                    <td>{{ cesta.precio_total }}</td>
-                    <td colspan="3">{{ cesta.direccion }}</td>
-                    <td><a class="btn btn-success" href="{% url 'tienda:actualizar_cesta' cesta.id %}">Editar</a></td>
-                    <td><a class="btn btn-primary" href="{% url 'tienda:reg_venta' cesta.producto.id %}">Comprar</a></td>
-                    <td><a class="btn btn-danger" href="{% url 'tienda:eliminar_cesta' cesta.id %}">Eliminar</a></td>
-                </tr>
-                {% endfor %}
-
-        </tbody>
-        {% else %}
-            <p>No hay registros que mostrar</p>
-
-        {% endif %}
-    </table>
+    <center><h1>Cesta</h1></center> 
+    {% if cesta_list %}{# se verifica si existe esta variable #}
+        <div class="row"> {# se agrega una fila dentro del contenedor que tendra todos los productos #}
+            <div class="container-fluid">
+                <div class="row row-cols-5 row-cols-sm-1 row-cols-md-1 row-cols-lg-4">
+                   {% for cesta in cesta_list %}
+                        <div class="col mb-4">
+                            <div class="card">
+                                {# Titulo Vendedor#}
+                                <h5 class="card-title"><center>{{ cesta.producto.mayorista }}</center></h5>
+                                {#titulo de producto#}
+                                <h5 class="card-title">{{ cesta.producto }}</h5>
+                                {#Imagen del producto#}
+                                <center><img src="{{ MEDIA_URL }}{{ cesta.producto.foto_producto1 }}" width="265em" height="200em" alt=""></center>
+                                {# precio por unidad del producto#}
+                                <center><h4 class="card-title">${{ cesta.precio_unitario }}</h4></center> 
+                                <div class="card-body"> 
+                                    <center>
+                                        <a class="btn btn-primary" href="{% url 'tienda:reg_venta' cesta.producto.id %}">Comprar</a>
+                                        <a class="btn btn-success" href="{% url 'tienda:actualizar_cesta' cesta.id %}">Editar</a>
+                                        <a class="btn btn-danger" href="{% url 'tienda:eliminar_cesta' cesta.id %}">Borrar</a>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+                   {% endfor %}                   
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p>No hay compras pendientes que mostrar</p>
+    {% endif %}
     <a class="btn btn-success" href="{% url 'tienda:index' %}">Inicio</a>
 </div>
-
 {% endblock %}
