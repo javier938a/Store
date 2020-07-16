@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.core.serializers import serialize
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Q
+from django.utils import timezone
 
 class RegistrarProducto(CreateView):#esta vista sirve para registrar producto se pasa el ID del Mayorista para filtrar que sea el mayorista ingresado
     template_name = 'superStore/procesos_producto/registrar_productos.html'
@@ -21,6 +22,8 @@ class RegistrarProducto(CreateView):#esta vista sirve para registrar producto se
         cantidad = form.cleaned_data.get('cantidad')#Obteniendo la cantidad total de producto
         total = float(precio_unitario)*float(cantidad)#Obteniendo el precio total del producto
         form.instance.precio_total = total#Agregandolo a el campo del formulario
+        fecha_registro = timezone.now()
+        form.instance.fecha_registro = fecha_registro
         form_valid = super(RegistrarProducto, self).form_valid(form)
 
         return form_valid

@@ -39,6 +39,7 @@
         <img src="{{ MEDIA_URL }}{{ perfil_proveedor.foto_perfil }}" class="card-img-top" width="200" height="300" alt="...">
         <div class="card-body">
           <h5 class="card-title">{{ perfil_proveedor.nombre_empresa }}</h5>
+          <h6>{{ perfil_proveedor.objetivo }}</h6>
         </div>
         <ul class="list-group list-group-flush">
             <li class="list-group-item"><h5>Tipo de Usuario</h5>{{ perfil_proveedor.user.tipo_usuario_id }}</li>

@@ -128,6 +128,7 @@ class tbl_producto(models.Model):#Tabla producto que almacenara todos los produc
     mayorista = models.ForeignKey(tbl_mayorista, on_delete=models.CASCADE, blank=True)
     producto = models.CharField(max_length=100, help_text="Ingrese el nombre el producto")
     info_producto = models.TextField(max_length=1000, null=True)
+    fecha_registro = models.DateField(null=True, blank=True)
     costo_envio = models.FloatField(help_text="Costo del envio", null=True)
     medio_de_envio = models.CharField(max_length=100, help_text="empresa por donde se envia el producto", null=True)
     categoria = models.ForeignKey(tbl_categoria, on_delete=models.CASCADE)

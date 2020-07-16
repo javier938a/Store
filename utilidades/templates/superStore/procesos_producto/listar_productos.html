@@ -40,10 +40,11 @@
                   <center><img src="{{ MEDIA_URL }}{{ prod.foto_producto1 }}" width="200px" height="100px" alt=""></center>
 
                   <div class="card-body">
-                    categoria: <h5 class="card-title">{{ prod.categoria }}</h5>
-                    precio: <h5 class="card-title">$ {{ prod.precio_unitario }}</h5>
-                    cantidad: <h5 class="card-title">{{ prod.cantidad }} unidades</h5>
-                    total: <h5 class="card-title">$ {{ prod.precio_total }}</h5>
+                    Fecha de registro: <h5 class="card-title">{{ prod.fecha_registro }}</h5>
+                    Categoria: <h5 class="card-title">{{ prod.categoria }}</h5>
+                    Precio: <h5 class="card-title">$ {{ prod.precio_unitario }}</h5>
+                    Cantidad: <h5 class="card-title">{{ prod.cantidad }} unidades</h5>
+                    Total: <h5 class="card-title">$ {{ prod.precio_total }}</h5>
                     <center>
                       <a class="btn btn-success" href="{% url 'tienda:edit_prod' prod.id %}">Editar</a>
                       <a class="btn btn-danger" href="{% url 'tienda:del_prod' prod.id %}">Eliminar</a>

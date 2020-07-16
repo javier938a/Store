@@ -100,8 +100,10 @@ class EditarInformacionPerfilProveedor(UpdateView):
         return render(
             request,
             self.template_name,
-            context={'id_proveedor':self.kwargs['pk'], 'proveedor':proveedor, 'usuario':usuario}
-        )
+            context={'id_proveedor':self.kwargs['pk'],
+                     'proveedor':proveedor,
+                    'usuario':usuario}
+                    )
     def post(self, request, *args, **kwars):
         #campos de usuario
         first_name = request.POST.get('nombres')
@@ -114,6 +116,7 @@ class EditarInformacionPerfilProveedor(UpdateView):
             hay_foto=True
             subir_image(foto_perfil,"Proveedor", str(foto_perfil))#metodo que sirve para guardar la imagen recibe la imagen por el metodo request.FILES y el segundo paramentro define si es cliente o proveedor y el tercer parametro el nombre de la imagen
         
+        objetivo = request.POST.get('objetivo')
         genero = request.POST.get('genero')
         nombre_empresa = request.POST.get('nombre_empresa')
         telefono = request.POST.get('telefono')
@@ -132,6 +135,7 @@ class EditarInformacionPerfilProveedor(UpdateView):
         if hay_foto:
             update_proveedor = tbl_mayorista.objects.filter(id=self.kwargs['pk']).update(
                 foto_perfil=("foto_perfil_proveedor/"+str(foto_perfil)),
+                objetivo=objetivo,
                 genero=genero,
                 nombre_empresa=nombre_empresa,
                 telefono=telefono,
@@ -143,6 +147,7 @@ class EditarInformacionPerfilProveedor(UpdateView):
             )
         else:
             update_proveedor = tbl_mayorista.objects.filter(id=self.kwargs['pk']).update(
+                objetivo=objetivo,
                 genero=genero,
                 nombre_empresa=nombre_empresa,
                 telefono=telefono,

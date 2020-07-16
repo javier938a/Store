@@ -3,58 +3,61 @@
 {% block contenido %}
 <div class="container">
   <div class="row">
-    <div class="col-md-12">
-        {# recivo el contexto venta_list #}
-        <table class="table">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">No</th>
-              <th scope="col">Cliente</th>
-              <th scope="col">Proveedor</th>
-              <th scope="col">Producto</th>
-              <th scope="col">Fecha y hora de la venta</th>
-              <th scope="col">Cantidad</th>
-              <th scope="col">Precio Unitario</th>
-              <th scope="col">Precio Total</th>
-              <th colspan="3" scope="col">Direccion</th>
-              <th scope="col">Estado de Envio</th>
-              {% ifequal user.tipo_usuario_id.tipo_usuario "Cliente" %}
-                <th scope="col" colspan="1">Opciones</th>
-              {% endifequal %}
-              {% ifequal user.tipo_usuario_id.tipo_usuario "Proveedor" %}
-                <th colspan="2" scope="col">Opciones</th>
-              {% endifequal %}
-            </tr>
-          </thead>
-          <tbody>
-              {% if venta_list %}
-                  {% for venta in venta_list %}
-                      <tr>
-                          <th scope="row">{{ venta.id }}</th>
-                          <th>{{ venta.cliente_id }}</th>
-                          <th>{{ venta.producto_id.mayorista }}</th>
-                          <th>{{ venta.producto_id }}</th>
-                          <th>{{ venta.fecha_hora_realizada }}</th>
-                          <th>{{ venta.cantidad }}</th>
-                          <th>{{ venta.precio_unitario }}</th>
-                          <th>{{ venta.precio_total }}</th>
-                          <th colspan="3">{{ venta.direccion }}</th>
-                          <th>{{ venta.estado_envio }}</th>
-                          {% ifequal user.tipo_usuario_id.tipo_usuario "Cliente" %}{# verifica si el usuario logeado es cliente si es cliente solo le dara la opcion de confirmar de recivido#}
-                            <th><a class="btn btn-success" href="{% url 'tienda:mod_estado' venta.id %}">Confirmar de recivido</a></th>
-                          {% endifequal %}
-                          {% ifequal user.tipo_usuario_id.tipo_usuario "Proveedor" %}
-                            <th><a class="btn btn-success" href="{% url 'tienda:mod_estado' venta.id %}">Cambiar estado<br>de Envio</a></th>{#Verifica si el usuario logueado es proveedor si es proveedor le da la opcion de eliminar la venta y de modificar su estado de envio pero solo tiene que permitir 2 opciones #}
-                            <th><a class="btn btn-danger" href="{% url 'tienda:del_venta' venta.id %}">Eliminar <br>Venta</a></th>
-                          {% endifequal %}
-                      </tr>
-                  {% endfor %}
-              {% else %}
-                      <p>No hay regostros que mostrar</p>
-              {% endif %}
-          </tbody>
-        </table>
+    <div class="col-12">
+      <center><h1>Ventas</h1></center>
+    </div>
+  </div>
+  <div class="row">
+    {% if venta_list %}
+      <div class="row">
+        <div class="container-fluid">
+          <div class="row row-cols-5 row-cols-sm-1 row-col-md-1 row-cols-lg-4">
+            {% for venta in venta_list %}
+              <div class="col mb-4">
+                <div class="card">
+                  {# Nombre del producto #}
+                  <h5 class="card-title">{{ venta.producto_id }}</h5>
+                  {# Imagen del producto #}
+                  <center><img src=" {{ MEDIA_URL }}{{ venta.producto_id.foto_producto1 }} " width="265em" height="200em" alt=""></center>
+                  {# Precio del producto #}
+                  <center><h4 class="card-title"></h4></center>
+                  {# Opciones #}
+                  <div class="card-body">
+                    {# nombre del vendedor #}
+                    Vendedor:
+                    <h5 class="card-title">{{ venta.producto_id.mayorista }}</h5>
+                    {# Nombre del Cliente #}
+                    Cliente:
+                    <h5 class="card-title">{{ venta.cliente_id }}</h5>
+                    Fecha de compra:
+                    <h5 class="card-title">{{ venta.fecha_hora_realizada }}</h5>
+                    Cantidad:
+                    <h5 class="card-title">{{ venta.cantidad }} unidades</h5>
+                    Precio por unidad:
+                    <h5 class="card-title">${{ venta.precio_unitario }}</h5>
+                    Total:
+                    <h5 class="card-title">${{ venta.precio_total }}</h5>
+                    Direccion a enviar:
+                    <h5 class="card-title">{{ venta.direccion }}</h5>
+                    Telefono del cliente:
+                    <h5 class="card-title">{{ venta.cliente_id.telefono }}</h5>
+                    {% ifequal user.tipo_usuario_id.tipo_usuario "Cliente" %}{# verifica si el usuario logeado es cliente si es cliente solo le dara la opcion de confirmar de recivido#}
+                    <th><a class="btn btn-success" href="{% url 'tienda:mod_estado' venta.id %}">Confirmar de recivido</a></th>
+                    {% endifequal %}
+                    {% ifequal user.tipo_usuario_id.tipo_usuario "Proveedor" %}
+                      <th><a class="btn btn-success" href="{% url 'tienda:mod_estado' venta.id %}">Cambiar estado<br>de Envio</a></th>{#Verifica si el usuario logueado es proveedor si es proveedor le da la opcion de eliminar la venta y de modificar su estado de envio pero solo tiene que permitir 2 opciones #}
+                      <th><a class="btn btn-danger" href="{% url 'tienda:del_venta' venta.id %}">Eliminar <br>Venta</a></th>
+                    {% endifequal %}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
       </div>
+    {% else %}
+      <p>No hay ventas que mostrar</p>
+    {% endif %}
   </div>
   <div class="row">
     <div class="col-sm-2">
