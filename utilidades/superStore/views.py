@@ -34,7 +34,7 @@ class index(ListView):#Mostrando index Pagina Principal
         context = super(index, self).get_context_data(**kwargs)
         user = self.request.user
         clave = self.request.GET.get('clave')
-        print("Esta es la clave"+str(clave))
+        print("Esta es la clave "+str(clave))
         if user.is_authenticated:#Verifica si el usuario esta autenticado
             pass
             print("El Valor de request.user")

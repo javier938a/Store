@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -140,3 +141,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_REDIRECT_URL = '/'
 
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',]
+
+ASGI_APPLICATION = 'utilidades.routing.application'
+
+CHANNEL_LAYERS={
+    'default':{
+        'BACKEND':'channels_redis.core.RedisChannelLayer',
+        'CONFIG':{
+            "hosts":[(os.environ.get('REDIS_LOCATION', 'localhost'),6379)],
+        },
+    },
+}

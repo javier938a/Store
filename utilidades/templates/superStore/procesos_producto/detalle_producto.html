@@ -58,6 +58,7 @@
           <ul class="list-group list-group-flush">
             <li class="list-group-item"><h5>Registrado desde:</h5>{{ detalle_producto.mayorista.user.date_joined }}</li>
             <li class="list-group-item"><h5>Seguidores</h5><p id="numero_amigos"></p></li>
+            <input id="id_mayorista" type="hidden" name="" value="{{ detalle_producto.mayorista.id }}">
             <li class="list-group-item"><a href="{% url 'tienda:nuevo_seguidor' detalle_producto.mayorista.id %}" id="btnSeguir" class="btn btn-primary active" >Seguir</a></li>
           </ul>
         </div> 
@@ -199,4 +200,5 @@
 {% block script %}
     {% load static %}
     <script src="{% static "js/appProducto.js" %}"></script>
+    <script src="{% static "js/appNotificacion.js" %}"></script>
 {% endblock %}
