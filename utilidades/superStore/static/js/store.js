@@ -18,7 +18,7 @@ $(document).ready(function(){
 
         socket.onmessage = function(e){
             sms = JSON.parse(e.data);
-            //alert(sms.messaje);
+            alert(sms.messaje);
         }
         socket.onclose = function(e){
             //alert("Se ha desconectado")

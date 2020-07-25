@@ -7,6 +7,7 @@ from django.core.serializers import serialize
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Q
 from django.utils import timezone
+from django.conf import settings
 
 class RegistrarProducto(CreateView):#esta vista sirve para registrar producto se pasa el ID del Mayorista para filtrar que sea el mayorista ingresado
     template_name = 'superStore/procesos_producto/registrar_productos.html'
@@ -94,10 +95,14 @@ class DetalleProducto(DetailView):
     context_object_name = 'detalle_producto'
     def get_context_data(self, **kwargs):
         context = super(DetalleProducto, self).get_context_data(**kwargs)
+        webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS',{})
+        vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
+        print(vapid_key)
         coment = tbl_comentario_producto.objects.filter(producto__id=self.kwargs['pk']).order_by('id')#obteniendo todos los comentarios de este producto
         context['list_coment']=coment#Asignandolo al contexto
         context['producto_id']=self.kwargs['pk']
         context['lista_productos']=self.model.objects.filter(mayorista=self.object.mayorista)
+        context['vapid_key']=vapid_key
         print("Listado de productos...")
         print(context['lista_productos'])
         #print(context)

@@ -5,7 +5,7 @@ $(document).ready(function(){
         evt.preventDefault();
         alert(url);
         socket.send(JSON.stringify({
-            'messaje':'tienes un nuevo seguidor'
+            'message':'tienes un nuevo seguidor'
         }));
     });
     socket.onopen=function(e){
@@ -13,6 +13,6 @@ $(document).ready(function(){
     }
     socket.onmessage=function(e){
         const data = JSON.parse(e.data)
-        //alert(data.message);
+        alert(data.message);
     }
 });

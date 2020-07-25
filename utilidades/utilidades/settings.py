@@ -39,8 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'superStore.apps.SuperstoreConfig',
+    'superStore.apps.SuperstoreConfig',    
     'crispy_forms',
+    'webpush'
+    
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -115,6 +117,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+WEBPUSH_SETTINGS={
+    "VAPID_PUBLIC_KEY":"BHO_RW5du1XUOme8Uqu3P1HFI4OeAh0GWp1Rv6K39Zqv-r_mMLTO4LBB5j8V9-Okj1cuewh453oQ9aXmOfEgY8s",
+    "VAPID_PRIVATE_KEY":"evjuDqPjPdyxn3mtyv_LcgQhxBETyMCTqXdefvv13RY",
+    "VAPID_ADMIN_EMAIL":"carlos8a_93@yahoo.com"
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -134,7 +142,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR,"static"),
+]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

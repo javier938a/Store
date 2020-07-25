@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% block metas %}
+  <meta name="vapid-key" content="{{ vapid_key }}">
+    {% if user.id %}
+      <meta name="prove_id" content="{{ detalle_producto.mayorista.user.id }}"> 
+      <meta name="name_user" content="{{ user.username }}">
+    {% endif %}
+{% endblock %}
+
 {% block css %}
   {% load static %}
   <link rel="stylesheet" href="{% static "css/estilos.css" %}">
@@ -59,7 +67,19 @@
             <li class="list-group-item"><h5>Registrado desde:</h5>{{ detalle_producto.mayorista.user.date_joined }}</li>
             <li class="list-group-item"><h5>Seguidores</h5><p id="numero_amigos"></p></li>
             <input id="id_mayorista" type="hidden" name="" value="{{ detalle_producto.mayorista.id }}">
-            <li class="list-group-item"><a href="{% url 'tienda:nuevo_seguidor' detalle_producto.mayorista.id %}" id="btnSeguir" class="btn btn-primary active" >Seguir</a></li>
+            <li class="list-group-item">
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-6">
+                    <p class="error"></p>
+                    <a href="{% url 'tienda:nuevo_seguidor' detalle_producto.mayorista.id %}" id="btnSeguir" class="btn btn-primary active" >Seguir</a>
+                  </div>
+                  <div class="col-md-6">
+                    <a class="btn btn-primary contact" href="">contactar al vendedor</a>
+                  </div>
+                </div>
+              </div>
+            </li>
           </ul>
         </div> 
       </div>
@@ -104,6 +124,7 @@
                     <div>
                       <a href="{% url 'tienda:agregar_cesta' detalle_producto.id %}" class="btn btn-primary">Agregar a Cesta</a>
                       <a href="{% url 'tienda:reg_venta' detalle_producto.id  %}" class="btn btn-primary">Comprar</a>
+                      <a id="chat" class="btn btn-primary contact" href="">contactar al vendedor</a>
                     </div>
                   </div>
                 </div>
@@ -195,10 +216,32 @@
       </form>
     </div>
 </div>
+{#Sala de chat con el vendedor#}
+<div class="chat" id="sala_chat">
+  <div class="container">
+    <div id="cont_chat">
+      {% load static %}
+      <a id="close" href="#"><img src="{% static "img/close.png" %}" width="20px" height="20px" alt=""></a>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <form action="">
+          <textarea  name="" id="ver_sms" cols="20" rows="3">
+            
+          </textarea>
+          <input id="mensaje" type="text" name="" id="" id="mensaje">
+          <button id="send" type="submit">Enviar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block script %}
     {% load static %}
     <script src="{% static "js/appProducto.js" %}"></script>
-    <script src="{% static "js/appNotificacion.js" %}"></script>
-{% endblock %}
+    <script src="{% static "js/registerSw.js" %}"></script>
+    <script src="{% static "js/site.js" %}"></script>
+    <script src="{% static "js/appChat.js" %}"></script>
+    {% endblock %}

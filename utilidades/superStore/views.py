@@ -23,6 +23,7 @@ from .proces_venta.crud_venta import EliminarVenta
 from .proces_comentario.crud_comentario import EscribirComentario, EliminarComentario
 from .proces_seguidores.crud_seguidores import verificar_existe_seguidor, agregar_nuevo_seguidor#metodo que verificara si existen seguidores
 from django.db.models import Q
+from .notificaciones.notif import send_push
 # Create your views here.
 class index(ListView):#Mostrando index Pagina Principal
     #login_url ='tienda:login'
@@ -58,6 +59,7 @@ class index(ListView):#Mostrando index Pagina Principal
         #print('Valores')
        # print(context.get('cate_list'))
         return context
+
 
 class ListarSubCategoria(ListView):
     template_name = "superStore/proces_categoria/listar_sub_categoria.html"

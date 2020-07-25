@@ -16,3 +16,25 @@
 .visible{
     display: none;
 }
+.chat{
+   background: rgba(0, 0, 102, 1); 
+   width: 30%;
+   color: rgb(255, 255, 255, 1);
+   font-family: Arial, Helvetica, sans-serif;
+   font-size: 18px;
+   text-align: center;
+   padding: 33px;
+   min-height: 250px;
+   border-radius:22px;
+   position: absolute;
+   left: 34%;
+   top: 30%;
+   z-index: 300;
+   display: none;
+
+}
+#cont_chat{
+    position: absolute;
+    right: 5px;
+    top:1px;
+}
