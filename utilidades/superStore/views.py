@@ -23,7 +23,11 @@ from .proces_venta.crud_venta import EliminarVenta
 from .proces_comentario.crud_comentario import EscribirComentario, EliminarComentario
 from .proces_seguidores.crud_seguidores import verificar_existe_seguidor, agregar_nuevo_seguidor#metodo que verificara si existen seguidores
 from django.db.models import Q
-from .notificaciones.notif import send_push
+from .models import tbl_seguidores
+from django.utils import timezone
+import datetime
+from django.db.models.functions import Extract
+from superStore.notificaciones.notif import guardar_token
 # Create your views here.
 class index(ListView):#Mostrando index Pagina Principal
     #login_url ='tienda:login'
@@ -47,7 +51,16 @@ class index(ListView):#Mostrando index Pagina Principal
                 if tbl_mayorista.objects.filter(user=user).exists():
                     id_prove = tbl_mayorista.objects.get(user=user).id#obtiene el id del mayorista en dado caso sea mayorista
                     context['id_prove'] = id_prove #agrega al contexto el id del proveedor
-        
+                    #Obteniendo el listado de notificaciones de nuevos seguidores
+                    fecha = timezone.now()
+                    fecha_hoy = fecha.date()
+                    dia = fecha_hoy.day-7#Restandole 7 dias para que sea la semana pasada
+                    mes = fecha_hoy.month
+                    anio = fecha_hoy.year
+                    fecha_sem_pas = datetime.date(anio, mes,dia)
+                    noti_seguir = tbl_seguidores.objects.filter(Q(mayorista=id_prove) & Q(fecha_de_seguidor__range=[fecha_sem_pas,fecha_hoy]))
+                    print(noti_seguir)
+                    context['noti_seguidores']=noti_seguir
         print(clave)
         
         if clave==None:#se verifica que exista clave si no existe se muestran todos
@@ -55,7 +68,7 @@ class index(ListView):#Mostrando index Pagina Principal
             context['producto']=tbl_producto.objects.all()
         else:
             context['producto']=tbl_producto.objects.filter(Q(producto__icontains=clave))
-        
+    
         #print('Valores')
        # print(context.get('cate_list'))
         return context

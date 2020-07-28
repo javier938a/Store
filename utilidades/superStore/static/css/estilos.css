@@ -38,3 +38,8 @@
     right: 5px;
     top:1px;
 }
+.h-scroll{
+    position: fixed;
+    height: 200px;
+    overflow-y: scroll;
+}

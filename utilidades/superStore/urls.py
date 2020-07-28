@@ -9,8 +9,8 @@ from .views import logout_user
 from .views import ModificarEstadoEnvio, EliminarVenta
 from .views import EscribirComentario, EliminarComentario
 from .views import verificar_existe_seguidor, agregar_nuevo_seguidor
-from .views import send_push
-from django.views.generic import TemplateView
+from .views import guardar_token
+
 app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
@@ -46,7 +46,5 @@ urlpatterns=[
     path('cesta/actualizar_cesta/<int:pk>', ActualizarCesta.as_view(), name='actualizar_cesta'),#pk recive el id de la cesta a editar
     path('cesta/eliminar_cesta/<int:pk>', EliminarCesta.as_view(), name='eliminar_cesta'),#pk es el id del articulo a eliminar
     path('sub_categoria/<int:pk>', ListarSubCategoria.as_view(), name='sub_categoria'), #pk seria el valor de la Categia padre
-    path('send_push', send_push),
-    path('webpush/',include('webpush.urls')),
-    path('producto/detalle_producto/sw.js', TemplateView.as_view(template_name='sw.js', content_type='application/x-javascript')),
+    path('guardar-token/', guardar_token, name='guardar_token'),
 ]

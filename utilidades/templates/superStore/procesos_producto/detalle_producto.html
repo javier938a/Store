@@ -5,6 +5,7 @@
     {% if user.id %}
       <meta name="prove_id" content="{{ detalle_producto.mayorista.user.id }}"> 
       <meta name="name_user" content="{{ user.username }}">
+      <meta name="name_prove" content="{{ detalle_producto.mayorista.user.username }}">
     {% endif %}
 {% endblock %}
 
@@ -241,7 +242,5 @@
 {% block script %}
     {% load static %}
     <script src="{% static "js/appProducto.js" %}"></script>
-    <script src="{% static "js/registerSw.js" %}"></script>
-    <script src="{% static "js/site.js" %}"></script>
     <script src="{% static "js/appChat.js" %}"></script>
     {% endblock %}

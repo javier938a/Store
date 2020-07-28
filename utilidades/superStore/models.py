@@ -66,7 +66,7 @@ class tbl_cliente(models.Model):
     fecha_nacimiento = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return "Perfil %s" % self.user 
+        return "%s" % self.user 
 
 class tbl_direccion(models.Model):
     cliente = models.ForeignKey(tbl_cliente, on_delete=models.SET_NULL, null=True)
@@ -103,6 +103,7 @@ class tbl_mayorista(models.Model):
 class tbl_seguidores(models.Model):
     mayorista = models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True)
     cliente = models.ForeignKey(tbl_cliente, on_delete=models.SET_NULL, null=True)
+    fecha_de_seguidor = models.DateTimeField(null=True)
 
     def __str__(self):
         return "%s %s"%(self.mayorista, self.cliente)
@@ -122,9 +123,9 @@ class tbl_sub_categoria(models.Model):
         return reverse("categoria-detalle",args=[str(self.id)])
 
 class tbl_producto(models.Model):#Tabla producto que almacenara todos los producto de todos los proveedores
-    foto_producto1 = models.ImageField(verbose_name="Imagen", upload_to='foto_producto', null=True)
-    foto_producto2 = models.ImageField(verbose_name="Imagen", upload_to='foto_producto', null=True)
-    foto_producto3 = models.ImageField(verbose_name="Imagen", upload_to='foto_producto', null=True)
+    foto_producto1 = models.ImageField(verbose_name="Imagen", upload_to='foto_producto', null=True, blank=True)
+    foto_producto2 = models.ImageField(verbose_name="Imagen", upload_to='foto_producto', null=True, blank=True)
+    foto_producto3 = models.ImageField(verbose_name="Imagen", upload_to='foto_producto', null=True, blank=True)
     mayorista = models.ForeignKey(tbl_mayorista, on_delete=models.CASCADE, blank=True)
     producto = models.CharField(max_length=100, help_text="Ingrese el nombre el producto")
     info_producto = models.TextField(max_length=1000, null=True)

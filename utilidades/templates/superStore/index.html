@@ -46,29 +46,41 @@
                 {% if user.is_authenticated %}
                     {% ifequal user.tipo_usuario_id.tipo_usuario 'Cliente' %}{#Verifica si el usuario logeado es un cliente#}
                         {% if id_cli %}{# id_cli contiene el id del cliente logeado previamente asignado y verificado en el contexto y verifica si existe un id cliente que este relacionado con el usuario logueado muestra el detalle del cliente  si no existe lo redirigira al formulario de creacion de perfil del cliente#}
-                            <a class="nav-link" href="{% url 'tienda:infoUsuario' 1 %}">Perfil <br> {{ user.username }} </a>
+                            <a class="nav-link" href="{% url 'tienda:infoUsuario' 1 %}">Cuenta <br> {{ user.username }} </a>
                         {% else %}{# si no existe se redirigira al formulario de registro de cliente o perfil del cliente #}
-                            <a class=" nav-link" href="{% url 'tienda:perfil_cli' %}">Perfil <br> {{ user.username }}</a>
+                            <a class=" nav-link" href="{% url 'tienda:perfil_cli' %}">Cuenta <br> {{ user.username }}</a>
                         {% endif %}
                     {% endifequal %}
                     {% ifequal user.tipo_usuario_id.tipo_usuario 'Proveedor' %}{# verifica si el usuario logueado es un proveedor #}
                         {% if id_prove %}{# id_prove contiene el id del proveedor logeado y verifica si existe un id proveedor que este relacionado con el usuario proveedor logeado si no existe lo redirigira al formulario de registro de proveedor #}
-                            <a class="nav-link" href="{% url 'tienda:infoUsuario' 2 %}">Perfil <br> {{ user.username }} </a>
+                            <a class="nav-link" href="{% url 'tienda:infoUsuario' 2 %}">Cuenta <br> {{ user.username }} </a>
                         {% else %}
-                            <a class="nav-link" href="{% url 'tienda:reg_provee' %}">Perfil <br> {{ user.username }}</a>
+                            <a class="nav-link" href="{% url 'tienda:reg_provee' %}">Cuenta <br> {{ user.username }}</a>
                         {% endif %}
                     {% endifequal %}
                 {% else %}
                     <a class="nav-link" href="{% url 'tienda:login' %}">Identificate</a>
                 {% endif %}
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="">Notificaciones</a>
-            </li>
-
         {% block autenticacion %}
             {# anulando los elementos de autenticacion #}
         {% endblock %}
+        <div class="dropdown">
+            <button id="noti" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Notificacion
+            </button>
+            <div id="list_noti" class="dropdown-menu h-scroll" aria-labelledby="dropdownMenuButton">
+                {% ifequal user.tipo_usuario_id.tipo_usuario 'Proveedor' %}
+                    {% if noti_seguidores %}{# verificando si existe la variable en el contexto #}
+                        {# recorriendo la lista de seguidores #}
+                        {% for seguir in noti_seguidores %}
+                            <a class="dropdown-item" href="#">{{ seguir.cliente }} te esta siguiendo ahora mismo</a>
+                        {% endfor %}
+                    {% endif %}
+                {% endifequal %}
+              
+            </div>
+          </div>
     </ul>
 {% endblock %}
 

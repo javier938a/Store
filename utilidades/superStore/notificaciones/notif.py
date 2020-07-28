@@ -1,24 +1,35 @@
-from django.http.response import JsonResponse
-from django.views.decorators.http import require_POST
-from django.shortcuts import get_object_or_404
-from superStore.views import User
+from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
-from webpush import send_user_notification
+
+from django.http import HttpResponse, HttpResponseBadRequest
+from django.core import serializers
 import json
 
-@require_POST
+from fcm_django.models import FCMDevice
+
 @csrf_exempt
-def send_push(request):
+@require_http_methods(['POST',])
+def guardar_token(request):
+    print("Helowwww")
+    body = request.body.decode('utf-8')
+    print(body)
+    bodyDic=json.loads(body)
+
+    token = bodyDic['token']
+
+    existe = FCMDevice.objects.filter(registration_id=token, active =True)
+    if(len(existe)>0):
+        return HttpResponseBadRequest(json.dumps({'mensaje':'el token ya existe'}))
+    print("Helowwww")
+    dispositivo = FCMDevice()
+    dispositivo.registration_id = token
+    dispositivo.active = True
+    #solo si el usuario esta enlazadfo lo vamos a guardar
+    if request.user.is_authenticated:
+        dispositivo.user = request.user
+    
     try:
-        body = request.body
-        data = json.loads(body)
-        if 'head' not in data or 'body' not in data or 'id' not in data:
-            return JsonResponse(status=400, data={'message':'formato de datos no validos'})
-        
-        user_id = data['id']
-        user = get_object_or_404(User, pk=user_id)
-        payload = {'head':data['head'], 'body':data['body']}
-        send_user_notification(user=user, payload=payload, ttl=1000)
-        return JsonResponse(status=200, data={'message':'Web push enviado'})
-    except TypeError:
-        return JsonResponse(estatus=500, data={'message':'ha ocurrido un error 404'})
+        dispositivo.save()
+        return json.dumps({'mensaje':'token guardado'})
+    except:
+        return HttpResponseBadRequest(json.dumps({'mensaje':'No se ha podido guardar'}))

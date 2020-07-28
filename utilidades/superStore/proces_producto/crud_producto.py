@@ -8,6 +8,10 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Q
 from django.utils import timezone
 from django.conf import settings
+from fcm_django.models import FCMDevice
+from superStore.models import User
+from superStore.models import tbl_cliente
+from superStore.models import tbl_seguidores
 
 class RegistrarProducto(CreateView):#esta vista sirve para registrar producto se pasa el ID del Mayorista para filtrar que sea el mayorista ingresado
     template_name = 'superStore/procesos_producto/registrar_productos.html'
@@ -25,10 +29,26 @@ class RegistrarProducto(CreateView):#esta vista sirve para registrar producto se
         form.instance.precio_total = total#Agregandolo a el campo del formulario
         fecha_registro = timezone.now()
         form.instance.fecha_registro = fecha_registro
+        #obteniendo los seguidores del proveedor
+        idUserProve = self.request.user.id
+        idProve = tbl_mayorista.objects.get(user__id=idUserProve).id#obteniendo el id del mayorista
+        print("Hellowww")
+        print(idProve)
+        idClienteSeguidor = tbl_seguidores.objects.filter(mayorista__id=idProve).values_list('cliente',flat=True)#obteniendo todos los seguidores del proveedor pero seleccionando solo la columna de "cliente" 
+        idUserSeguidor = tbl_cliente.objects.filter(id__in=idClienteSeguidor).values_list('user',flat=True)
+        print(idClienteSeguidor)
+
+        dispositivos = FCMDevice.objects.filter(Q(user_id__in=idUserSeguidor))
+        dispositivos.send_message(#Enviando notificacion de que ha agregad nuevo producto
+            title= str(form.cleaned_data['mayorista']) +" ha agregado \n nuevo producto agregado",
+            body="Se ha agregado "+str(form.cleaned_data['producto']),
+            icon='https://i.imgur.com/MZM3K5w.png'
+        )
         form_valid = super(RegistrarProducto, self).form_valid(form)
 
         return form_valid
     def get_success_url(self):#Definiendo la direccion a donde se tiene que regresar cuando se guarde un producto que es al listado de producto
+
         return reverse_lazy('tienda:listar_prod', args=[str(self.kwargs['pk'])])
 
 class ListarProductos(ListView):

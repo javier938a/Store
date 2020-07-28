@@ -41,8 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'superStore.apps.SuperstoreConfig',    
     'crispy_forms',
-    'webpush'
-    
+    'pwa',
+    'fcm_django',    
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -117,13 +117,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-WEBPUSH_SETTINGS={
-    "VAPID_PUBLIC_KEY":"BHO_RW5du1XUOme8Uqu3P1HFI4OeAh0GWp1Rv6K39Zqv-r_mMLTO4LBB5j8V9-Okj1cuewh453oQ9aXmOfEgY8s",
-    "VAPID_PRIVATE_KEY":"evjuDqPjPdyxn3mtyv_LcgQhxBETyMCTqXdefvv13RY",
-    "VAPID_ADMIN_EMAIL":"carlos8a_93@yahoo.com"
-}
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -161,4 +154,19 @@ CHANNEL_LAYERS={
             "hosts":[(os.environ.get('REDIS_LOCATION', 'localhost'),6379)],
         },
     },
+}
+
+PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR,'serviceworker.js')
+
+FCM_DJANGO_SETTINGS = {
+        "APP_VERBOSE_NAME": "superStore-8a",
+         # default: _('FCM Django')
+        "FCM_SERVER_KEY": "AAAApr3NAFU:APA91bGNS9UZJNhiu0PY70flqNvdCYgit7vnqm984K8qPMyu_1x-supiGhxnLoPLFWEC16KcmYpy0nnMOqdg37XXpoGRTdzkVphwqdZWZkB7eqs5Cs6OinQw185eW1oHzTgDX7Z8npYv",
+         # true if you want to have only one active device per registered user at a time
+         # default: False
+        "ONE_DEVICE_PER_USER": False,
+         # devices to which notifications cannot be sent,
+         # are deleted upon receiving error response from FCM
+         # default: False
+        "DELETE_INACTIVE_DEVICES": True,
 }

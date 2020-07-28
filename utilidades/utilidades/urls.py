@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('superStore/', include('superStore.urls')),
     path('', RedirectView.as_view(url='/superStore/', permanent=True)),
+    path('', include('pwa.urls')),
 ] 
 
 if settings.DEBUG:
