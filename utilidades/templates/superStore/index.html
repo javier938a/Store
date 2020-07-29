@@ -38,6 +38,13 @@
                 {% endif %}
             </li>
             <li class="nav-item">
+                {% if user.is_authenticated %}
+                    {% ifequal user.tipo_usuario_id.tipo_usuario 'Cliente' %}
+                        <a href="" class="nav-link">Favoritos</a>
+                    {% endifequal %}
+                {% endif %}
+            </li>
+            <li class="nav-item">
                 {% ifequal user.tipo_usuario_id.tipo_usuario 'Cliente' %}
                     <a href="{% url 'tienda:list_venta' %}" class="nav-link">Compras</a>
                 {% endifequal %}
@@ -120,11 +127,11 @@
 {% endblock %}
 {# se mostraran todas las ventas de los usuarios #}
 {% block ventas %}
-    <div class="row">
-        {% if producto %}
+    {% if producto %}
+        <div class="row"> {# se agrega una fila dentro del contenedor que tendra todos los productos #}
             <div class="container-fluid">
-                <div class="row row-cols-5 row-cols-md-4 row-cols-lg-4">
-                    {% for prod in producto %}
+                <div class="row row-cols-5 row-cols-sm-1 row-cols-md-1 row-cols-lg-4">
+                {% for prod in producto %}
                         <div class="col mb-4">
                             <div class="card">
                                 {# Titulo Vendedor#}
@@ -133,23 +140,28 @@
                                 <h5 class="card-title">{{ prod.producto }}</h5>
                                 {#Imagen del producto#}
                                 <a href="{% url 'tienda:detalle_prod' prod.id %}">
-                                    <img src="{{ MEDIA_URL }}{{ prod.foto_producto1 }}" width="265em" height="200em" alt="">
+                                   <center><img src="{{ MEDIA_URL }}{{ prod.foto_producto1 }}" width="265em" height="200em" alt=""></center> 
                                 </a>
                                 
                                 <div class="card-body">
                                     {# precio por unidad del producto#}
                                     <h4 class="card-title">${{ prod.precio_unitario }}</h4>
+                                    {# agregando el boton de favoritos #}
+                                    <form class="aniadir_favorito" action="{% url 'tienda:favorito' prod.id %}" method="post">
+                                        {% csrf_token %}
+                                        <input id="cliente_id" type="hidden" name="cliente_id" value="{{ id_cli }}">
+                                        <button type="submit"  class="btn btn-success" name="boton">Añadir a <br>Favoritos</button>                                        
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                    {% endfor %}
+                {% endfor %}                   
                 </div>
             </div>
-        {% else %}
-            <p>No hay datos que mostrar</p>
-        {% endif %}
-
-    </div> 
+        </div> 
+    {% else %}
+        <p>No hay datos que mostrar</p>     
+    {% endif %}
 
 {% endblock %}
 

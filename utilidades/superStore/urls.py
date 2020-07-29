@@ -10,6 +10,7 @@ from .views import ModificarEstadoEnvio, EliminarVenta
 from .views import EscribirComentario, EliminarComentario
 from .views import verificar_existe_seguidor, agregar_nuevo_seguidor
 from .views import guardar_token
+from .views import aniadir_favoritos
 
 app_name='tienda'
 urlpatterns=[
@@ -47,4 +48,5 @@ urlpatterns=[
     path('cesta/eliminar_cesta/<int:pk>', EliminarCesta.as_view(), name='eliminar_cesta'),#pk es el id del articulo a eliminar
     path('sub_categoria/<int:pk>', ListarSubCategoria.as_view(), name='sub_categoria'), #pk seria el valor de la Categia padre
     path('guardar-token/', guardar_token, name='guardar_token'),
+    path('aniadir_favoritos/<int:pk>', aniadir_favoritos, name='favorito'),#pk es el id de un producto especifico que el cliente agrega a favorito
 ]

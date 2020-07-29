@@ -10,6 +10,13 @@ class ListarCesta(ListView):
     context_object_name = 'cesta_list'
     model = tbl_cesta
 
+    def get_context_data(self, **kwargs):
+        context = super(ListarCesta,self).get_context_data(**kwargs)
+        lista = context.get('cesta_list')
+        for li in lista:
+            print(li.producto.id)
+        #print(context)
+        return context
     def get_queryset(self):
         return self.model.objects.filter(cliente__user__id=self.request.user.id)#pk es el cliente al que esta asociada la cesta
 

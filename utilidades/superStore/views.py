@@ -28,6 +28,7 @@ from django.utils import timezone
 import datetime
 from django.db.models.functions import Extract
 from superStore.notificaciones.notif import guardar_token
+from .proces_favoritos.crud_favoritos import aniadir_favoritos
 # Create your views here.
 class index(ListView):#Mostrando index Pagina Principal
     #login_url ='tienda:login'

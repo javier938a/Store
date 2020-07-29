@@ -178,4 +178,10 @@ class tbl_cesta(models.Model):
     direccion = models.ForeignKey(tbl_direccion, on_delete=models.SET_NULL, null=True)
     def __str__(self):
         return "%s, %s" % (self.producto, self.cliente)
+
+class tbl_favoritos(models.Model):
+    cliente = models.ForeignKey(tbl_cliente, on_delete=models.SET_NULL, null=True)
+    producto = models.ForeignKey(tbl_producto, on_delete=models.SET_NULL, null=True)
+    def __str__(self):
+        return "%s" % (self.producto.producto)
     
