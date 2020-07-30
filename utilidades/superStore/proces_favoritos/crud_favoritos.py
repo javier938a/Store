@@ -3,8 +3,24 @@ from superStore.models import tbl_cliente
 from superStore.models import tbl_producto
 from django.http import JsonResponse
 from django.core.serializers import serialize
+from django.views.generic import ListView
 
+class listarFavoritos(ListView):
+    #recibira el id de un usuario y listara los productos agregados a favoritos
+    template_name = 'superStore/proces_favoritos/listar_favoritos.html'
+    context_object_name = 'favoritos'
+    model = tbl_favoritos
 
+    def get_context_data(self, **kwargs):
+        context = super(listarFavoritos, self).get_context_data(**kwargs)
+        id_user = self.request.user.id#Obteniendo el id del usuario
+        cliente_id = tbl_cliente.objects.get(user__id=id_user).id#obteniendo el id del cliente en base al id del usuario
+        print("helowwww"+str(cliente_id))
+        context['cliente_id']=cliente_id#agregando al contexto el id del cliente
+        return context
+    
+    def get_queryset(self):
+        return self.model.objects.filter(cliente=self.kwargs['pk'])
 
 def aniadir_favoritos(request, pk):
     respuesta=None

@@ -4,7 +4,13 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <center><h1>Ventas</h1></center>
+      {% ifequal user.tipo_usuario_id.tipo_usuario "Cliente" %}
+        <center><h1>Compras</h1></center>
+      {% endifequal %}
+      {% ifequal user.tipo_usuario_id.tipo_usuario "Proveedor" %}
+        <center><h1>Ventas</h1></center>
+      {% endifequal %}
+      
     </div>
   </div>
   <div class="row">
@@ -18,7 +24,7 @@
                   {# Nombre del producto #}
                   <h5 class="card-title">{{ venta.producto_id }}</h5>
                   {# Imagen del producto #}
-                  <center><img src=" {{ MEDIA_URL }}{{ venta.producto_id.foto_producto1 }} " width="265em" height="200em" alt=""></center>
+                  <center><img class=" img-fluid img-thumbnail"src=" {{ MEDIA_URL }}{{ venta.producto_id.foto_producto1 }} " alt=""></center>
                   {# Precio del producto #}
                   <center><h4 class="card-title"></h4></center>
                   {# Opciones #}

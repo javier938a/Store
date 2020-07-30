@@ -15,7 +15,7 @@
                                 {#titulo de producto#}
                                 <h5 class="card-title">{{ cesta.producto }}</h5>
                                 {#Imagen del producto#}
-                                <center><img src="{{ MEDIA_URL }}{{ cesta.producto.foto_producto1 }}" width="265em" height="200em" alt=""></center>
+                                <center><img class="img-fluid" src="{{ MEDIA_URL }}{{ cesta.producto.foto_producto1 }}" alt=""></center>
                                 {# precio por unidad del producto#}
                                 <center><h4 class="card-title">${{ cesta.precio_unitario }}</h4></center> 
                                 <div class="card-body"> 

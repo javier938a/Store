@@ -40,7 +40,9 @@
             <li class="nav-item">
                 {% if user.is_authenticated %}
                     {% ifequal user.tipo_usuario_id.tipo_usuario 'Cliente' %}
-                        <a href="" class="nav-link">Favoritos</a>
+                        {% if id_cli %}
+                            <a href="{% url 'tienda:list_favoritos' id_cli %}" class="nav-link">Favoritos</a>
+                        {% endif %}
                     {% endifequal %}
                 {% endif %}
             </li>
@@ -107,7 +109,7 @@
                             {% for cate in cate_list %}
                                 <div class="col mb-4">
                                 <div class="card">
-                                    <a href="{% url 'tienda:sub_categoria' cate.id %}"><img src=" {{ MEDIA_URL }}{{ cate.icono }}" width="100px" height="200px" class="card-img-top" alt="..."></a>
+                                    <a href="{% url 'tienda:sub_categoria' cate.id %}"><img class="img-fluid img-thumbnail" src=" {{ MEDIA_URL }}{{ cate.icono }}" class="card-img-top" alt="..."></a>
                                     <div class="card-body">
                                         <h5 class="card-title">{{ cate.categoria }}</h5>
                                     </div>
@@ -130,7 +132,7 @@
     {% if producto %}
         <div class="row"> {# se agrega una fila dentro del contenedor que tendra todos los productos #}
             <div class="container-fluid">
-                <div class="row row-cols-5 row-cols-sm-1 row-cols-md-1 row-cols-lg-4">
+                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-4">
                 {% for prod in producto %}
                         <div class="col mb-4">
                             <div class="card">
@@ -140,18 +142,11 @@
                                 <h5 class="card-title">{{ prod.producto }}</h5>
                                 {#Imagen del producto#}
                                 <a href="{% url 'tienda:detalle_prod' prod.id %}">
-                                   <center><img src="{{ MEDIA_URL }}{{ prod.foto_producto1 }}" width="265em" height="200em" alt=""></center> 
+                                   <center><img class="img-fluid img-thumbnail" src="{{ MEDIA_URL }}{{ prod.foto_producto1 }}" width="265em" height="200em" alt=""></center> 
                                 </a>
-                                
                                 <div class="card-body">
                                     {# precio por unidad del producto#}
                                     <h4 class="card-title">${{ prod.precio_unitario }}</h4>
-                                    {# agregando el boton de favoritos #}
-                                    <form class="aniadir_favorito" action="{% url 'tienda:favorito' prod.id %}" method="post">
-                                        {% csrf_token %}
-                                        <input id="cliente_id" type="hidden" name="cliente_id" value="{{ id_cli }}">
-                                        <button type="submit"  class="btn btn-success" name="boton">Añadir a <br>Favoritos</button>                                        
-                                    </form>
                                 </div>
                             </div>
                         </div>

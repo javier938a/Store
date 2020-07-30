@@ -171,7 +171,7 @@ $(document).ready(function(){
                    var producto = prod[i].fields.producto;
                    var precio_unitario = prod[i].fields.precio_unitario;
    
-                   parte_tmp='<div class="col mb-4"><div class="card"><h5 class="card-title">'+producto+'</h5><a href="/superStore/producto/detalle_producto/'+id+'"><img src="/media/'+foto_producto1+'" width="265em" height="200em" alt=""></a><div class="card-body"><h4 class="card-title">$'+precio_unitario+'</h4></div></div></div>';
+                   parte_tmp='<div class="col mb-4"><div class="card"><h5 class="card-title">'+producto+'</h5><a href="/superStore/producto/detalle_producto/'+id+'"><img class="img-fluid img-thumbnail" src="/media/'+foto_producto1+'" alt=""></a><div class="card-body"><h4 class="card-title">$'+precio_unitario+'</h4></div></div></div>';
                    tmp +=parte_tmp;
                    console.log(precio_unitario); 
                }
@@ -206,7 +206,7 @@ $(document).ready(function(){
                 var producto = prod[i].fields.producto;
                 var precio_unitario = prod[i].fields.precio_unitario;
 
-                parte_tmp='<div class="col mb-4"><div class="card"><h5 class="card-title">'+producto+'</h5><a href="/superStore/producto/detalle_producto/'+id+'"><img src="/media/'+foto_producto1+'" width="265em" height="200em" alt=""></a><div class="card-body"><h4 class="card-title">$'+precio_unitario+'</h4></div></div></div>';
+                parte_tmp='<div class="col mb-4"><div class="card"><h5 class="card-title">'+producto+'</h5><a href="/superStore/producto/detalle_producto/'+id+'"><img class="img-fluid img-thumbnail" src="/media/'+foto_producto1+'"  alt=""></a><div class="card-body"><h4 class="card-title">$'+precio_unitario+'</h4></div></div></div>';
                 tmp +=parte_tmp;
                 console.log(precio_unitario); 
             }
@@ -215,6 +215,37 @@ $(document).ready(function(){
 
                 //alert(data[0].model);
             }
+        });
+        return false;
+    });
+    $(".aniadir_favorito").submit(function(){
+        boton = $("button",this)
+        //alert("Holqqq");
+        const csrftoken=getCookie('csrftoken');
+        datos = {
+            csrfmiddlewaretoken:csrftoken,
+            'cliente_id':$("#cliente_id").val(),
+        };
+        //alert(datos.cliente_id);
+        $.ajax({
+            url:$(this).attr("action"),
+            type:'GET',
+            data:datos,
+            dataType:'json',
+            success:function(data){
+                if(data.res==true){
+                    //alert(boton.hasClass('btn-success'));
+                    if(boton.hasClass('btn-primary')==true){//verificando si el boton tiene btn-succes
+                        boton.addClass('btn-success');
+                        boton.removeClass('btn-primary');                           
+                    }                    
+                }else{
+                    if(boton.hasClass('btn-success')){//verificando si el boton esta en primary color
+                        boton.addClass('btn-primary');
+                        boton.removeClass('btn-success');                        
+                    }
+                }
+            },
         });
         return false;
     });

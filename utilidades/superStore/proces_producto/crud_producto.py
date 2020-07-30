@@ -12,6 +12,7 @@ from fcm_django.models import FCMDevice
 from superStore.models import User
 from superStore.models import tbl_cliente
 from superStore.models import tbl_seguidores
+from superStore.models import tbl_favoritos
 
 class RegistrarProducto(CreateView):#esta vista sirve para registrar producto se pasa el ID del Mayorista para filtrar que sea el mayorista ingresado
     template_name = 'superStore/procesos_producto/registrar_productos.html'
@@ -115,16 +116,25 @@ class DetalleProducto(DetailView):
     context_object_name = 'detalle_producto'
     def get_context_data(self, **kwargs):
         context = super(DetalleProducto, self).get_context_data(**kwargs)
-        webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS',{})
-        vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
-        print(vapid_key)
         coment = tbl_comentario_producto.objects.filter(producto__id=self.kwargs['pk']).order_by('id')#obteniendo todos los comentarios de este producto
         context['list_coment']=coment#Asignandolo al contexto
         context['producto_id']=self.kwargs['pk']
         context['lista_productos']=self.model.objects.filter(mayorista=self.object.mayorista)
-        context['vapid_key']=vapid_key
         print("Listado de productos...")
         print(context['lista_productos'])
+        #enviando el id del cliente
+        idUser = self.request.user.id
+        if self.request.user.tipo_usuario_id.tipo_usuario=="Cliente":
+            cliente_id = tbl_cliente.objects.get(user__id=idUser).id
+            context['cliente_id']=cliente_id
+            #verificando si el cliente ya agrego el producto a favoritos
+            print("Exists "+str(tbl_favoritos.objects.filter(cliente__id=cliente_id).exists()))
+            if tbl_favoritos.objects.filter(producto__id=self.kwargs['pk']).exists():
+                context['existe_fav']=True
+            else:
+                context['existe_fav']=False
+            print("id del cliente: "+str(context['cliente_id']))
+        print("jjjj "+str(self.request.user.tipo_usuario_id.tipo_usuario))
         #print(context)
         return context
 

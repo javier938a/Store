@@ -43,3 +43,41 @@
     height: 200px;
     overflow-y: scroll;
 }
+.col-center{
+    float: none;
+    margin: 0 auto;
+}
+/*aplicando css a el formulario comentar de detalle de producto */
+
+/*#comentar{
+    width: 250px;
+    margin: 0 auto;
+    height: 50px;
+}*/
+#comentar p {
+
+    text-align: left;
+}
+
+#comentar label {
+    font-size: 20px;
+}
+.clasificacion{
+    direction: rtl;/* right to left */
+    unicode-bidi: bidi-override;/* bidi de bidireccional */
+}
+#comentar input[type="radio"]{
+    display: none;
+}
+
+#comentar label {
+    color: grey;
+}
+
+#comentar label:hover, label:hover ~ label{
+    color: orange;
+}
+
+#comentar input[type="radio"]:checked ~ label {
+    color:orange;
+}

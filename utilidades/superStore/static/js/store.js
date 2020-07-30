@@ -16,38 +16,6 @@ function getCookie(name) {
     return cookieValue;
 }
 $(document).ready(function(){
-    $(".aniadir_favorito").submit(function(){
-        boton = $("button",this)
-        //alert("Holqqq");
-        const csrftoken=getCookie('csrftoken');
-        datos = {
-            csrfmiddlewaretoken:csrftoken,
-            'cliente_id':$("#cliente_id").val(),
-        };
-        //alert(datos.cliente_id);
-        $.ajax({
-            url:$(this).attr("action"),
-            type:'GET',
-            data:datos,
-            dataType:'json',
-            success:function(data){
-                //alert(data.res);
-                if(data.res==true){
-                    //alert(boton.hasClass('btn-success'));
-                    if(boton.hasClass('btn-success')==true){//verificando si el boton tiene btn-succes
-                        boton.removeClass('btn-success');
-                        boton.addClass('btn-primary');                           
-                    }                    
-                }else{
-                    if(boton.hasClass('btn-primary')){//verificando si el boton esta en primary color
-                        boton.removeClass('btn-primary');
-                        boton.addClass('btn-success');                        
-                    }
-                }
-            },
-        });
-        return false;
-    });
     $("#categorias a.nav-link").hover(function(){
         active = $(this).hasClass("active");
         if(active==false){
