@@ -20,7 +20,9 @@ class listarFavoritos(ListView):
         return context
     
     def get_queryset(self):
-        return self.model.objects.filter(cliente=self.kwargs['pk'])
+        id_user = self.request.user.id#Obteniendo el id del usuario
+        cliente_id = tbl_cliente.objects.get(user__id=id_user).id#obteniendo el id del cliente en base al id del usuario
+        return self.model.objects.filter(cliente__id=cliente_id)
 
 def aniadir_favoritos(request, pk):
     respuesta=None

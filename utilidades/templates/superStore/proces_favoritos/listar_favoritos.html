@@ -18,13 +18,13 @@
                                 {#titulo de producto#}
                                 <h5 class="card-title">{{ fav.producto.producto }}</h5>
                                 {#Imagen del producto#}
-                                <a href="{% url 'tienda:detalle_prod' fav.producto.id %}">
+                                <a href="/superStore/producto/detalle_producto/{{ fav.producto.url }}/{{ fav.producto.id }}">
                                    <center><img class="img-fluid img-thumbnail" src="{{ MEDIA_URL }}{{ fav.producto.foto_producto1 }}" alt=""></center> 
                                 </a>
                                 <div class="card-body">
                                     {# precio por unidad del producto#}
                                     <h4 class="card-title">${{ fav.producto.precio_unitario }}</h4>
-                                    <form class="aniadir_favorito" action="{% url 'tienda:favorito' fav.producto.id %}" method="post">
+                                    <form style="display: flex; align-items:center; justify-content: center;" class="aniadir_favorito" action="{% url 'tienda:favorito' fav.producto.id %}" method="post">
                                         {% csrf_token %}
                                         <input id="cliente_id" type="hidden" name="cliente_id" value="{{ cliente_id }}">
                                         <button type="submit"  class="btn btn-success" name="boton">Añadir a <br>Favoritos</button>

@@ -114,6 +114,8 @@ class DetalleProducto(DetailView):
     template_name='superStore/procesos_producto/detalle_producto.html'
     model = tbl_producto
     context_object_name = 'detalle_producto'
+    slug_field='url'
+    slug_url_kwarg='url'
     def get_context_data(self, **kwargs):
         context = super(DetalleProducto, self).get_context_data(**kwargs)
         coment = tbl_comentario_producto.objects.filter(producto__id=self.kwargs['pk']).order_by('id')#obteniendo todos los comentarios de este producto

@@ -1,97 +1,4 @@
 {% extends "base.html" %}
-{% block clave %}
-    <form method="GET" class="form-inline my-2 my-lg-0">
-        <input name="clave" class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
-    </form>
-{% endblock %}
-
-{% block item %}
-    <ul class="navbar-nav mr-auto nav-tabs">
-        {% if id_prove %}
-            <input id="idprov" type="hidden" name="" value="{{ id_prove }}">{# aqui el id del proveedor #}
-        {% endif %}
-        
-            <li class="nav-item">
-                {% if user.is_authenticated %}
-                    {% ifequal user.tipo_usuario_id.tipo_usuario 'Proveedor'  %}
-                        {% if id_prove %}
-                            <a class="nav-link" href="{% url 'tienda:listar_prod' id_prove %}">Productos</a>
-                        {% endif %}
-                    {% endifequal %}
-                {% endif %}
-            </li>
-            <li class="nav-item">
-                {% if user.is_authenticated %}{# verificando que el usuario este autenticado para colocar iten de registrar #}
-                    {% ifequal user.tipo_usuario_id.tipo_usuario 'Cliente' %}{# verificando si el tipo de usuario sea cliente para ubicar la opcion de cesta en el menu #}    
-                        {% if id_cli %}
-                                <a class="nav-link" href="{% url 'tienda:list_cesta' %}">Cesta</a>    
-                        {% endif %}
-                    {% endifequal %}
-                    {% ifequal user.tipo_usuario_id.tipo_usuario 'Proveedor' %}{# en dado caso no se cliente, sera proveedor y se verifica para ubicar por cesta las ventas de ese proveedor #}
-                        {% if id_prove %}
-                            <a class="nav-link" href="{% url 'tienda:list_venta' %}">Ventas</a>
-                        {% endif %}
-                    {% endifequal %}
-                {% else %}{# en dado caso de que no este autenticado no esta registrado se procede a poner el iten de registrar #}
-                    <a id="registrar" class="nav-link" href="{% url 'tienda:registrar' %}" tabindex="-1" aria-disabled="true">Registrarse</a>
-                {% endif %}
-            </li>
-            <li class="nav-item">
-                {% if user.is_authenticated %}
-                    {% ifequal user.tipo_usuario_id.tipo_usuario 'Cliente' %}
-                        {% if id_cli %}
-                            <a href="{% url 'tienda:list_favoritos' id_cli %}" class="nav-link">Favoritos</a>
-                        {% endif %}
-                    {% endifequal %}
-                {% endif %}
-            </li>
-            <li class="nav-item">
-                {% ifequal user.tipo_usuario_id.tipo_usuario 'Cliente' %}
-                    <a href="{% url 'tienda:list_venta' %}" class="nav-link">Compras</a>
-                {% endifequal %}
-            </li>
-            <li class="nav-item">
-                {% if user.is_authenticated %}
-                    {% ifequal user.tipo_usuario_id.tipo_usuario 'Cliente' %}{#Verifica si el usuario logeado es un cliente#}
-                        {% if id_cli %}{# id_cli contiene el id del cliente logeado previamente asignado y verificado en el contexto y verifica si existe un id cliente que este relacionado con el usuario logueado muestra el detalle del cliente  si no existe lo redirigira al formulario de creacion de perfil del cliente#}
-                            <a class="nav-link" href="{% url 'tienda:infoUsuario' 1 %}">Cuenta <br> {{ user.username }} </a>
-                        {% else %}{# si no existe se redirigira al formulario de registro de cliente o perfil del cliente #}
-                            <a class=" nav-link" href="{% url 'tienda:perfil_cli' %}">Cuenta <br> {{ user.username }}</a>
-                        {% endif %}
-                    {% endifequal %}
-                    {% ifequal user.tipo_usuario_id.tipo_usuario 'Proveedor' %}{# verifica si el usuario logueado es un proveedor #}
-                        {% if id_prove %}{# id_prove contiene el id del proveedor logeado y verifica si existe un id proveedor que este relacionado con el usuario proveedor logeado si no existe lo redirigira al formulario de registro de proveedor #}
-                            <a class="nav-link" href="{% url 'tienda:infoUsuario' 2 %}">Cuenta <br> {{ user.username }} </a>
-                        {% else %}
-                            <a class="nav-link" href="{% url 'tienda:reg_provee' %}">Cuenta <br> {{ user.username }}</a>
-                        {% endif %}
-                    {% endifequal %}
-                {% else %}
-                    <a class="nav-link" href="{% url 'tienda:login' %}">Identificate</a>
-                {% endif %}
-            </li>
-        {% block autenticacion %}
-            {# anulando los elementos de autenticacion #}
-        {% endblock %}
-        <div class="dropdown">
-            <button id="noti" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Notificacion
-            </button>
-            <div id="list_noti" class="dropdown-menu h-scroll" aria-labelledby="dropdownMenuButton">
-                {% ifequal user.tipo_usuario_id.tipo_usuario 'Proveedor' %}
-                    {% if noti_seguidores %}{# verificando si existe la variable en el contexto #}
-                        {# recorriendo la lista de seguidores #}
-                        {% for seguir in noti_seguidores %}
-                            <a class="dropdown-item" href="#">{{ seguir.cliente }} te esta siguiendo ahora mismo</a>
-                        {% endfor %}
-                    {% endif %}
-                {% endifequal %}
-              
-            </div>
-          </div>
-    </ul>
-{% endblock %}
 
 {% block logout %}
     {% if user.is_authenticated %}
@@ -141,7 +48,7 @@
                                 {#titulo de producto#}
                                 <h5 class="card-title">{{ prod.producto }}</h5>
                                 {#Imagen del producto#}
-                                <a href="{% url 'tienda:detalle_prod' prod.id %}">
+                                <a href="/superStore/producto/detalle_producto/{{ prod.url }}/{{prod.id}}">
                                    <center><img class="img-fluid img-thumbnail" src="{{ MEDIA_URL }}{{ prod.foto_producto1 }}" width="265em" height="200em" alt=""></center> 
                                 </a>
                                 <div class="card-body">

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
+from django.utils.text import slugify
 # Create your models here.
 
 class tbl_pais(models.Model):
@@ -126,6 +127,7 @@ class tbl_producto(models.Model):#Tabla producto que almacenara todos los produc
     foto_producto1 = models.ImageField(verbose_name="Imagen", upload_to='foto_producto', null=True, blank=True)
     foto_producto2 = models.ImageField(verbose_name="Imagen", upload_to='foto_producto', null=True, blank=True)
     foto_producto3 = models.ImageField(verbose_name="Imagen", upload_to='foto_producto', null=True, blank=True)
+    url = models.SlugField(max_length=150, null=True, blank=True)
     mayorista = models.ForeignKey(tbl_mayorista, on_delete=models.CASCADE, blank=True)
     producto = models.CharField(max_length=100, help_text="Ingrese el nombre el producto")
     info_producto = models.TextField(max_length=1000, null=True)
@@ -142,6 +144,10 @@ class tbl_producto(models.Model):#Tabla producto que almacenara todos los produc
     
     def get_absolute_url(self):
         return reverse('producto', args=[str(self.id)])
+    
+    def save(self, *args, **kwargs):
+        self.url = slugify(self.producto)
+        super(tbl_producto, self).save(*args, **kwargs)
 
 class tbl_estado_envio(models.Model):#Se define al tabla estado del envio 
     estado = models.CharField(max_length=115)

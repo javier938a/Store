@@ -34,7 +34,7 @@ urlpatterns=[
     path('producto/editar_producto/<int:pk>',EditarProducto.as_view(), name='edit_prod'),#el pk hace referencia al id del producto que se va a editar
     path('producto/guardar_producto/<int:pk>', RegistrarProducto.as_view(), name='prod'),#el pk argumento hace referencia al id del mayorista que esta guardando su producto
     path('producto/eliminar_producto/<int:pk>', EliminarProducto.as_view(), name='del_prod'),
-    path('producto/detalle_producto/<int:pk>', DetalleProducto.as_view(), name='detalle_prod'),#muestra informacion de un producto especifico pk es el id de un producto especifico
+    path('producto/detalle_producto/<slug:url>/<int:pk>', DetalleProducto.as_view(), name='detalle_prod'),#muestra informacion de un producto especifico pk es el id de un producto especifico
     path('producto/comentario', EscribirComentario, name='w_coment'),
     path('producto/comentario/<int:pk>', EliminarComentario, name='del_coment'),
     path('producto/buscar_tienda', buscar_producto_tienda, name='prod_search'),#para buscar ten la tienda del proveedor
@@ -50,5 +50,5 @@ urlpatterns=[
     path('sub_categoria/<int:pk>', ListarSubCategoria.as_view(), name='sub_categoria'), #pk seria el valor de la Categia padre
     path('guardar-token/', guardar_token, name='guardar_token'),
     path('aniadir_favoritos/<int:pk>', aniadir_favoritos, name='favorito'),#pk es el id de un producto especifico que el cliente agrega a favorito
-    path('favoritos/<int:pk>', listarFavoritos.as_view(), name='list_favoritos'), #pk es el id de un usuario especifico
+    path('favoritos/', listarFavoritos.as_view(), name='list_favoritos'), #pk es el id de un usuario especifico
 ]

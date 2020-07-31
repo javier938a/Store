@@ -167,11 +167,11 @@ $(document).ready(function(){
                for(let i in prod){
                    var id = prod[i].pk;
                    var foto_producto1 = prod[i].fields.foto_producto1;
-                   var mayorista_id = prod[i].fields.mayorista;
+                   var url = prod[i].fields.url;
                    var producto = prod[i].fields.producto;
                    var precio_unitario = prod[i].fields.precio_unitario;
    
-                   parte_tmp='<div class="col mb-4"><div class="card"><h5 class="card-title">'+producto+'</h5><a href="/superStore/producto/detalle_producto/'+id+'"><img class="img-fluid img-thumbnail" src="/media/'+foto_producto1+'" alt=""></a><div class="card-body"><h4 class="card-title">$'+precio_unitario+'</h4></div></div></div>';
+                   parte_tmp='<div class="col mb-4"><div class="card"><h5 class="card-title">'+producto+'</h5><a href="/superStore/producto/detalle_producto/'+url+'/'+id+'"><img class="img-fluid img-thumbnail" src="/media/'+foto_producto1+'" alt=""></a><div class="card-body"><h4 class="card-title">$'+precio_unitario+'</h4></div></div></div>';
                    tmp +=parte_tmp;
                    console.log(precio_unitario); 
                }
@@ -202,11 +202,11 @@ $(document).ready(function(){
             for(let i in prod){//extrayendo todos los datos de los productos enpaquedados con joson
                 var id = prod[i].pk;
                 var foto_producto1 = prod[i].fields.foto_producto1;
-                var mayorista_id = prod[i].fields.mayorista;
+                var url = prod[i].fields.mayorista;
                 var producto = prod[i].fields.producto;
                 var precio_unitario = prod[i].fields.precio_unitario;
 
-                parte_tmp='<div class="col mb-4"><div class="card"><h5 class="card-title">'+producto+'</h5><a href="/superStore/producto/detalle_producto/'+id+'"><img class="img-fluid img-thumbnail" src="/media/'+foto_producto1+'"  alt=""></a><div class="card-body"><h4 class="card-title">$'+precio_unitario+'</h4></div></div></div>';
+                parte_tmp='<div class="col mb-4"><div class="card"><h5 class="card-title">'+producto+'</h5><a href="/superStore/producto/detalle_producto/'+url+'/'+id+'"><img class="img-fluid img-thumbnail" src="/media/'+foto_producto1+'"  alt=""></a><div class="card-body"><h4 class="card-title">$'+precio_unitario+'</h4></div></div></div>';
                 tmp +=parte_tmp;
                 console.log(precio_unitario); 
             }
