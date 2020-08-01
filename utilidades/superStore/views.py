@@ -40,7 +40,9 @@ class index(ListView):#Mostrando index Pagina Principal
     def get_context_data(self, **kwargs):
         context = super(index, self).get_context_data(**kwargs)
         user = self.request.user
+        id_cli = self.request.session.get('id_cli',0)
         clave = self.request.GET.get('clave')
+        id_prove = self.request.session.get('id_prove', 0)
         print("Esta es la clave "+str(clave))
         if user.is_authenticated:#Verifica si el usuario esta autenticado
             pass
@@ -48,13 +50,15 @@ class index(ListView):#Mostrando index Pagina Principal
             if user.tipo_usuario_id.tipo_usuario =="Cliente":#verifica si es cliente
                 if tbl_cliente.objects.filter(user=user).exists():#si el usuario esta en la tabla cliente significa que tiene perfil registrado
                     id_cli = tbl_cliente.objects.get(user=user).id#Verifica si se a creado el perfil del cliente no existe hay que crearlo
+                    self.request.session['id_cli']=id_cli
                     context['id_cli']=id_cli #agrega al contexto el id del cliente
             else:
                 if tbl_mayorista.objects.filter(user=user).exists():
                     id_prove = tbl_mayorista.objects.get(user=user).id#obtiene el id del mayorista en dado caso sea mayorista
+                    self.request.session['id_prove']=id_prove#agregar a sesion la variable id_prove
                     context['id_prove'] = id_prove #agrega al contexto el id del proveedor
                     #Obteniendo el listado de notificaciones de nuevos seguidores
-                    fecha = timezone.now()
+                    '''fecha = timezone.now()
                     fecha_hoy = fecha.date()
                     dia = fecha_hoy.day-7#Restandole 7 dias para que sea la semana pasada
                     mes = fecha_hoy.month
@@ -62,7 +66,7 @@ class index(ListView):#Mostrando index Pagina Principal
                     fecha_sem_pas = datetime.date(anio, mes,dia)
                     noti_seguir = tbl_seguidores.objects.filter(Q(mayorista=id_prove) & Q(fecha_de_seguidor__range=[fecha_sem_pas,fecha_hoy]))
                     print(noti_seguir)
-                    context['noti_seguidores']=noti_seguir
+                    context['noti_seguidores']=noti_seguir'''
         print(clave)
         
         if clave==None:#se verifica que exista clave si no existe se muestran todos

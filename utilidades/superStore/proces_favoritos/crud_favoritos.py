@@ -17,6 +17,7 @@ class listarFavoritos(ListView):
         cliente_id = tbl_cliente.objects.get(user__id=id_user).id#obteniendo el id del cliente en base al id del usuario
         print("helowwww"+str(cliente_id))
         context['cliente_id']=cliente_id#agregando al contexto el id del cliente
+        context['id_cli']=self.request.session.get('id_cli')
         return context
     
     def get_queryset(self):

@@ -14,7 +14,6 @@
 
 {% endblock %}
 
-
 {% block contenido %}
 <div class="container ">
     {% if perfil_cliente %}
@@ -37,7 +36,6 @@
             <div class="float-left">
                 <a class="btn btn-success card-link" href="{% url 'tienda:dire_list' perfil_cliente.id %}">Direcciones</a>
                 <a class="btn btn-success card-link" href="{% url 'tienda:editarUsuario' perfil_cliente.id %}">Editar<br>Informacion</a>          
-                <a class="btn btn-success card-link" href="{% url 'tienda:index' %}">Regresar <br></a>
             </div>
 
         </div>
@@ -62,7 +60,6 @@
         </ul>
         <div class="card-body">
             <a class="btn btn-success" href="{% url 'tienda:editarProveedor' perfil_proveedor.id %}">Modificar informacion</a>
-            <a class="btn btn-success" href="{% url 'tienda:index' %}">Regresar</a>
         </div>
     </div>
     {% endif %}

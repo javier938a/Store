@@ -22,6 +22,7 @@ class RegistrarProducto(CreateView):#esta vista sirve para registrar producto se
         context = super(RegistrarProducto, self).get_context_data(**kwargs)
         context.get('form').fields['mayorista'].empty_label=None
         context.get('form').fields['mayorista'].queryset = tbl_mayorista.objects.filter(id=self.kwargs['pk'])#Validando que solo el mayorista que ha ingresado seccion vea sus productos en inventario
+        context['id_cli']=self.request.session.get('id_cli')
         return context
     def form_valid(self, form):
         precio_unitario = form.cleaned_data.get('precio_unitario')#Obteniendo el precio unitario del formulario
@@ -78,6 +79,7 @@ class EditarProducto(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(EditarProducto, self).get_context_data(**kwargs)
         context.get('form').fields['mayorista'].queryset = tbl_mayorista.objects.filter(user__id=self.request.user.id)
+        context['id_cli']=self.request.session.get('id_cli')
         #context['editar']=1 #servira para validar si se esta usando para registrar o editar
         return context
     
@@ -101,6 +103,7 @@ class EliminarProducto(DeleteView):
     context_object_name = 'delete_prod'
     def get_context_data(self, **kwargs):
         context = super(EliminarProducto, self).get_context_data(**kwargs)
+        context['id_cli']=self.request.session.get('id_cli')
         context['producto'] = self.get_object()#agrego el objetto
         print("Esto es")
         print(self.get_object().mayorista.id)

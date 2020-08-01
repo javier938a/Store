@@ -12,10 +12,6 @@
         <form method="post">
             {% csrf_token %}
             {{ form|crispy }}
-            <div class="float-left">
-                <a class="btn btn-success" href="registrar" >Registrar</a>
-                <a class="btn btn-success" href="{% url 'tienda:index' %}">Inicio</a>
-            </div>
             <div class="float-right">
                 <a class="btn btn-danger" href="">Olvide mi contraseña</a> 
                 <input type="submit" value="Iniciar sesión">

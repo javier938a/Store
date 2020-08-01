@@ -13,6 +13,9 @@ class ListarCesta(ListView):
     def get_context_data(self, **kwargs):
         context = super(ListarCesta,self).get_context_data(**kwargs)
         lista = context.get('cesta_list')
+        id_cli = self.request.session.get('id_cli')
+        print("Id cliente: "+str(id_cli))
+        context['id_cli']=id_cli
         for li in lista:
             print(li.producto.id)
         #print(context)
@@ -28,6 +31,7 @@ class Agregar_a_Cesta(CreateView):
     def get_context_data(self, **kwargs):
         context = super(Agregar_a_Cesta, self).get_context_data(**kwargs)
         producto = tbl_producto.objects.filter(id=self.kwargs['pk'])
+        context['id_cli']=self.request.session.get('id_cli')
         print("Heloo")
         print(self.request.user.id)
         context.get('form').fields['cliente'].queryset = tbl_cliente.objects.filter(user__id=self.request.user.id)
@@ -73,6 +77,7 @@ class ActualizarCesta(UpdateView):
         context.get('form').fields['producto'].empty_label=None
         context.get('form').fields['direccion'].queryset = tbl_direccion.objects.filter(cliente__user__id=self.request.user.id)
         context.get('form').fields['direccion'].empty_label=None
+        context['id_cli']=self.request.session.get('id_cli')
         return context
     def form_valid(self, form):
         precio_unitario = form.cleaned_data['precio_unitario']#Obteniendo el precio unitario
@@ -96,5 +101,9 @@ class EliminarCesta(DeleteView):
     model=tbl_cesta
     form_class=FormCrearCesta
     context_object_name='cesta'
+    def get_context_data(self, **kwargs):
+        context = super(EliminarCesta, self).get_context_data(**kwargs)
+        context['id_cli']=self.request.session.get('id_cli')
+        return context
     def get_success_url(self):
         return reverse_lazy('tienda:list_cesta')

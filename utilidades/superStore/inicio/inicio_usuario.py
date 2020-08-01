@@ -24,9 +24,11 @@ class UsuarioDetalle(DetailView):
         if tipoUsuario==1:#Verificando si es Cliente para registrar el perfil del cliente
             perfil_cliente = tbl_cliente.objects.get(user=self.request.user.id)
             context['perfil_cliente']=perfil_cliente
+            context['id_cli']=self.request.session.get('id_cli')
         elif tipoUsuario==2:#Verificando si es Proveedor para registrar el perfil del proveedor
             perfil_proveedor = tbl_mayorista.objects.get(user=self.request.user.id)#pk es el id del usuario
             context['perfil_proveedor']=perfil_proveedor
+            context['id_prove']=self.request.session.get('id_prove')
         
          # agregando el perfil al contexto
         return context
@@ -85,8 +87,9 @@ class EditarInformacionPerfilCliente(UpdateView):#vista para editar la informaci
         print("Holaaaa")
         cliente = tbl_cliente.objects.get(id=self.kwargs['pk'])
         usuario = User.objects.get(username=cliente.user)
+        id_cli = self.request.session.get('id_cli')
         print(usuario)
-        return render(request, self.template_name, context={'id_cliente':self.kwargs['pk'],'cliente':cliente,'Usuario':usuario,})    
+        return render(request, self.template_name, context={'id_cliente':self.kwargs['pk'],'cliente':cliente,'Usuario':usuario,'id_cli':id_cli,})    
 
 
 class EditarInformacionPerfilProveedor(UpdateView):
@@ -97,13 +100,14 @@ class EditarInformacionPerfilProveedor(UpdateView):
     def get(self, request, *args, **kwargs):
         proveedor = tbl_mayorista.objects.get(id=self.kwargs['pk'])#obteniendo el proveedor del la tabla mayorista
         usuario = User.objects.get(id=proveedor.user.id)#obteniendo el usuario de la tabla User cuyo proveedor sea el de el ID ingresado
+        id_prove = self.request.session.get('id_prove')
         return render(
             request,
             self.template_name,
             context={'id_proveedor':self.kwargs['pk'],
                      'proveedor':proveedor,
-                    'usuario':usuario}
-                    )
+                    'usuario':usuario,
+                    'id_prove':id_prove,})
     def post(self, request, *args, **kwars):
         #campos de usuario
         first_name = request.POST.get('nombres')

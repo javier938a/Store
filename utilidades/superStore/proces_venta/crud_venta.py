@@ -22,6 +22,7 @@ class RegistrarVenta(CreateView):
         context.get('form').fields['direccion'].queryset = tbl_direccion.objects.filter(cliente__user__id=self.request.user.id, estado=True)
         context.get('form').fields['direccion'].empty_label=None
         print(context.get('form')['precio_unitario'].value())
+        context['id_cli']=self.request.session.get('id_cli')
         return context
     
     def form_valid(self, form):
@@ -45,6 +46,7 @@ class ListarVenta(ListView):#metodo sirve para listar las ventas del proveedor y
 
     def get_context_data(self, **kwargs):
         context = super(ListarVenta, self).get_context_data(**kwargs)
+        context['id_cli']=self.request.session.get('id_cli')
         return context
 
     def get_queryset(self):
@@ -62,6 +64,7 @@ class EliminarVenta(DeleteView):
     form_class = FormCrearVenta
     def get_context_data(self, **kwargs):
         context = super(EliminarVenta, self).get_context_data(**kwargs)
+        context['id_cli']=self.request.session.get('id_cli')
         print(context)
         return context
     def get_success_url(self):
@@ -73,5 +76,10 @@ class ModificarEstadoEnvio(TemplateView):
         cambio = tbl_estado_envio.objects.filter(estado=request.POST['estados'])#Obteniendo el estado del option seleccionadpo
         resultado =tbl_venta.objects.filter(id=self.kwargs['pk']).update(estado_envio=cambio[0].id)#Actualizando el campo utiliano ese estado
         print(resultado)
+        
         return redirect('tienda:list_venta')
+    
+    def get(self, request, *args, **kwargs):
+        id_cli=request.session.get('id_cli')
+        return render(request, self.template_name, context={'id_cli':id_cli,})
   

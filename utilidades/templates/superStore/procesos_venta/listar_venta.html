@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block titulo %}
+  <title>Lista de ventas</title>
+{% endblock %}
+
 {% block contenido %}
 <div class="container">
   <div class="row">
@@ -64,11 +68,6 @@
     {% else %}
       <p>No hay ventas que mostrar</p>
     {% endif %}
-  </div>
-  <div class="row">
-    <div class="col-sm-2">
-      <a class="btn btn-success" href="{% url 'tienda:index' %}">Inicio</a>
-    </div>
   </div>
 </div>
 
