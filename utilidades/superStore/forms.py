@@ -55,7 +55,7 @@ class CreatePerfilMayorista(forms.ModelForm):#Registra el perfil del proveedor
             'genero':forms.Select(attrs={'class':'form-control'}),
             'nombre_empresa':forms.TextInput(attrs={'class':'form-control'}),
             'telefono':forms.TextInput(attrs={'class':'form-control'}),
-            'fecha_nacimiento':forms.DateInput(attrs={'class':'form-control'}),
+            'fecha_nacimiento':forms.DateInput(attrs={'class':'form-control vDateField'}),
             'pais':forms.TextInput(attrs={'class':'form-control', 'placeholder':'Pais'}),
             'departamento':forms.TextInput(attrs={'class':'form-control', 'placeholder':'Departamento'}),
             'municipio':forms.TextInput(attrs={'class':'form-control', 'placeholder':'Municipio'}),

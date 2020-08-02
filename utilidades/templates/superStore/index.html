@@ -11,8 +11,8 @@
                                 <div class="col mb-4">
                                 <div class="card">
                                     <a href="{% url 'tienda:sub_categoria' cate.id %}"><img class="img-fluid img-thumbnail" src=" {{ MEDIA_URL }}{{ cate.icono }}" class="card-img-top" alt="..."></a>
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ cate.categoria }}</h5>
+                                    <div style="float:none; margin:0 auto;" class="card-body co">
+                                        <h5 style=" font-size: 1.5vw;" class="card-title">{{ cate.categoria }}</h5>
                                     </div>
                                 </div>
                                 </div>
@@ -38,14 +38,16 @@
                         <div class="col mb-4">
                             <div class="card">
                                 {# Titulo Vendedor#}
-                                <h5 class="card-title">Tienda {{ prod.mayorista }}</h5>
+                                <center><h5 class="card-title"><strong>Tienda {{ prod.mayorista }}</strong></h5></center>
+                                
                                 {#titulo de producto#}
-                                <h5 class="card-title">{{ prod.producto }}</h5>
+                                <center><b><h5 class="card-title"><strong>{{ prod.producto }}</strong></h5></b></center>
+                                
                                 {#Imagen del producto#}
                                 <a href="/superStore/producto/detalle_producto/{{ prod.url }}/{{prod.id}}">
                                    <center><img class="img-fluid img-thumbnail" src="{{ MEDIA_URL }}{{ prod.foto_producto1 }}" width="265em" height="200em" alt=""></center> 
                                 </a>
-                                <div class="card-body">
+                                <div style="float:none; margin:0 auto;" class="card-body">
                                     {# precio por unidad del producto#}
                                     <h4 class="card-title">${{ prod.precio_unitario }}</h4>
                                 </div>
@@ -63,7 +65,7 @@
 
 {% block script %}
 
-    {% load static %}{# cargando el recurso de la carpeta estatica #}
-    <script src="{% static "js/store.js" %}"></script>{# llamando al archivo js principal que se encarga de gestionar eventos #}
+
+
 
 {% endblock %}

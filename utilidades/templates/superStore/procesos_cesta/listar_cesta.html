@@ -23,11 +23,9 @@
                                 {# precio por unidad del producto#}
                                 <center><h4 class="card-title">${{ cesta.precio_unitario }}</h4></center> 
                                 <div class="card-body"> 
-                                    <center>
-                                        <a class="btn btn-primary" href="{% url 'tienda:reg_venta' cesta.producto.id %}">Comprar</a>
-                                        <a class="btn btn-success" href="{% url 'tienda:actualizar_cesta' cesta.id %}">Editar</a>
-                                        <a class="btn btn-danger" href="{% url 'tienda:eliminar_cesta' cesta.id %}">Borrar</a>
-                                    </center>
+                                    <a class="btn btn-primary" href="{% url 'tienda:reg_venta' cesta.producto.id %}">Comprar</a>
+                                    <a class="btn btn-success" href="{% url 'tienda:actualizar_cesta' cesta.id %}">Editar</a>
+                                    <a class="btn btn-danger" href="{% url 'tienda:eliminar_cesta' cesta.id %}">Borrar</a>
                                 </div>
                             </div>
                         </div>

@@ -16,6 +16,16 @@ function getCookie(name) {
     return cookieValue;
 }
 $(document).ready(function(){
+    $('.vDateField').datepicker();
+    $.datepicker.setDefaults({
+        showOn: "both",
+        buttonImageOnly: true,
+        buttonImage: "calendar.gif",
+        buttonText: "Calendar"
+      });
+      $.datepicker.formatDate('yyyy-mm-dd');
+    $.datepicker.setDefaults( $.datepicker.regional['es'] );
+    
     $("#categorias a.nav-link").hover(function(){
         active = $(this).hasClass("active");
         if(active==false){

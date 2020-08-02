@@ -1,4 +1,5 @@
 $(document).ready(function(){
+
     $("#foto").change(function(e){
         var ruta = e.target.files[0];
         imageType = /image.*/;
