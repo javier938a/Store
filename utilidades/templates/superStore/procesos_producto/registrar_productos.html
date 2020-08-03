@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% block titulo %}
     <title>Registrar Productos</title>
 {% endblock %}
@@ -15,6 +16,15 @@
             <button class="btn btn-success" type="submit">Guardar</button>
         </div>
     </form>
+    <form action="">
+        {% csrf_token %}
+        {{ subCateForm|crispy }}
+    </form>
 </div>
 
+{% endblock %}
+
+{% block script %}
+    {% load static %}
+    <script src="{% static "js/appOpProducto.js" %}" ></script>
 {% endblock %}

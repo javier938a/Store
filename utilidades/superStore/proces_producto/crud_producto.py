@@ -1,6 +1,6 @@
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
-from superStore.forms import FormCrearProducto
+from superStore.forms import FormCrearProducto, SubCateForm
 from superStore.models import tbl_producto, tbl_mayorista, tbl_comentario_producto
 from django.http import JsonResponse
 from django.core.serializers import serialize
@@ -22,7 +22,9 @@ class RegistrarProducto(CreateView):#esta vista sirve para registrar producto se
         context = super(RegistrarProducto, self).get_context_data(**kwargs)
         context.get('form').fields['mayorista'].empty_label=None
         context.get('form').fields['mayorista'].queryset = tbl_mayorista.objects.filter(id=self.kwargs['pk'])#Validando que solo el mayorista que ha ingresado seccion vea sus productos en inventario
+        context['subCateForm']=SubCateForm#formulario auxiliar para elegir las categorias
         context['id_cli']=self.request.session.get('id_cli')
+        print(context.get('form').errors)
         return context
     def form_valid(self, form):
         precio_unitario = form.cleaned_data.get('precio_unitario')#Obteniendo el precio unitario del formulario
@@ -53,6 +55,8 @@ class RegistrarProducto(CreateView):#esta vista sirve para registrar producto se
 
         return reverse_lazy('tienda:listar_prod', args=[str(self.kwargs['pk'])])
 
+
+
 class ListarProductos(ListView):
     template_name = 'superStore/procesos_producto/listar_productos.html'
     model = tbl_producto
@@ -80,6 +84,7 @@ class EditarProducto(UpdateView):
         context = super(EditarProducto, self).get_context_data(**kwargs)
         context.get('form').fields['mayorista'].queryset = tbl_mayorista.objects.filter(user__id=self.request.user.id)
         context['id_cli']=self.request.session.get('id_cli')
+        context['subCateForm']=SubCateForm
         #context['editar']=1 #servira para validar si se esta usando para registrar o editar
         return context
     

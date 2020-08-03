@@ -12,7 +12,7 @@ from django.urls import reverse_lazy, reverse
 from .proces_venta.crud_venta import RegistrarVenta, ListarVenta #importanto la clase de registrar Venta
 from .proces_producto.crud_producto import RegistrarProducto, ListarProductos, EditarProducto, EliminarProducto, DetalleProducto, buscar_producto_tienda, cargar_todos_productos_tienda #todos los procesos de producto
 from .proces_cesta.crud_cesta import ListarCesta, Agregar_a_Cesta, ActualizarCesta, EliminarCesta# importando la clase listar cesta en donde me lista todos productos de la cesta
-from .models import tbl_categoria, tbl_sub_categoria
+from .models import tbl_categoria, tbl_sub_categoria1
 from .forms import FormCrearDireccion
 from django.db import DatabaseError, transaction
 from .inicio.inicio_usuario import UsuarioDetalle # este modulo se usara para cuando la persona inicie secion
@@ -30,6 +30,7 @@ from django.db.models.functions import Extract
 from superStore.notificaciones.notif import guardar_token
 from .proces_favoritos.crud_favoritos import aniadir_favoritos
 from .proces_favoritos.crud_favoritos import listarFavoritos #Listar favoritos
+from .proces_categoria.crud_categoria import listarCategoria, listarSubCategoria1, listarSubCategoria2
 # Create your views here.
 class index(ListView):#Mostrando index Pagina Principal
     #login_url ='tienda:login'
@@ -82,10 +83,10 @@ class index(ListView):#Mostrando index Pagina Principal
 
 class ListarSubCategoria(ListView):
     template_name = "superStore/proces_categoria/listar_sub_categoria.html"
-    model = tbl_sub_categoria
+    model = tbl_sub_categoria1
     context_object_name = 'listar_sub_categoria'
     def get_queryset(self):
-        return tbl_sub_categoria.objects.filter(categoria=self.kwargs['pk'])
+        return tbl_sub_categoria1.objects.filter(categoria=self.kwargs['pk'])
 
 
 def register(request):#metodo register sirve para registrar un nuevo usuario

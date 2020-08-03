@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import User, tbl_mayorista, tbl_cliente, tbl_direccion, tbl_producto, tbl_venta
+from .models import User, tbl_mayorista, tbl_cliente, tbl_direccion, tbl_producto, tbl_venta, tbl_categoria
 from .models import tbl_cesta
 
 class CreateUserForm(UserCreationForm):#extienda de la clase UserCreationForm
@@ -90,7 +90,7 @@ class FormCrearDireccion(forms.ModelForm):#para registrar las multiples direccio
 class FormCrearProducto(forms.ModelForm):
     class Meta:
         model = tbl_producto
-        fields = ('foto_producto1','foto_producto2','foto_producto3','mayorista', 'producto','info_producto', 'categoria','medio_de_envio', 'cantidad', 'precio_unitario','costo_envio',)
+        fields = ('foto_producto1','foto_producto2','foto_producto3','mayorista', 'producto','info_producto','medio_de_envio', 'cantidad', 'precio_unitario','costo_envio','sub_categoria2',)
         labels = {
             'foto_producto1':'Foto del producto No1',
             'foto_producto2':'Foto del producto No2',
@@ -98,11 +98,11 @@ class FormCrearProducto(forms.ModelForm):
             'mayorista':'Proveedor',
             'producto':'Producto',
             'info_producto':'Descripcion',
-            'categoria':'Categorida',
             'medio_de_envio':'Medio de envio',
             'cantidad':'Cantidad',
             'precio_unitario':'Precio por Unidad',
             'costo_envio':'Costo de envio',
+            'sub_categoria2':'Categoria',
         }
         widgets = {
             'foto_producto1':forms.FileInput(attrs={'class':'form-control'}),
@@ -111,12 +111,17 @@ class FormCrearProducto(forms.ModelForm):
             'mayorista':forms.Select(attrs={'class':'form-control'}),
             'producto':forms.TextInput(attrs={'class':'form-control'}),
             'info_producto':forms.TextInput(attrs={'class':'form-control'}),   
-            'categoria':forms.Select(attrs={'class':'form-control'}),
             'medio_de_envio':forms.TextInput(attrs={'class':'form-control'}),
             'cantidad':forms.NumberInput(attrs={'class':'form-control'}),
             'precio_unitario':forms.NumberInput(attrs={'class':'form-control'}),
             'costo_envio':forms.NumberInput(attrs={'class':'form-control'}),
+            'sub_categoria2':forms.Select(attrs={'class':'form-control'}),
         }
+
+class SubCateForm(forms.Form):
+    categoria1 = forms.ChoiceField(label="Categoria nivel 1", widget=forms.Select(attrs={'required':False}))
+    categoria2 = forms.ChoiceField(label="Categoria nivel 2", widget=forms.Select(attrs={'required':False}))
+        
 
 class FormCrearVenta(forms.ModelForm):
     class Meta:
@@ -156,7 +161,10 @@ class FormCrearCesta(forms.ModelForm):
             'precio_unitario':forms.NumberInput(attrs={'class':'form-control','readonly':'readonly'}),
             'direccion':forms.Select(attrs={'class':'form-control'}),
         }
-        
+class CategoriaForm(forms.ModelForm):
+    class Meta:
+        model = tbl_categoria
+        fields=('categoria',)
 
 
 
