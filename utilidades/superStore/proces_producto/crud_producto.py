@@ -126,8 +126,8 @@ class DetalleProducto(DetailView):
     slug_url_kwarg='url'
     def get_context_data(self, **kwargs):
         context = super(DetalleProducto, self).get_context_data(**kwargs)
-        coment = tbl_comentario_producto.objects.filter(producto__id=self.kwargs['pk']).order_by('id')#obteniendo todos los comentarios de este producto
-        context['list_coment']=coment#Asignandolo al contexto
+        #coment = tbl_comentario_producto.objects.filter(producto__id=self.kwargs['pk']).order_by('id')#obteniendo todos los comentarios de este producto
+        #context['list_coment']=coment#Asignandolo al contexto
         context['producto_id']=self.kwargs['pk']
         context['lista_productos']=self.model.objects.filter(mayorista=self.object.mayorista)
         print("Listado de productos...")

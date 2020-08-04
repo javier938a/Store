@@ -20,7 +20,7 @@ from .inicio.inicio_usuario import EditarInformacionPerfilCliente, EditarInforma
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .proces_venta.crud_venta import ModificarEstadoEnvio
 from .proces_venta.crud_venta import EliminarVenta
-from .proces_comentario.crud_comentario import EscribirComentario, EliminarComentario
+from .proces_comentario.crud_comentario import EscribirComentario, EliminarComentario, listarComentarios
 from .proces_seguidores.crud_seguidores import verificar_existe_seguidor, agregar_nuevo_seguidor#metodo que verificara si existen seguidores
 from django.db.models import Q
 from .models import tbl_seguidores
@@ -224,6 +224,18 @@ class RegistrarDireccion(CreateView):#sirve para registrar las direcciones del u
         context.get('form').fields['cliente'].queryset = tbl_cliente.objects.filter(id=self.kwargs['pk'])# validando que solo aparesca el Cliente pueda ingresar direccion
         context['id_cliente']=self.kwargs['pk']
         return context
+    
+    def form_valid(self, form):
+        estado_guardado = form.cleaned_data['estado']
+        print(estado_guardado)
+        if estado_guardado==True:
+            direcciones = tbl_direccion.objects.filter(Q(cliente__user__id=self.request.user.id)).update(estado=False)
+            print(direcciones)
+        
+        form_valid = super(RegistrarDireccion, self).form_valid(form)
+        return form_valid
+
+
     def get_success_url(self):
         return reverse_lazy('tienda:dire_list', args=[str(self.kwargs['pk'])])
 
@@ -242,8 +254,23 @@ class EditarDireccion(UpdateView):
         direccion = self.model.objects.get(id = self.kwargs['pk'])
         context['id_cliente']=direccion.cliente.id
         return context
+        
+    def form_valid(self, form):
+        estado_editado=form.cleaned_data['estado']
+        print(estado_editado)
+        #verificando si la direccion ingresado, el estado es igual a True
+        if estado_editado==True:
+            print(self.request.user.id)#si la direccion ingresada es igual a true obtiene los demas registros obviando el que se ha editado y actualiza los demas estados en false
+            direcciones = tbl_direccion.objects.filter(~Q(id=self.kwargs['pk']) & Q(cliente__user__id=self.request.user.id)).update(estado=False)
+            
+            print(direcciones)
+        form_valid = super(EditarDireccion, self).form_valid(form)
+        print("Esta aqui")
+        print(form_valid)
+        return form_valid
     def get_success_url(self):
         direccion = self.model.objects.get(id=self.kwargs['pk'])
+
         #id_cliente = tbl_cliente
         return reverse_lazy('tienda:dire_list', args=[str(direccion.cliente.id)])
 

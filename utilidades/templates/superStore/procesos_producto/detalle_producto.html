@@ -151,6 +151,9 @@
                         {% endifequal %}
                         </form>
                   </div>
+                  <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                    <a href="#" class="btn btn-primary">Compartir</a>
+                  </div>
                 </div>
             </div>
         </div>
@@ -215,29 +218,38 @@
         </div>
     </div>
     <div class="row">
-      <div class="col-12" id="comentarios">
-        {% if list_coment %}{# verificando si hay datos o si existe list_coment que devuelve todos los comentarios dque los clientes han hecho del producto #}
+      <div id="ccmm" class="col-12">
+
+      </div>
+      <div class="col-12" id ="comentarios">
+        {% if list_coment %}
           {% for com in list_coment %}
-              <p class="msj" id="c{{ com.id }}">{{ com.cliente }}<br>
-                {% ifequal com.puntaje 1 %}
-                  <p style="color: orange;">★</p>
+            <p class="msj" id="c{{ com.id }}">
+              {{ com.cliente }}<br>
+              <span style="color: orange;">
+                {%  ifequal com.puntaje 1 %}
+                          ★
                 {% endifequal %}
-                {% ifequal com.puntaje 2 %}
-                  <p style="color: orange;">★★</p>
+                {%  ifequal com.puntaje 2 %}
+                          ★★
                 {% endifequal %}
-                {% ifequal com.puntaje 3 %}
-                  <p style="color: orange;">★★★</p>
+                {%  ifequal com.puntaje 3 %}
+                          ★★★
                 {% endifequal %}
-                {% ifequal com.puntaje 4 %}
-                  <p style="color: orange;">★★★★</p>
+                {%  ifequal com.puntaje 4 %}
+                          ★★★★
                 {% endifequal %}
-                {% ifequal com.puntaje 5 %}
-                  <p style="color: orange;">★★★★★</p>
+                {%  ifequal com.puntaje 5 %}
+                          ★★★★★
                 {% endifequal %}
-                <br>{{ com.comentario}}<br><a class="del_coment" id="cc{{ com.id }}" href="{% url 'tienda:del_coment' com.id %}">Eliminar</a></p>
+              </span>
+              <br>
+              {{ com.comentario}}<br>
+              <a class="del_coment" id="cc{{ com.id }}" href="{% url 'tienda:del_coment' com.id %}">Eliminar</a>
+            </p>
           {% endfor %}
         {% else %}
-          <p id="sin_coment">No hay comentarios aun.</p>
+          <p>No hay comentarios aun</p>
         {% endif %}
       </div>
       <form id="comentar" action="{% url 'tienda:w_coment' %}" method="POST">
@@ -269,7 +281,7 @@
       {% load static %}
       <a id="close" href="#"><img src="{% static "img/close.png" %}" width="20px" height="20px" alt=""></a>
     </div>
-    <div class="row">
+    <div id="comentar" class="row">
       <div class="col-12">
         <form action="">
           <textarea  name="" id="ver_sms" cols="20" rows="3">

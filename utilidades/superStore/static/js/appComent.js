@@ -33,7 +33,6 @@ $(document).ready(function(){
             data:datos,
             success:function(data){
                     comentario = "Valoracion "+data.puntaje+"<br>Cliente "+data.cliente+" <p> "+data.coment+"</p>";
-                    $("#comentario").append(comentario);
             }
         });
         

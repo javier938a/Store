@@ -26,8 +26,13 @@
                 <tr>
                     <th scope="row">{{ dire.id }}</th>
                     <th>{{ dire.cliente }} </th>
-                    <td>{{ dire.pais }} {{ dire.departamento }} {{ dire.municipio }} {{ dire.barrio_canton }} {{ dire.calle }} {{ dire.referencia }} {{ dire.estado }}</td>
-
+                    <th>{{ dire.pais }} {{ dire.departamento }} {{ dire.municipio }} {{ dire.barrio_canton }} {{ dire.calle }} {{ dire.referencia }} </th>
+                    {% ifequal dire.estado True %}
+                        <th style="background-color: orangered;"> Selecionado </th>
+                    {% else %}
+                        <th style="background-color:orchid;">No selecionado</th>
+                    {% endifequal %}
+                    {{ dire.estado }}
                     <td><a class="btn btn-success" href="{% url 'tienda:dire_edi' dire.id %}">Editar</a></td>
                     <td><a class="btn btn-danger" href="{% url 'tienda:del_dire' dire.id %}">Eliminar</a></td>
                 </tr>

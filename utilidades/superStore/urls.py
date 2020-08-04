@@ -7,7 +7,7 @@ from .views import ListarSubCategoria
 from .views import UsuarioDetalle, EditarInformacionPerfilCliente,EditarInformacionPerfilProveedor, EditarDireccion, ListarDireccion, EliminarDireccion
 from .views import logout_user
 from .views import ModificarEstadoEnvio, EliminarVenta
-from .views import EscribirComentario, EliminarComentario
+from .views import EscribirComentario, EliminarComentario, listarComentarios
 from .views import verificar_existe_seguidor, agregar_nuevo_seguidor
 from .views import guardar_token
 from .views import aniadir_favoritos
@@ -37,6 +37,7 @@ urlpatterns=[
     path('producto/eliminar_producto/<int:pk>', EliminarProducto.as_view(), name='del_prod'),
     path('producto/detalle_producto/<slug:url>/<int:pk>', DetalleProducto.as_view(), name='detalle_prod'),#muestra informacion de un producto especifico pk es el id de un producto especifico
     path('producto/comentario', EscribirComentario, name='w_coment'),
+    path('producto/comentario/listarComent/<int:pk>',listarComentarios, name='ListarComment' ),
     path('producto/comentario/<int:pk>', EliminarComentario, name='del_coment'),
     path('producto/buscar_tienda', buscar_producto_tienda, name='prod_search'),#para buscar ten la tienda del proveedor
     path('producto/cargar_todos_prod', cargar_todos_productos_tienda, name='prod_all'),

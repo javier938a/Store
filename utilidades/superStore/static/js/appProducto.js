@@ -14,6 +14,64 @@ function getCookie(name) {
     return cookieValue;
 }
 $(document).ready(function(){
+    //Listando los comentarios del producto
+    id_prod = $("#prod_id").val();
+    $.ajax({
+        type:'GET',
+        url:'/superStore/producto/comentario/listarComent/'+id_prod,
+        dataType:'json',
+        success:function(data){
+            for(let i in data){
+                var puntaje = data[i].puntaje
+                punt=''
+                console.log(data[i]);
+                parrafo = '<p clas="msj" id="c'+data[i].id+'"> '+data[i].cliente+'<br> \
+                <span style="color: orange;">'
+                if(puntaje===1){
+                    punt='★';
+                }else if(puntaje===2){
+                    punt='★★';
+                }else if(puntaje===3){
+                    punt='★★★';
+                }else if(puntaje===4){
+                    punt='★★★★';
+                }else if(puntaje==5){
+                    puntaje='★★★★★';
+                }
+                parrafo = parrafo+punt+'</span><br>'+data[i].comentario+'<br>\
+                <a class="del_coment" id="cc'+data[i].id+'" href="/superStore/producto/comentario/'+data[i].id+'">Eliminar</a></p>';
+                $("#comentarios").append(parrafo);
+
+            }
+        }
+    });
+
+        //alert("Ya esta cargado");
+        //Eliminando los comentarios
+        $('#comentarios').on('click','.del_coment',function(evt){
+            evt.preventDefault();
+            var conf = confirm("¿Esta seguro que desea eliminar el comentario?");
+            if(conf==true){
+                 url = $(this).attr('href');//obtiene el valor de href que es el url de cada comentario
+                 btn = $(this).attr('id');//obtiene el valor del id del boton eliminar que "c + cid" que es el id de cada comentario
+                 id_p = btn.substring(1,btn.length);//con substring eliminamos un "c" ya que en los p esta como "cid"
+                 //alert(id_p);
+                 $.ajax({
+                     url:url,
+                     type:'GET',
+                     dataType:'json',
+                     success:function(data){
+                         if(data.res==true){//si se elimina el elemento 
+                             $("#"+id_p).remove();//eliminamos el parrafo o el comentario de la lista en la pagina
+        
+                         }
+                         
+                     }
+                 });
+             }
+        });
+
+    //alert(id_prod);
     $(".foto").hover(function(){
         var ubi = $(this).attr("src");
         //alert(ubi);
@@ -36,37 +94,32 @@ $(document).ready(function(){
             data:datos,
             dataType:"json",
             success:function(data){
-                if(data.res==true){
-                    location.reload();//recarga la pagina para mostrar los comentarios
-                    $("#cmt").val('');//limpia el contenido del textview
-                }else{
-                    alert("Hubo un error favor recarge o contacte con el desarrollador!!")
+                var p ='<span style="color: orange;">';
+                stars=""
+                if(data.puntaje==1){
+                   stars='★';
+                }else if(data.puntaje==2){
+                    stars='★★';
+                }else if(data.puntaje==3){
+                    stars = '★★★';
+                }else if(data.puntaje==4){
+                    stars = '★★★★';
+                }else if(data.puntaje==5){
+                    stars = '★★★★★';
                 }
+                p = p+stars+'</span>';
+                htm = '<p class="msj" id="c'+data.id+'">'+data.cliente+'<br>'+p+'<br>'+data.comentario+'<br>'+'<a class="del_coment" id="cc'+data.id+'" href="/superStore/producto/comentario/'+data.id+'">Eliminar</a></br>'
+                parrafo= p+htm
+                alert(parrafo);
+                //datos = JSON.parse(data)
+                //alert(data.id);
+                //com=pp+'<br>'+data.comentario+'<br><a class="del_coment" id="cc'+data.id+'" href="/superStore/producto/comentario/'+data.id+' ">Eliminar</a>'
+                $("#comentarios").append(htm);
+                $("#cmt").val('');//limpia el contenido del textview
+                $("#comentar").css('display','none');
+                //alert(comentario);
             }
         });     
-    });
-    //Elimina el comentario
-    $(".del_coment").click(function(evt){
-        evt.preventDefault();
-        var conf = confirm("¿Esta seguro que desea eliminar el comentario?");
-        if(conf==true){
-            url = $(this).attr('href');//obtiene el valor de href que es el url de cada comentario
-            btn = $(this).attr('id');//obtiene el valor del id del boton eliminar que "c + cid" que es el id de cada comentario
-            id_p = btn.substring(1,btn.length);//con substring eliminamos un "c" ya que en los p esta como "cid"
-            $.ajax({
-                url:url,
-                type:'GET',
-                dataType:'json',
-                success:function(data){
-                    if(data.res==true){//si se elimina el elemento 
-                        $("#"+id_p).remove();//eliminamos el parrafo o el comentario de la lista en la pagina
-   
-                    }
-                    
-                }
-            });
-        }
-
     });
     //pestañas 
     $("#ver_perfil_tienda").click(function(evt){
