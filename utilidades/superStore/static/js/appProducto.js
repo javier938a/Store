@@ -15,40 +15,67 @@ function getCookie(name) {
 }
 $(document).ready(function(){
     //Listando los comentarios del producto
-    id_prod = $("#prod_id").val();
+    id_prod_meta = document.querySelector('meta[name="prod_id"]');
+    id_prod = id_prod_meta.content;
+    
     $.ajax({
         type:'GET',
         url:'/superStore/producto/comentario/listarComent/'+id_prod,
         dataType:'json',
         success:function(data){
-            for(let i in data){
-                var puntaje = data[i].puntaje
-                punt=''
-                console.log(data[i]);
-                parrafo = '<p clas="msj" id="c'+data[i].id+'"> '+data[i].cliente+'<br> \
-                <span style="color: orange;">'
-                if(puntaje===1){
-                    punt='★';
-                }else if(puntaje===2){
-                    punt='★★';
-                }else if(puntaje===3){
-                    punt='★★★';
-                }else if(puntaje===4){
-                    punt='★★★★';
-                }else if(puntaje==5){
-                    puntaje='★★★★★';
-                }
-                parrafo = parrafo+punt+'</span><br>'+data[i].comentario+'<br>\
-                <a class="del_coment" id="cc'+data[i].id+'" href="/superStore/producto/comentario/'+data[i].id+'">Eliminar</a></p>';
-                $("#comentarios").append(parrafo);
+                if(data.length==0){
+                    $("#comentar").css('display','block');//si el tamaño de los comentarios son igual a cero significa que no hay ningun comentario y se habilita el editor para escribir
+                }else if(data.length>0){//si es mayor que cero significa que hay comentarios que escribir
+                    for(let i in data){
+                        if(i!=0){//valida que la variable i sea diferente de cero ya que en la casilla numero cero esta la comprobacion si el comentario del usuario logueado
+                            console.log(i);
+                            var puntaje = data[i].puntaje;
+                            punt=''
+                            console.log(data[i]);
 
-            }
+                            
+                            stars=""
+                            if(data[i].puntaje==1){
+                               stars='★';
+                            }else if(data[i].puntaje==2){
+                                stars='★★';
+                            }else if(data[i].puntaje==3){
+                                stars = '★★★';
+                            }else if(data[i].puntaje==4){
+                                stars = '★★★★';
+                            }else if(data[i].puntaje==5){
+                                stars = '★★★★★';
+                            }
+            
+                          
+                            sms ='<div class="msj" id="c'+data[i].id+'">\
+                                    <h5 id="titCo">'+data[i].cliente+'</h5>\
+                                    <span id="stars" style="color: orange;" id="s'+data[i].id+'">'+stars+'</span>\
+                                     <p id="par'+data[i].id+'">\
+                                        '+data[i].comentario+'\
+                                    </p>\
+                                    <div id="op_coment">\
+                                        <a class="del_coment" id="cc'+data[i].id+'" href="/superStore/producto/comentario/'+data[i].id+'">Eliminar</a>\
+                                        <button id="ccc'+data[i].id+'" class="editar_coment">Editar</button>\
+                                    </div>\
+                                  </div>';
+
+                            $("#comentarios").append(sms);
+                        }
+                    }
+                }
+                if(data[0].existe==false){//si no existe mostrara el campo para agregar el comentario..
+                    $("#comentar").css('display','block');
+                }
+                
+
+
         }
     });
 
         //alert("Ya esta cargado");
         //Eliminando los comentarios
-        $('#comentarios').on('click','.del_coment',function(evt){
+        $(document).on('click','.del_coment',function(evt){
             evt.preventDefault();
             var conf = confirm("¿Esta seguro que desea eliminar el comentario?");
             if(conf==true){
@@ -63,14 +90,97 @@ $(document).ready(function(){
                      success:function(data){
                          if(data.res==true){//si se elimina el elemento 
                              $("#"+id_p).remove();//eliminamos el parrafo o el comentario de la lista en la pagina
-        
+                             $("#comentar").css('display','block');//mostramos para que de la opcion de comentar
                          }
                          
                      }
                  });
              }
         });
+        ///editar comentario
+        var ver = true;
+        $(document).on('click', '.editar_coment', function(evt){
+            evt.preventDefault();
+            id = $(this).attr('id');
+            idSub = id.substring(3,id.length);//obteniendo el id puro 
+            idParrafo = id.substring(2,id.length)//deduciendo el id del parrafo 
+            console.log('valor de ver; '+ver);
+            if(ver===true){
+                texto = $('#par'+idSub).text();//texto del comentario.
+                $('#par'+idSub).html('');
+                ver=false
+                formedit = '<form class="comt" id="edit_com" action="/superStore/producto/comentario/editar_coment/'+idSub+'">\
+                                <p class="clasificacion">\
+                                    <input type="radio" name="puntaje" value="5" id="radio1">\
+                                    <label for="radio1">★</label>\
+                                    <input type="radio" name="puntaje" value="4" id="radio2">\
+                                    <label for="radio2">★</label>\
+                                    <input type="radio" name="puntaje" value="3" id="radio3">\
+                                    <label for="radio3">★</label>\
+                                    <input type="radio" name="puntaje" value="2" id="radio4">\
+                                    <label for="radio4">★</label>\
+                                    <input type="radio" name="puntaje" value="1" id="radio5" checked>\
+                                    <label for="radio5">★</label>\
+                                </p>\
+                                <textarea name="coment" id="cmt" cols="100" rows="3">\
+                                </textarea>\
+                                <button class="btn btn-primary" type="submit">Comentar</button>\
+                            </form>';
+                $("#op_coment").css('display','none');//ocultando elementos
+                $("#stars").css('display','none');
+                $("#titCo").css('display','none');
+                $('#'+idParrafo).append(formedit);//  agregando el formulario de edicion
+                $("#cmt").append(texto);//agregando el texto del comentario anterior              
+            }else{
+                ver=true;
+                $('#edit_com').remove();
+            }
+        });
+        $(document).on('submit', "#edit_com", function(evt){
+            evt.preventDefault();
+            url = $(this).attr("action");
+            const csrftoken = getCookie('csrftoken');
+            id_prod_meta = document.querySelector('meta[name="prod_id"]');
+            id_prod = id_prod_meta.content;//id del producto
+            puntaje=$("input:radio[name=puntaje]:checked").val();
+            comentario=document.getElementById('cmt').value.trim();
+            $.ajax({
+                type:'GET',
+                url:url,
+                data:{
+                    csrfmiddlewaretoken:csrftoken,
+                    'producto_id':id_prod,
+                    'comentario':comentario,
+                    'puntaje':puntaje,
+                },
+                success:function(data){
+                    console.log(data[0].res);
+                    if(data[0].res===true){
+                        $("#edit_com").remove();
+                        stars=""
+                        if(data[1].puntaje==1){
+                           stars='★';
+                        }else if(data[1].puntaje==2){
+                            stars='★★';
+                        }else if(data[1].puntaje==3){
+                            stars = '★★★';
+                        }else if(data[1].puntaje==4){
+                            stars = '★★★★';
+                        }else if(data[1].puntaje==5){
+                            stars = '★★★★★';
+                        }
 
+                        comenn = data[1].comentario; 
+                        $("#s"+data[1].id).append(stars) ;
+                        $("#par"+data[1].id).append(comenn);
+                        $("#op_coment").css('display','block');//mostrando elementos elementos
+                        $("#stars").css('display','block');
+                        $("#titCo").css('display','block');
+                    }
+                }
+            });
+            
+        });
     //alert(id_prod);
     $(".foto").hover(function(){
         var ubi = $(this).attr("src");
@@ -79,12 +189,15 @@ $(document).ready(function(){
     })
     //formulario de comentario
     $("#comentar").submit(function(evt){//Enviando el formulario
-        const csrftoken = getCookie('csrftoken');
         //alert($("#cmt").val());
+        //Listando los comentarios del producto
         evt.preventDefault();
+        const csrftoken = getCookie('csrftoken');
+        id_prod_meta = document.querySelector('meta[name="prod_id"]');
+        id_prod = id_prod_meta.content;
         datos={
             csrfmiddlewaretoken:csrftoken,
-            'producto_id':$("#prod_id").val(),
+            'producto_id':id_prod,
             'coment':$("#cmt").val(),
             'puntaje':$("input:radio[name=puntaje]:checked").val()
         };
@@ -94,7 +207,7 @@ $(document).ready(function(){
             data:datos,
             dataType:"json",
             success:function(data){
-                var p ='<span style="color: orange;">';
+                //verificando el puntaje para ver cuantas estrellas le corresponde a cada comentario
                 stars=""
                 if(data.puntaje==1){
                    stars='★';
@@ -107,14 +220,24 @@ $(document).ready(function(){
                 }else if(data.puntaje==5){
                     stars = '★★★★★';
                 }
-                p = p+stars+'</span>';
-                htm = '<p class="msj" id="c'+data.id+'">'+data.cliente+'<br>'+p+'<br>'+data.comentario+'<br>'+'<a class="del_coment" id="cc'+data.id+'" href="/superStore/producto/comentario/'+data.id+'">Eliminar</a></br>'
-                parrafo= p+htm
-                alert(parrafo);
+                sms ='<div class="msj" id="c'+data.id+'">\
+                        <h5 id="titCo">'+data.cliente+'</h5>\
+                        <span id="stars" style="color: orange;" id="s'+data.id+'">'+stars+'</span>\
+                        <p id="par'+data.id+'">\
+                            '+data.comentario+'\
+                        </p>\
+                        <div id="op_coment">\
+                            <a class="del_coment" id="cc'+data.id+'" href="/superStore/producto/comentario/'+data.id+'">Eliminar</a>\
+                            <button id="ccc'+data.id+'" class="editar_coment">Editar</button>\
+                        </div>\
+                      </div>';
+                //alert(parrafo);
                 //datos = JSON.parse(data)
                 //alert(data.id);
                 //com=pp+'<br>'+data.comentario+'<br><a class="del_coment" id="cc'+data.id+'" href="/superStore/producto/comentario/'+data.id+' ">Eliminar</a>'
-                $("#comentarios").append(htm);
+                //alert(sms);
+                $("#comentarios").append(sms);
+            
                 $("#cmt").val('');//limpia el contenido del textview
                 $("#comentar").css('display','none');
                 //alert(comentario);

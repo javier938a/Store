@@ -55,30 +55,30 @@
     margin: 0 auto;
     height: 50px;
 }*/
-#comentar p {
+.comt p {
 
-    text-align: left;
+    text-align: left !important;
 }
 
-#comentar label {
-    font-size: 20px;
+.comt label {
+    font-size: 20px !important;
 }
 .clasificacion{
-    direction: rtl;/* right to left */
-    unicode-bidi: bidi-override;/* bidi de bidireccional */
+    direction: rtl !important;/* right to left */
+    unicode-bidi: bidi-override !important;/* bidi de bidireccional */
 }
-#comentar input[type="radio"]{
-    display: none;
-}
-
-#comentar label {
-    color: grey;
+.comt input[type="radio"]{
+    display: none !important;
 }
 
-#comentar label:hover, label:hover ~ label{
-    color: orange;
+.comt label {
+    color: grey !important;
 }
 
-#comentar input[type="radio"]:checked ~ label {
-    color:orange;
+.comt label:hover, label:hover ~ label{
+    color: orange !important;
+}
+
+.comt input[type="radio"]:checked ~ label {
+    color:orange !important;
 }

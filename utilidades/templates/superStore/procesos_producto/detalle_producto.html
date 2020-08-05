@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block metas %}
+    <meta name="prod_id" content="{{ producto_id }}">
     {% if user.id %}
       <meta name="prove_id" content="{{ detalle_producto.mayorista.user.id }}"> 
       <meta name="name_user" content="{{ user.username }}">
@@ -13,6 +14,7 @@
   <link rel="stylesheet" href="{% static "css/estilos.css" %}">
 {% endblock %}
 
+{#<input id="prod_id" type="hidden" name="producto_id" value="{{ producto_id }}">#} 
 {% block titulo %}
     <title>Detalle de producto</title>
 {% endblock %}
@@ -218,42 +220,10 @@
         </div>
     </div>
     <div class="row">
-      <div id="ccmm" class="col-12">
+      <div class="col-12" id ="comentarios">
 
       </div>
-      <div class="col-12" id ="comentarios">
-        {% if list_coment %}
-          {% for com in list_coment %}
-            <p class="msj" id="c{{ com.id }}">
-              {{ com.cliente }}<br>
-              <span style="color: orange;">
-                {%  ifequal com.puntaje 1 %}
-                          ★
-                {% endifequal %}
-                {%  ifequal com.puntaje 2 %}
-                          ★★
-                {% endifequal %}
-                {%  ifequal com.puntaje 3 %}
-                          ★★★
-                {% endifequal %}
-                {%  ifequal com.puntaje 4 %}
-                          ★★★★
-                {% endifequal %}
-                {%  ifequal com.puntaje 5 %}
-                          ★★★★★
-                {% endifequal %}
-              </span>
-              <br>
-              {{ com.comentario}}<br>
-              <a class="del_coment" id="cc{{ com.id }}" href="{% url 'tienda:del_coment' com.id %}">Eliminar</a>
-            </p>
-          {% endfor %}
-        {% else %}
-          <p>No hay comentarios aun</p>
-        {% endif %}
-      </div>
-      <form id="comentar" action="{% url 'tienda:w_coment' %}" method="POST">
-        <input id="prod_id" type="hidden" name="producto_id" value="{{ producto_id }}"> 
+      <form class="comt" style="display: none;" id="comentar" action="{% url 'tienda:w_coment' %}" method="POST">
         <p class="clasificacion">
           <input type="radio" name="puntaje" value="5" id="radio1">
           <label for="radio1">★</label>
@@ -263,7 +233,7 @@
           <label for="radio3">★</label>
           <input type="radio" name="puntaje" value="2" id="radio4">
           <label for="radio4">★</label>
-          <input type="radio" name="puntaje" value="1" id="radio5">
+          <input type="radio" name="puntaje" value="1" id="radio5" checked>
           <label for="radio5">★</label>
           
         </p>
