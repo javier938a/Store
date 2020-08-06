@@ -6,6 +6,7 @@
       <meta name="prove_id" content="{{ detalle_producto.mayorista.user.id }}"> 
       <meta name="name_user" content="{{ user.username }}">
       <meta name="name_prove" content="{{ detalle_producto.mayorista.user.username }}">
+      <meta name="is_authenticated" content="{{ user.is_authenticated }}">
     {% endif %}
 {% endblock %}
 
@@ -213,17 +214,19 @@
                         <div class="d-flex w-100 justify-content-between">
                           <h5>Categoria</h5>
                         </div>
-                        <p class="mb-1">{{ detalle_producto.categoria}}</p>
+                        <p class="mb-1">{{ detalle_producto.sub_categoria2}}</p>
                       </a>
                   </div>
             </div>
         </div>
     </div>
     <div class="row">
+      <h1>Comentarios</h1>
       <div class="col-12" id ="comentarios">
 
       </div>
-      <form class="comt" style="display: none;" id="comentar" action="{% url 'tienda:w_coment' %}" method="POST">
+      <form class="comt " style="display: none;" id="comentar" action="{% url 'tienda:w_coment' %}" method="POST" enctype="multipart/form-data">
+        <h3>Puntuacion</h3>
         <p class="clasificacion">
           <input type="radio" name="puntaje" value="5" id="radio1">
           <label for="radio1">★</label>
@@ -237,9 +240,10 @@
           <label for="radio5">★</label>
           
         </p>
-        <textarea name="coment" id="cmt" cols="100" rows="3">
-
-        </textarea>
+        <textarea class="form-control" name="coment" id="cmt" cols="100" rows="3"></textarea>
+        <input class="form-control" type="file" accept="image/*"  name="foto_prueba1" id="foto_prueba1">
+        <input class="form-control" type="file" accept="image/*"  name="foto_prueba2" id="foto_prueba2">
+        <input class="form-control" type="file" accept="image/*"  name="foto_prueba3" id="foto_prueba3">
         <button class="btn btn-primary" type="submit">Comentar</button>
       </form>
     </div>
@@ -269,5 +273,5 @@
 {% block script %}
     {% load static %}
     <script src="{% static "js/appProducto.js" %}"></script>
-    <script src="{% static "js/appChat.js" %}"></script>
+    {#<script src="{% static "js/appChat.js" %}"></script>#}
 {% endblock %}

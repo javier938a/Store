@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.serializers import serialize
 from django.db.models import Q
+import os
 import json
 
 def listarComentarios(request, pk):#pk seria el id de un producto especifico
@@ -20,10 +21,22 @@ def listarComentarios(request, pk):#pk seria el id de un producto especifico
         lista_user.append(dicx)
 
         for i in comentarios:
-            dic1={'id':i.id,'cliente':i.cliente.user.username,'producto':i.producto.producto, 'comentario':i.comentario, 'puntaje':i.puntaje} 
+            dic1={'id':i.id,'cliente':i.cliente.user.username,'producto':i.producto.producto, 'comentario':i.comentario, 'puntaje':i.puntaje, 'foto_prueba1':str(i.foto_prueba1),'foto_prueba2':str(i.foto_prueba2),'foto_prueba3':str(i.foto_prueba3),} 
+            print(dic1)
             lista_user.append(dic1)     
 
     return JsonResponse(lista_user, safe=False)
+#metodo para subir las imagenes 
+
+def subir_imagen(image_bit, image_name="img_coment.jpg"):
+    raiz = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+    print("Raiz: "+str(raiz))
+    print("Valor de la raiz")
+    print(raiz)
+    ubi_writer=raiz+"/media/foto_prueba/"+image_name
+    with open(ubi_writer, 'wb+') as ubicasion:
+        for bin in image_bit.chunks():
+            ubicasion.write(bin)
 
 def EscribirComentario(request):
     #obteniendo los datos por el metodo post
@@ -40,6 +53,13 @@ def EscribirComentario(request):
         producto = tbl_producto.objects.get(id=producto_id)
         comentario = request.POST.get('coment')
         puntaje = request.POST.get('puntaje')
+        #obteniendo las imagenes.
+        foto_prueba1=request.FILES.get('foto_prueba1')
+        foto_prueba2 = request.FILES.get('foto_prueba2')
+        foto_prueba3=request.FILES.get('foto_prueba3')
+        print("y la imagen?")
+        print(request.FILES)        
+        
         #Creando el comentario
         print("Este es un comentario")
         print(comentario)
@@ -47,7 +67,10 @@ def EscribirComentario(request):
             cliente=cliente,
             producto=producto,
             comentario=comentario,
-            puntaje=puntaje
+            puntaje=puntaje,
+            foto_prueba1=foto_prueba1,
+            foto_prueba2=foto_prueba2,
+            foto_prueba3=foto_prueba3
         )
         comentar.save()#guandando comentario
         comentarioFin = tbl_comentario_producto.objects.get(Q(cliente__user__id=request.user.id) & Q(producto__id=producto_id))
@@ -79,28 +102,47 @@ def EliminarComentario(request, pk):
         safe=True
     )
 
-def EditarComentar(request, pk):#metodo servira para eliminar un comentario
+def EditarComentar(request):#metodo servira para eliminar un comentario
     res = False
     if request.is_ajax():
+        print(request.POST)
+        print(request.FILES)
+        print("llega hasta aqui? ")
         id_user = request.user.id
         cliente = tbl_cliente.objects.get(user__id=id_user)
-        producto_id=request.GET.get('producto_id')
+        producto_id=request.POST.get('producto_id')
+        id_coment=request.POST.get('id_coment')#Obteniendo el id del comentario
         producto = tbl_producto.objects.get(id=producto_id)
-        comentario=request.GET.get('comentario')
-        puntaje=request.GET.get('puntaje')
+        comentario=request.POST.get('comentario')
+        puntaje=request.POST.get('puntaje')
+        #OBTENIENDO LAS IMAGENES
+        foto_prueba1=request.FILES.get('foto_prueba1')
+        foto_prueba2 = request.FILES.get('foto_prueba2')
+        foto_prueba3=request.FILES.get('foto_prueba3')
+        if foto_prueba1 is not None and foto_prueba2 is not None and foto_prueba3 is not None:
+            print("LLega hasta aqui?")
+            subir_imagen(foto_prueba1, str(foto_prueba1))
+            subir_imagen(foto_prueba2, str(foto_prueba2))
+            subir_imagen(foto_prueba3, str(foto_prueba3))
         print("helooo")
         print(comentario)
-        tbl_comentario_producto.objects.filter(id=pk).update(
+        tbl_comentario_producto.objects.filter(id=id_coment).update(
                                                             cliente=cliente, 
                                                             producto=producto, 
                                                             comentario=comentario, 
-                                                            puntaje=puntaje
+                                                            puntaje=puntaje,
+                                                            foto_prueba1=("foto_prueba/"+str(foto_prueba1)),
+                                                            foto_prueba2=("foto_prueba/"+str(foto_prueba2)),
+                                                            foto_prueba3=("foto_prueba/"+str(foto_prueba3))
                                                         )
     res=True
-    datos=[{'res':res,},{'res':res,'id':pk, 'cliente':str(cliente), 'producto':str(producto), 'comentario':comentario, 'puntaje':puntaje}]
+    datos=[{'res':res,},{'res':res,'id':id_coment, 'cliente':str(cliente), 'producto':str(producto), 'comentario':comentario, 'puntaje':puntaje}]
     print("resultado del update")                                            
     print(comentario) 
     return JsonResponse(datos, safe=False)
+
+
+
 
 
              

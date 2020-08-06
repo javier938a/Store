@@ -181,6 +181,9 @@ class tbl_comentario_producto(models.Model):
     producto = models.ForeignKey(tbl_producto, on_delete=models.SET_NULL, null=True)
     comentario = models.TextField(max_length=500, help_text="Ingrese un comentario sobre su experiencia de compra")
     puntaje = models.IntegerField(help_text="Ingrese un puntaja evaluando al vendedor de esta manera ayuda a que otras personas tengan mas confianza para comprar en la tienda")
+    foto_prueba1=models.ImageField(verbose_name="Image", upload_to="foto_prueba", null=True, blank=True)
+    foto_prueba2=models.ImageField(verbose_name="Image", upload_to='foto_prueba', null=True, blank=True)
+    foto_prueba3=models.ImageField(verbose_name="Image", upload_to='foto_prueba', null=True, blank=True)
     def __str__(self):
         return " %s: %s" % (self.cliente, self.comentario)
 
