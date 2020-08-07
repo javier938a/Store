@@ -135,17 +135,19 @@ class DetalleProducto(DetailView):
         print(context['lista_productos'])
         #enviando el id del cliente
         idUser = self.request.user.id
-        if self.request.user.tipo_usuario_id.tipo_usuario=="Cliente":
-            cliente_id = tbl_cliente.objects.get(user__id=idUser).id
-            context['cliente_id']=cliente_id
-            #verificando si el cliente ya agrego el producto a favoritos
-            print("Exists "+str(tbl_favoritos.objects.filter(cliente__id=cliente_id).exists()))
-            if tbl_favoritos.objects.filter(producto__id=self.kwargs['pk']).exists():
-                context['existe_fav']=True
+        if self.request.user.is_authenticated:
+            if self.request.user.tipo_usuario_id.tipo_usuario=="Cliente":
+                cliente_id = tbl_cliente.objects.get(user__id=idUser).id
+                context['cliente_id']=cliente_id
+                #verificando si el cliente ya agrego el producto a favoritos
+                print("Exists "+str(tbl_favoritos.objects.filter(cliente__id=cliente_id).exists()))
+                if tbl_favoritos.objects.filter(producto__id=self.kwargs['pk']).exists():
+                    context['existe_fav']=True
             else:
                 context['existe_fav']=False
-            print("id del cliente: "+str(context['cliente_id']))
-        print("jjjj "+str(self.request.user.tipo_usuario_id.tipo_usuario))
+
+            #print("id del cliente: "+str(context['cliente_id']))
+        #print("jjjj "+str(self.request.user.tipo_usuario_id.tipo_usuario))
         #print(context)
         return context
 

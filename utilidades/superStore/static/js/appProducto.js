@@ -13,12 +13,50 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+       
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+
 $(document).ready(function () {
+    //aplicando efecto lightbox a las miniaturas de imagenes
+    $(document).on('click', '[data-toggle="lightbox"]', function(evt){
+        evt.preventDefault();
+        $(this).ekkoLightbox({
+            alwaysShowClose:true,
+            onShown:function(){
+                console.log('Comprobando los eventos')
+            },
+        });
+    });
     //Listando los comentarios del producto
     id_prod_meta = document.querySelector('meta[name="prod_id"]');
     id_prod = id_prod_meta.content;
     var user_meta = document.querySelector('meta[name="name_user"]')
-    var user= user_meta.content;
+
+    if(user_meta==null){//si user_meta esta null significa que el usuario no ha iniciado secion
+       var user=null //si es asi asignar el valor null a user para que no detecte usuario.
+    }else{
+        var user= user_meta.content;//de lo contrario significa que el usuario se ha logeado..
+    }
+    
+    
     var opciones ='';
     $.ajax({
         type: 'GET',
@@ -55,7 +93,7 @@ $(document).ready(function () {
                                         </div>';
                         }
                         //alert("valor de opciones "+opciones);
-                        sms = '<div class="msj" id="c' + data[i].id + '">\
+                        sms = '<div style="color: azure;" class="msj" id="c' + data[i].id + '">\
                                     <h5 id="titCo'+data[i].id+'">'+ data[i].cliente + '</h5>\
                                     <span id="stars'+data[i].id+'" style="color: orange;" id="s'+ data[i].id + '">' + stars + '</span>\
                                      <p id="par'+ data[i].id + '">\
@@ -64,18 +102,24 @@ $(document).ready(function () {
                                     <div clas="container" >\
                                     <div style="margin: 0; padding: 0; border:0;" class="row">\
                                     <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">\
-                                        <div id="foto1" class="card" style="width: 5rem;">\
-                                            <img class="img-thumbnail foto" src="/media/'+data[i].foto_prueba1+'" class="card-img-top" width="80px" height="80" alt="...">\
+                                        <div id="foto1'+data[i].id+'" class="card" style="width: 5rem;">\
+                                            <a data-toggle="lightbox" data-gallery="galeria-'+data[i].id+'" href="/media/'+data[i].foto_prueba1+'">\
+                                                <img class="img-thumbnail foto" src="/media/'+data[i].foto_prueba1+'" class="card-img-top" width="80px" height="80" alt="...">\
+                                            </a>\
                                         </div>\
                                     </div>\
                                     <div style="margin-left: -85px;" class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">\
-                                        <div id="foto2" class="card" style="width: 5rem;">\
-                                            <img class="img-thumbnail foto" src="/media/'+data[i].foto_prueba2+'" class="card-img-top" width="80px" height="80" alt="...">\
+                                        <div id="foto2'+data[i].id+'" class="card" style="width: 5rem;">\
+                                            <a data-toggle="lightbox" data-gallery="galeria-'+data[i].id+'" href="/media/'+data[i].foto_prueba2+'">\
+                                                <img class="img-thumbnail foto" src="/media/'+data[i].foto_prueba2+'" class="card-img-top" width="80px" height="80" alt="...">\
+                                            </a>\
                                         </div>\
                                     </div>\
                                     <div style="margin-left: -85px;" class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">\
-                                        <div id="foto3" class="card" style="width: 5rem;">\
-                                            <img class="img-thumbnail foto" src="/media/'+data[i].foto_prueba3+'" class="card-img-top" width="80px" height="80" alt="...">\
+                                        <div id="foto3'+data[i].id+'" class="card" style="width: 5rem;">\
+                                            <a data-toggle="lightbox" data-gallery="galeria-'+data[i].id+'" href="/media/'+data[i].foto_prueba3+'" >\
+                                                <img class="img-thumbnail foto" src="/media/'+data[i].foto_prueba3+'" class="card-img-top" width="80px" height="80" alt="...">\
+                                            </a>\
                                         </div>\
                                     </div>\
                                 </div>\
@@ -89,8 +133,9 @@ $(document).ready(function () {
                 }
             }
             if (data[0].existe == false) {//si no existe mostrara el campo para agregar el comentario..
-                $("#comentar").css('display', 'block');
-                
+                if(user!=null){
+                    $("#comentar").css('display', 'block');
+                }                
             }
 
 
@@ -131,8 +176,8 @@ $(document).ready(function () {
         idParrafo = id.substring(2, id.length)//deduciendo el id del parrafo 
         console.log('valor de ver; ' + ver);
         texto = $('#par' + idSub).text();//Obteniendo el texto del comentario que esta en el parrafo que contiene el prefijo par y luego el id del comentario
-        $('#par' + idSub).html('');//limpiando el parrafo para mostrar el formulario de comentario y tambien para poner el nuevo comentario 
-        formedit = '<form method="POST" class="comt" id="edit_com" action="/superStore/producto/comentario/editar_coment" enctype="multipart/form-data">\
+        $('#par' + idSub).css('display','none');//ocultando el parrafo del comentario.
+        formedit = '<form method="POST" class="needs-validation comt" id="edit_com" action="/superStore/producto/comentario/editar_coment" enctype="multipart/form-data">\
                         <input id="id_coment" type="hidden" name="id_coment" value="'+idSub+'">\
                         <h4>Puntaje<h4/>\
                         <p class="clasificacion">\
@@ -147,21 +192,61 @@ $(document).ready(function () {
                             <input type="radio" name="puntaje" value="1" id="radio5" checked>\
                             <label for="radio5">★</label>\
                         </p>\
-                            <textarea class="form-control" styles=" text-align:left; " name="coment" id="cmt" cols="100" rows="3"></textarea>\
-                            <input class="form-control" type="file" accept="image/*"  name="foto_prueba1" id="foto_prueba1">\
-                            <input class="form-control" type="file" accept="image/*"  name="foto_prueba2" id="foto_prueba2">\
-                            <input class="form-control" type="file" accept="image/*"  name="foto_prueba3" id="foto_prueba3">\
+                            <div class="form-row" >\
+                                <textarea class="form-control" styles=" text-align:left; " name="coment" id="cmt" cols="100" rows="3" required></textarea>\
+                            </div>\
+                            <div class="form-row" >\
+                                <input class="form-control" type="file" accept="image/*"  name="foto_prueba1" id="foto_prueba1" required>\
+                            </div>\
+                            <div class="form-row" >\
+                                <input class="form-control" type="file" accept="image/*"  name="foto_prueba2" id="foto_prueba2" required>\
+                            </div>\
+                            <div class="form-row" >\
+                                <input class="form-control" type="file" accept="image/*"  name="foto_prueba3" id="foto_prueba3" required>\
+                            </div>\
                             <button class="btn btn-primary" type="submit">Comentar</button>\
+                            <a class="btn btn-success" id="closeForm" href="/close/'+idSub+'">Cancelar</a> \
                     </form>';
-        $("#op_coment").css('display', 'none');//ocultando los botones
-        $("#stars"+idSub+"").html('');//limpiando donde estan las estrellas
-        $("#stars"+idSub+"").css('display', 'none');//ocultando las estrellas del puntaje
-        $("#titCo"+idSub+"").html('');//limpiando e titulo...
-        $("#titCo"+idSub+"").css('display', 'none');//ocultando el titulo del comentario        
         $('#' + idParrafo).append(formedit);//  agregando el formulario de edicion a la etiqueta p donde esta el texto
-        $("#cmt").append(texto);//agregando el texto el en textarea que se esta mostrando             
 
+        $("#cmt").append(texto);//agregando el texto el en textarea que se esta mostrando      
+
+        $("#titCo"+idSub+"").css('display', 'none');//ocultando el titulo del comentario 
+
+        $("#op_coment").css('display', 'none');//ocultando los botones
+
+        $("#stars"+idSub+"").css('display', 'none');//ocultando las estrellas del puntaje
+  
+
+        //ocultando los contenedores de imagenes..
+        $("#foto1"+idSub+"").css('display', 'none');
+        $("#foto2"+idSub+"").css('display', 'none');
+        $("#foto3"+idSub+"").css('display', 'none');
+
+        /*$('#par' + idSub).html('');//limpiando el parrafo para mostrar el formulario de comentario y tambien para poner el nuevo comentario 
+        $("#stars"+idSub+"").html('');//limpiando donde estan las estrellas
+        $("#titCo"+idSub+"").html('');//limpiando e titulo...
+        //limpiando el contenedor de imagenes..  
+        $("#foto1"+idSub+"").html('');
+        $("#foto2"+idSub+"").html('');   
+        $("#foto3"+idSub+"").html('');*/
     });
+    $(document).on('click', "#closeForm", function(evt){//escuchando el evento de cancelar la edicion del comentario
+        evt.preventDefault();
+        idTag = $(this).attr('href');
+        idc = idTag.substring(7,idTag.length);//id del comentario...
+        $('#par' + idc).css('display','block');//desocultando el parrafo en donde esta el comentario modo texto
+        //alert(idc);
+        $("#edit_com").remove();//Se elimina el formulario de edicion...
+        $("#op_coment").css('display', 'block');//ocultando los botones
+        $("#stars"+idc+"").css('display', 'block');//ocultando las estrellas del puntaje
+        $("#titCo"+idc+"").css('display', 'block');//ocultando el titulo del comentario   
+        //ocultando los contenedores de imagenes..
+        $("#foto1"+idc+"").css('display', 'block');
+        $("#foto2"+idc+"").css('display', 'block');
+        $("#foto3"+idc+"").css('display', 'block');
+    })
+
     $(document).on('submit', "#edit_com", function (evt) {
         evt.preventDefault();
         url = $(this).attr("action");
@@ -206,14 +291,33 @@ $(document).ready(function () {
                     } else if (data[1].puntaje == 5) {
                         stars = '★★★★★';
                     }
-
+                    //limpiando los componentes del formulario..
+                    $('#par' + data[1].id).html('');//limpiando el parrafo para mostrar el nuevo comentario
+                    $("#stars"+data[1].id+"").html('');//limpiando donde estan las estrellas
+                    $("#titCo"+data[1].id+"").html('');//limpiando e titulo...
+                    //limpiando el contenedor de imagenes..  
+                    $("#foto1"+data[1].id+"").html('');
+                    $("#foto2"+data[1].id+"").html('');   
+                    $("#foto3"+data[1].id+"").html('');
                     comenn = data[1].comentario;
                     $("#titCo"+data[1].id+"").append(data[1].cliente);//agregando el titulo que es el nombre del cliente
                     $("#stars" + data[1].id).append(stars);//agregando el puntaje en estrellas del comentario
                     $("#par" + data[1].id).append(comenn);//agregando el comentario
-                    $("#op_coment").css('display', 'block');//mostrando elementos elementos
-                    $("#stars"+data[1].id+"").css('display', 'block');
-                    $("#titCo"+data[1].id+"").css('display', 'block');
+                    foto1 = '<img class="img-thumbnail foto" src="/media/'+data[1].foto_prueba1+'" class="card-img-top" width="80px" height="80" alt="...">';
+                    foto2 = '<img class="img-thumbnail foto" src="/media/'+data[1].foto_prueba2+'" class="card-img-top" width="80px" height="80" alt="...">';
+                    foto3 = '<img class="img-thumbnail foto" src="/media/'+data[1].foto_prueba3+'" class="card-img-top" width="80px" height="80" alt="...">';
+                    //agregando las imagenes
+                    $("#foto1"+data[1].id).append(foto1);
+                    $("#foto2"+data[1].id).append(foto2);
+                    $("#foto3"+data[1].id).append(foto3);
+                    //mostrando las imagenes
+                    $("#foto1"+data[1].id).css('display', 'block');;
+                    $("#foto2"+data[1].id).css('display', 'block');;
+                    $("#foto3"+data[1].id).css('display', 'block');;   
+
+                    $("#op_coment").css('display', 'block');//mostrando los botones
+                    $("#stars"+data[1].id+"").css('display', 'block');//mostrando el nuevo puntaje
+                    $("#titCo"+data[1].id+"").css('display', 'block');//mostrando el titulo del comentario..
                 }
             }
         });
@@ -223,6 +327,12 @@ $(document).ready(function () {
     $(".foto").hover(function () {
         var ubi = $(this).attr("src");
         //alert(ubi);
+            //aplicando el efecto lupa a la imagen seleccionada...
+        $(".zoom").magnify({
+            speed:200,
+            src:ubi
+        });
+
         $("#foto_producto").attr("src", ubi);
     })
     //formulario de comentario
@@ -278,6 +388,31 @@ $(document).ready(function () {
                         <p id="par'+ data.id + '">\
                             '+ data.comentario + '\
                         </p>\
+                        <div clas="container" >\
+                            <div style="margin: 0; padding: 0; border:0;" class="row">\
+                                <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">\
+                                    <div id="foto1'+data.id+'" class="card" style="width: 5rem;">\
+                                        <a data-toggle="lightbox" data-gallery="galeria-'+data.id+'" href="/media/'+data.foto_prueba1+'">\
+                                            <img class="img-thumbnail foto" src="/media/'+data.foto_prueba1+'" class="card-img-top" width="80px" height="80" alt="...">\
+                                        </a>\
+                                    </div>\
+                                </div>\
+                                <div style="margin-left: -85px;" class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">\
+                                    <div id="foto2'+data.id+'" class="card" style="width: 5rem;">\
+                                        <a data-toggle="lightbox" data-gallery="galeria-'+data.id+'" href="/media/'+data.foto_prueba2+'">\
+                                            <img class="img-thumbnail foto" src="/media/'+data.foto_prueba2+'" class="card-img-top" width="80px" height="80" alt="...">\
+                                        </a>\
+                                    </div>\
+                                </div>\
+                                <div style="margin-left: -85px;" class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">\
+                                    <div id="foto3'+data.id+'" class="card" style="width: 5rem;">\
+                                        <a data-toggle="lightbox" data-gallery="galeria-'+data.id+'" href="/media/'+data.foto_prueba3+'">\
+                                            <img class="img-thumbnail foto" src="/media/'+data.foto_prueba3+'" class="card-img-top" width="80px" height="80" alt="...">\
+                                        </a>\
+                                    </div>\
+                                </div>\
+                            </div>\
+                        </div>\
                         <div id="op_coment">\
                             <a class="del_coment btn btn-danger" id="cc'+ data.id + '" href="/superStore/producto/comentario/' + data.id + '">Eliminar</a>\
                             <button id="ccc'+ data.id + '" class="editar_coment btn btn-primary">Editar</button>\

@@ -80,12 +80,24 @@ def EscribirComentario(request):
         comentario=str(comentarioFin.comentario)
         puntaje=str(comentarioFin.puntaje)
 
-        datos={'id':id, 'cliente':str(cliente), 'producto':str(producto), 'comentario':str(comentario), 'puntaje':str(puntaje), 'res':str(res)}
+        datos={
+                'id':id, 
+                'cliente':str(cliente), 
+                'producto':str(producto), 
+                'comentario':str(comentario), 
+                'puntaje':str(puntaje), 
+                'res':str(res),
+                'foto_prueba1':('foto_prueba/'+str(foto_prueba1)), 
+                'foto_prueba2':('foto_prueba/'+str(foto_prueba2)), 
+                'foto_prueba3':('foto_prueba/'+str(foto_prueba3))
+            }
         print("Resultado de save")
         
         res = True# si se guarda entonces res cambia a True
         coment = json.dumps(datos)
         print(coment)
+        print("direccion de imagen...")
+        print(('foto_prueba/'+str(foto_prueba1)))
     return JsonResponse(datos, safe=True)
 
 def EliminarComentario(request, pk):
@@ -136,16 +148,9 @@ def EditarComentar(request):#metodo servira para eliminar un comentario
                                                             foto_prueba3=("foto_prueba/"+str(foto_prueba3))
                                                         )
     res=True
-    datos=[{'res':res,},{'res':res,'id':id_coment, 'cliente':str(cliente), 'producto':str(producto), 'comentario':comentario, 'puntaje':puntaje}]
+    datos=[{'res':res,},{'res':res,'id':id_coment, 'cliente':str(cliente), 'producto':str(producto), 'comentario':comentario, 'puntaje':puntaje, 'foto_prueba1':('foto_prueba/'+str(foto_prueba1)), 'foto_prueba2':('foto_prueba/'+str(foto_prueba2)),'foto_prueba3':('foto_prueba/'+str(foto_prueba3))}]
     print("resultado del update")                                            
     print(comentario) 
     return JsonResponse(datos, safe=False)
 
 
-
-
-
-             
-
-        
-    
