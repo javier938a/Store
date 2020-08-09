@@ -1,5 +1,5 @@
 from django.views.generic import ListView
-from superStore.models import tbl_categoria, tbl_sub_categoria1, tbl_sub_categoria2
+from superStore.models import tbl_categoria, tbl_sub_categoria1
 from superStore.forms import CategoriaForm
 from django.http import JsonResponse
 from django.core.serializers import serialize
@@ -21,10 +21,5 @@ def listarSubCategoria1(request, pk):#pk es ek id  de la categoria
 
     return JsonResponse(serialize('json',sub_categoria1), safe=False)
 
-def listarSubCategoria2(request, pk):
-    sub_categoria2 = None
-    print("esta aqui....")
-    if request.is_ajax():
-        sub_categoria2 = tbl_sub_categoria2.objects.filter(categoria__id=pk)
-    
-    return JsonResponse(serialize('json', sub_categoria2), safe=False)
+
+

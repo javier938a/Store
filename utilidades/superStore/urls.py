@@ -12,7 +12,8 @@ from .views import verificar_existe_seguidor, agregar_nuevo_seguidor
 from .views import guardar_token
 from .views import aniadir_favoritos
 from .views import listarFavoritos
-from .views import listarCategoria, listarSubCategoria1, listarSubCategoria2
+from .views import listarCategoria, listarSubCategoria1
+from .views import listarDepartamento, listarMunicipio,listarBCanton
 
 app_name='tienda'
 urlpatterns=[
@@ -56,5 +57,7 @@ urlpatterns=[
     path('favoritos/', listarFavoritos.as_view(), name='list_favoritos'), #pk es el id de un usuario especifico
     path('list_cate/',listarCategoria, name='categorias'),
     path('list_cate/lis_sub_cate1/<int:pk>',listarSubCategoria1, name='subcate1'),
-    path('list_cate/lis_sub_cate1/list_sub_cate2/<int:pk>', listarSubCategoria2, name='subcate2'),
+    path('depto/<int:pk>', listarDepartamento, name='depto'),
+    path('depto/muni/<int:pk>', listarMunicipio, name='muni'),
+    path('depto/muni/barcant/<int:pk>', listarBCanton, name='baBcan'),
 ]

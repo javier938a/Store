@@ -46,7 +46,7 @@ $(document).ready(function () {
         });
     });
     //Listando los comentarios del producto
-    id_prod_meta = document.querySelector('meta[name="prod_id"]');
+    id_prod_meta = document.querySelector('meta[name="prod_id"]');//obteniendo el id del producto que lo almaceno en una etiqueta meta
     id_prod = id_prod_meta.content;
     var user_meta = document.querySelector('meta[name="name_user"]')
 
@@ -55,8 +55,6 @@ $(document).ready(function () {
     }else{
         var user= user_meta.content;//de lo contrario significa que el usuario se ha logeado..
     }
-    
-    
     var opciones ='';
     $.ajax({
         type: 'GET',
@@ -125,6 +123,7 @@ $(document).ready(function () {
                                 </div>\
                                     </div>\
                                     '+opciones+'\
+                                    <div fech'+data[i].id+'>Creado el: '+data[i].fecha_creacion+'</div>\
                                   </div>';
 
                         $("#comentarios").append(sms);
@@ -217,7 +216,7 @@ $(document).ready(function () {
 
         $("#stars"+idSub+"").css('display', 'none');//ocultando las estrellas del puntaje
   
-
+        $("#fech"+idSub).css('display','none');//ocultando el div de la fecha
         //ocultando los contenedores de imagenes..
         $("#foto1"+idSub+"").css('display', 'none');
         $("#foto2"+idSub+"").css('display', 'none');
@@ -295,6 +294,7 @@ $(document).ready(function () {
                     $('#par' + data[1].id).html('');//limpiando el parrafo para mostrar el nuevo comentario
                     $("#stars"+data[1].id+"").html('');//limpiando donde estan las estrellas
                     $("#titCo"+data[1].id+"").html('');//limpiando e titulo...
+                    $("#fech"+data[1].id+"").html('');//limpiando la anterior fecha..
                     //limpiando el contenedor de imagenes..  
                     $("#foto1"+data[1].id+"").html('');
                     $("#foto2"+data[1].id+"").html('');   
@@ -310,11 +310,13 @@ $(document).ready(function () {
                     $("#foto1"+data[1].id).append(foto1);
                     $("#foto2"+data[1].id).append(foto2);
                     $("#foto3"+data[1].id).append(foto3);
+                    //agregando nueva fecha
+                    $("#fech"+data[1].id).append('fecha de edicion '+data[1].fecha_creacion);
                     //mostrando las imagenes
-                    $("#foto1"+data[1].id).css('display', 'block');;
-                    $("#foto2"+data[1].id).css('display', 'block');;
-                    $("#foto3"+data[1].id).css('display', 'block');;   
-
+                    $("#foto1"+data[1].id).css('display', 'block');//mostrando la nueva imagen o foto
+                    $("#foto2"+data[1].id).css('display', 'block');
+                    $("#foto3"+data[1].id).css('display', 'block');  
+                    $('#par' + data[1].id).css('display','block');//mostrando el comentario
                     $("#op_coment").css('display', 'block');//mostrando los botones
                     $("#stars"+data[1].id+"").css('display', 'block');//mostrando el nuevo puntaje
                     $("#titCo"+data[1].id+"").css('display', 'block');//mostrando el titulo del comentario..
@@ -417,6 +419,7 @@ $(document).ready(function () {
                             <a class="del_coment btn btn-danger" id="cc'+ data.id + '" href="/superStore/producto/comentario/' + data.id + '">Eliminar</a>\
                             <button id="ccc'+ data.id + '" class="editar_coment btn btn-primary">Editar</button>\
                         </div>\
+                        <div>Creado el: '+data.fecha_creacion+'</div>\
                       </div>';
                 //alert(parrafo);
                 //datos = JSON.parse(data)

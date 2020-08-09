@@ -30,7 +30,9 @@ from django.db.models.functions import Extract
 from superStore.notificaciones.notif import guardar_token
 from .proces_favoritos.crud_favoritos import aniadir_favoritos
 from .proces_favoritos.crud_favoritos import listarFavoritos #Listar favoritos
-from .proces_categoria.crud_categoria import listarCategoria, listarSubCategoria1, listarSubCategoria2
+from .proces_categoria.crud_categoria import listarCategoria, listarSubCategoria1
+from .proces_ubicacion.crud_ubicacion import listarDepartamento, listarMunicipio, listarBCanton
+
 # Create your views here.
 class index(ListView):#Mostrando index Pagina Principal
     #login_url ='tienda:login'
@@ -43,7 +45,10 @@ class index(ListView):#Mostrando index Pagina Principal
         user = self.request.user
         id_cli = self.request.session.get('id_cli',0)
         clave = self.request.GET.get('clave')
+        id_Subcategoria = self.request.GET.get('id_sub')
         id_prove = self.request.session.get('id_prove', 0)
+        paises = tbl_pais.objects.all()#obteniendo el listado de todos los
+        context['paises']=paises
         print("Esta es la clave "+str(clave))
         if user.is_authenticated:#Verifica si el usuario esta autenticado
             pass
@@ -69,12 +74,19 @@ class index(ListView):#Mostrando index Pagina Principal
                     print(noti_seguir)
                     context['noti_seguidores']=noti_seguir'''
         print(clave)
-        
-        if clave==None:#se verifica que exista clave si no existe se muestran todos
-            print("Esta es la clave!")
-            context['producto']=tbl_producto.objects.all()
+        print("id de la subCategoria")
+        print(id_Subcategoria)
+        if id_Subcategoria is not None:
+            context['producto']=tbl_producto.objects.filter(Q(sub_categoria1__id=id_Subcategoria))
         else:
-            context['producto']=tbl_producto.objects.filter(Q(producto__icontains=clave))
+            if clave==None:#se verifica que exista clave si no existe se muestran todos
+                print("Esta es la clave!")
+                context['producto']=tbl_producto.objects.all()
+            else:
+                context['producto']=tbl_producto.objects.filter(Q(producto__icontains=clave))
+    
+
+            
     
         #print('Valores')
        # print(context.get('cate_list'))

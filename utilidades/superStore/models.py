@@ -123,16 +123,6 @@ class tbl_sub_categoria1(models.Model):
     def get_absolute_url(self):
         return reverse("categoria-detalle",args=[str(self.id)])
 
-class tbl_sub_categoria2(models.Model):
-    categoria = models.ForeignKey(tbl_sub_categoria1, on_delete=models.SET_NULL, null=True)
-    sub_categoria2=models.CharField(max_length=50, help_text="Ingrese subcategoria nivel 3")
-
-    def __str__(self):
-        return self.sub_categoria2
-
-    def get_absolute_url(self):
-        return reverse('sub_categoria-detalle', args=[str(self.id)])
-
 class tbl_producto(models.Model):#Tabla producto que almacenara todos los producto de todos los proveedores
     foto_producto1 = models.ImageField(verbose_name="Imagen", upload_to='foto_producto', null=True, blank=True)
     foto_producto2 = models.ImageField(verbose_name="Imagen", upload_to='foto_producto', null=True, blank=True)
@@ -144,10 +134,10 @@ class tbl_producto(models.Model):#Tabla producto que almacenara todos los produc
     fecha_registro = models.DateField(null=True, blank=True)
     costo_envio = models.FloatField(help_text="Costo del envio", null=True)
     medio_de_envio = models.CharField(max_length=100, help_text="empresa por donde se envia el producto", null=True)
-    sub_categoria2 = models.ForeignKey(tbl_sub_categoria2, on_delete=models.SET_NULL, null=True, blank=True)
     cantidad = models.IntegerField(help_text="Ingrese la cantidad del producto")
     precio_unitario = models.FloatField(help_text="Ingrese el precio unitario del producto")
     precio_total = models.FloatField(help_text="precio total en inventario", blank=True, null=True)
+    sub_categoria1 = models.ForeignKey(tbl_sub_categoria1, on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.producto
@@ -184,6 +174,8 @@ class tbl_comentario_producto(models.Model):
     foto_prueba1=models.ImageField(verbose_name="Image", upload_to="foto_prueba", null=True, blank=True)
     foto_prueba2=models.ImageField(verbose_name="Image", upload_to='foto_prueba', null=True, blank=True)
     foto_prueba3=models.ImageField(verbose_name="Image", upload_to='foto_prueba', null=True, blank=True)
+    fecha_creacion=models.DateTimeField(blank=True, null=True)
+    
     def __str__(self):
         return " %s: %s" % (self.cliente, self.comentario)
 

@@ -3,6 +3,7 @@ from django.views.generic import ListView, CreateView, DeleteView
 from django.http import JsonResponse
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.serializers import serialize
+from django.utils import timezone
 from django.db.models import Q
 import os
 import json
@@ -21,7 +22,7 @@ def listarComentarios(request, pk):#pk seria el id de un producto especifico
         lista_user.append(dicx)
 
         for i in comentarios:
-            dic1={'id':i.id,'cliente':i.cliente.user.username,'producto':i.producto.producto, 'comentario':i.comentario, 'puntaje':i.puntaje, 'foto_prueba1':str(i.foto_prueba1),'foto_prueba2':str(i.foto_prueba2),'foto_prueba3':str(i.foto_prueba3),} 
+            dic1={'id':i.id,'cliente':i.cliente.user.username,'producto':i.producto.producto, 'comentario':i.comentario, 'puntaje':i.puntaje, 'foto_prueba1':str(i.foto_prueba1),'foto_prueba2':str(i.foto_prueba2),'foto_prueba3':str(i.foto_prueba3),'fecha_creacion':i.fecha_creacion} 
             print(dic1)
             lista_user.append(dic1)     
 
@@ -59,7 +60,7 @@ def EscribirComentario(request):
         foto_prueba3=request.FILES.get('foto_prueba3')
         print("y la imagen?")
         print(request.FILES)        
-        
+        fecha_creacion = timezone.now() 
         #Creando el comentario
         print("Este es un comentario")
         print(comentario)
@@ -70,7 +71,8 @@ def EscribirComentario(request):
             puntaje=puntaje,
             foto_prueba1=foto_prueba1,
             foto_prueba2=foto_prueba2,
-            foto_prueba3=foto_prueba3
+            foto_prueba3=foto_prueba3,
+            fecha_creacion=fecha_creacion
         )
         comentar.save()#guandando comentario
         comentarioFin = tbl_comentario_producto.objects.get(Q(cliente__user__id=request.user.id) & Q(producto__id=producto_id))
@@ -79,6 +81,7 @@ def EscribirComentario(request):
         producto=str(comentarioFin.cliente)
         comentario=str(comentarioFin.comentario)
         puntaje=str(comentarioFin.puntaje)
+        fecha_creacion=str(comentarioFin.fecha_creacion)
 
         datos={
                 'id':id, 
@@ -89,7 +92,8 @@ def EscribirComentario(request):
                 'res':str(res),
                 'foto_prueba1':('foto_prueba/'+str(foto_prueba1)), 
                 'foto_prueba2':('foto_prueba/'+str(foto_prueba2)), 
-                'foto_prueba3':('foto_prueba/'+str(foto_prueba3))
+                'foto_prueba3':('foto_prueba/'+str(foto_prueba3)),
+                'fecha_creacion':fecha_creacion,
             }
         print("Resultado de save")
         
@@ -131,6 +135,8 @@ def EditarComentar(request):#metodo servira para eliminar un comentario
         foto_prueba1=request.FILES.get('foto_prueba1')
         foto_prueba2 = request.FILES.get('foto_prueba2')
         foto_prueba3=request.FILES.get('foto_prueba3')
+        #obteniendo fecha de edicion
+        fecha_creacion=timezone.now()
         if foto_prueba1 is not None and foto_prueba2 is not None and foto_prueba3 is not None:
             print("LLega hasta aqui?")
             subir_imagen(foto_prueba1, str(foto_prueba1))
@@ -145,10 +151,11 @@ def EditarComentar(request):#metodo servira para eliminar un comentario
                                                             puntaje=puntaje,
                                                             foto_prueba1=("foto_prueba/"+str(foto_prueba1)),
                                                             foto_prueba2=("foto_prueba/"+str(foto_prueba2)),
-                                                            foto_prueba3=("foto_prueba/"+str(foto_prueba3))
+                                                            foto_prueba3=("foto_prueba/"+str(foto_prueba3)),
+                                                            fecha_creacion=fecha_creacion
                                                         )
     res=True
-    datos=[{'res':res,},{'res':res,'id':id_coment, 'cliente':str(cliente), 'producto':str(producto), 'comentario':comentario, 'puntaje':puntaje, 'foto_prueba1':('foto_prueba/'+str(foto_prueba1)), 'foto_prueba2':('foto_prueba/'+str(foto_prueba2)),'foto_prueba3':('foto_prueba/'+str(foto_prueba3))}]
+    datos=[{'res':res,},{'res':res,'id':id_coment, 'cliente':str(cliente), 'producto':str(producto), 'comentario':comentario, 'puntaje':puntaje, 'foto_prueba1':('foto_prueba/'+str(foto_prueba1)), 'foto_prueba2':('foto_prueba/'+str(foto_prueba2)),'foto_prueba3':('foto_prueba/'+str(foto_prueba3)), 'fecha_creacion':fecha_creacion}]
     print("resultado del update")                                            
     print(comentario) 
     return JsonResponse(datos, safe=False)

@@ -5,7 +5,7 @@
             <ul class="nav flex-column">
                 {% for sub_cate in listar_sub_categoria %}
                     <li class="nav-item">
-                        <a href="" class="nav-link active">{{ sub_cate.sub_categoria }}</a>
+                        <a href="/superStore?&id_sub={{ sub_cate.id }}" class="nav-link active">{{ sub_cate.sub_categoria }}</a>
                     </li>
                 {% endfor %}
             </ul>

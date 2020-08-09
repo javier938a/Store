@@ -132,6 +132,31 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
+        <div id="pais">
+          <form action="" method="get">
+            <select name="paises" id="paises">
+              <option value="" selected>---------</option>
+              {% for pais in paises %}
+                <option value="{{ pais.id }}">{{ pais.pais }}</option>
+              {% endfor %}
+            </select>
+          </form>
+        </div>
+        <div id="depto">
+            <select id="departamento">
+
+            </select>
+        </div>
+        <div id="muni">
+          <select id="municipio">
+
+          </select>
+        </div>
+        <div id="bc">
+          <select id="barrioBcanton">
+            
+          </select>
+        </div>
         {% block clave %}
           <form style="display: flex; align-items:center; justify-content: center;" method="GET" class="form-inline my-2 my-lg-0">
             <input name="clave" class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
