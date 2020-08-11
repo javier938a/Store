@@ -22,6 +22,11 @@
     <!-- MDB core JavaScript -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
     <!-- Font Awesome -->
+  
+    
+    {% block js %}
+
+    {% endblock %}
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
     <!-- Google Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
@@ -132,31 +137,6 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div id="pais">
-          <form action="" method="get">
-            <select name="paises" id="paises">
-              <option value="" selected>---------</option>
-              {% for pais in paises %}
-                <option value="{{ pais.id }}">{{ pais.pais }}</option>
-              {% endfor %}
-            </select>
-          </form>
-        </div>
-        <div id="depto">
-            <select id="departamento">
-
-            </select>
-        </div>
-        <div id="muni">
-          <select id="municipio">
-
-          </select>
-        </div>
-        <div id="bc">
-          <select id="barrioBcanton">
-            
-          </select>
-        </div>
         {% block clave %}
           <form style="display: flex; align-items:center; justify-content: center;" method="GET" class="form-inline my-2 my-lg-0">
             <input name="clave" class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
@@ -165,6 +145,9 @@
         {% endblock %}
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'tienda:contry' %}">Ubicacion</a>
+            </li>
             {% if user.is_authenticated %}{# verificando si el usuario esta logeado para poner el menu ya sea de cliente o de proveedor #} 
               {% ifequal user.tipo_usuario_id.tipo_usuario "Cliente" %}{# se verifica si usuario es cliente para ponerle el menu que corresponde al cliente #}
                   {% if id_cli %}

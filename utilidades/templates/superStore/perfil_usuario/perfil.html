@@ -56,7 +56,6 @@
             <li class="list-group-item"><h5>Apellidos</h5>{{ perfil_proveedor.user.last_name }}</li>
             <li class="list-group-item"><h5>Correo</h5>{{ perfil_proveedor.user.email }}</li>
             <li class="list-group-item"><h5>Telefono</h5>{{ perfil_proveedor.telefono }}</li>
-            <li class="list-group-item"><h5>Direccion</h5>{{ perfil_proveedor.pais }} {{ perfil_proveedor.departamento }} {{ perfil_proveedor.municipio }} {{ perfil_proveedor.barrio_canton }}</li>
         </ul>
         <div class="card-body">
             <a class="btn btn-success" href="{% url 'tienda:editarProveedor' perfil_proveedor.id %}">Modificar informacion</a>

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block clave %}
+<form style="display: flex; align-items:center; justify-content: center;" method="GET" class="form-inline my-2 my-lg-0">
+  <input name="muni" class="form-control mr-sm-2" type="search" placeholder="Buscar municipio" aria-label="Search">
+  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar municipio</button>
+</form>
+{% endblock %}
+{% block contenido %}
+
+<div class="list-group">
+    <a href="#" class="list-group-item list-group-item-action active">
+      MUNICIPIOS
+    </a>
+    {% if muni %}
+        {% for mun in muni %}
+            <a href="{% url 'tienda:bacan' mun.id %}" class="list-group-item list-group-item-action">{{ mun.municipio }}</a>
+        {% endfor %}
+    {% else %}
+        <p>No hay municipios registrados</p>
+    {% endif %}
+  </div>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block clave %}
+    <form style="display: flex; align-items:center; justify-content: center;" method="GET" class="form-inline my-2 my-lg-0">
+        <input name="depto" class="form-control mr-sm-2" type="search" placeholder="Buscar departamento" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar departamento</button>
+    </form>
+{% endblock %}
+{% block contenido %}
+<div class="list-group">
+    <a href="#" class="list-group-item list-group-item-action active">
+      DEPARTAMENTOS
+    </a>
+    {% if depto %}
+        {% for dep in depto %}
+            <a href="{% url 'tienda:muni' dep.id %}" class="list-group-item list-group-item-action">{{ dep.departamento }}</a>
+        {% endfor %}
+    {% else %}
+        <p>No hay departamentos registrados</p>
+    {% endif %}
+  </div>
+{% endblock %}

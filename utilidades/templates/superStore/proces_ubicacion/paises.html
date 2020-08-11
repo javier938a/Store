@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block clave %}
+    <form style="display: flex; align-items:center; justify-content: center;" method="GET" class="form-inline my-2 my-lg-0">
+        <input name="pais" class="form-control mr-sm-2" type="search" placeholder="Buscar pais" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar Pais</button>
+    </form>
+{% endblock %}
+
+{% block contenido %}
+<div class="list-group">
+    <a href="#" class="list-group-item list-group-item-action active">
+        <b>PAISES</b>
+    </a>
+    {% if paises %}
+        {% for pais in paises %}
+        <a href="{% url 'tienda:depto' pais.id %}" class="list-group-item list-group-item-action">{{ pais.pais }}</a>
+        {% endfor %}
+    {% else %}
+        <p>No hay paises que mostrar</p>
+    {% endif %}
+  </div>
+{% endblock %}

@@ -94,10 +94,7 @@ class tbl_mayorista(models.Model):
     nombre_empresa = models.CharField(max_length=50, help_text="Ingrese el nombre de su empresa")
     telefono = models.CharField(max_length=8, help_text="Ingrese su numero de telefono")
     fecha_nacimiento = models.DateField(null=True, blank=True)
-    pais = models.CharField(max_length=20, null=True)
-    departamento = models.CharField(max_length=50, null=True)
-    municipio = models.CharField(max_length=50, null=True)
-    barrio_caton = models.CharField(max_length=50, null=True)
+    barrio_canton = models.ForeignKey(tbl_barrio_canton, on_delete=models.SET_NULL, null=True)
     def __str__(self):
         return "%s" % (self.nombre_empresa)
 

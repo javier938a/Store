@@ -73,6 +73,7 @@
           <ul class="list-group list-group-flush">
             <li class="list-group-item"><h5>Registrado desde:</h5>{{ detalle_producto.mayorista.user.date_joined }}</li>
             <li class="list-group-item"><h5>Seguidores</h5><p id="numero_amigos"></p></li>
+            <li class="list-group-item"><h5>Direccion: </h5>{{ detalle_producto.mayorista.barrio_canton.municipio.departamento.pais }}, {{ detalle_producto.mayorista.barrio_canton.municipio.departamento }}, {{ detalle_producto.mayorista.barrio_canton.municipio }}, {{ detalle_producto.mayorista.barrio_canton }} </li>
             <input id="id_mayorista" type="hidden" name="" value="{{ detalle_producto.mayorista.id }}">
             <li class="list-group-item">
               <div class="container">
@@ -216,7 +217,7 @@
                         <div class="d-flex w-100 justify-content-between">
                           <h5>Categoria</h5>
                         </div>
-                        <p class="mb-1">{{ detalle_producto.sub_categoria2}}</p>
+                        <p class="mb-1">{{ detalle_producto.sub_categoria1 }}</p>
                       </a>
                   </div>
             </div>

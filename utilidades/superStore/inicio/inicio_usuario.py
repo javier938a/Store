@@ -126,10 +126,7 @@ class EditarInformacionPerfilProveedor(UpdateView):
         telefono = request.POST.get('telefono')
         fecha_nacimiento = request.POST.get('fecha_nacimiento')
         #Direccion
-        pais = request.POST.get('pais')
-        departamento = request.POST.get('departamento')
-        municipio = request.POST.get('municipio')
-        barrio_canton = request.POST.get('barrio_canton')
+
         #barrio_canton es barrio_caton en la tabla tbl_mayorista
         update_usuario = User.objects.filter(id=request.user.id).update(
             first_name=first_name,
@@ -156,9 +153,5 @@ class EditarInformacionPerfilProveedor(UpdateView):
                 nombre_empresa=nombre_empresa,
                 telefono=telefono,
                 fecha_nacimiento=fecha_nacimiento,
-                pais=pais,
-                departamento=departamento,
-                municipio=municipio,
-                barrio_caton=barrio_canton
             )
         return redirect("tienda:index")

@@ -13,7 +13,7 @@ from .views import guardar_token
 from .views import aniadir_favoritos
 from .views import listarFavoritos
 from .views import listarCategoria, listarSubCategoria1
-from .views import listarDepartamento, listarMunicipio,listarBCanton
+from .views import ListarPais, ListarDepartamentos, ListarMunicipio,ListarBCanton
 
 app_name='tienda'
 urlpatterns=[
@@ -57,7 +57,8 @@ urlpatterns=[
     path('favoritos/', listarFavoritos.as_view(), name='list_favoritos'), #pk es el id de un usuario especifico
     path('list_cate/',listarCategoria, name='categorias'),
     path('list_cate/lis_sub_cate1/<int:pk>',listarSubCategoria1, name='subcate1'),
-    path('depto/<int:pk>', listarDepartamento, name='depto'),
-    path('depto/muni/<int:pk>', listarMunicipio, name='muni'),
-    path('depto/muni/barcant/<int:pk>', listarBCanton, name='baBcan'),
+    path('pais/',ListarPais.as_view(), name='contry'),
+    path('pais/depto/<int:pk>', ListarDepartamentos.as_view(), name='depto'),
+    path('pais/depto/muni/<int:pk>', ListarMunicipio.as_view(), name='muni'),
+    path('pais/depto/muni/barcant/<int:pk>', ListarBCanton.as_view(), name='bacan'),
 ]

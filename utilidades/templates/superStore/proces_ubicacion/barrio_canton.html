@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block clave %}
+<form style="display: flex; align-items:center; justify-content: center;" method="GET" class="form-inline my-2 my-lg-0">
+  <input name="bacan" class="form-control mr-sm-2" type="search" placeholder="Buscar Barrio o Canton" aria-label="Search">
+  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar Barrio o Canton</button>
+</form>
+{% endblock %}
+{% block contenido %}
+    <div class="list-group">
+        <a href="#" class="list-group-item list-group-item-action active">
+        BARRIO O CANTON
+        </a>
+        {% if bacan %}
+            {% for b_c in bacan %}
+                <a href="/superStore?&boc={{ b_c.id }}" class="list-group-item list-group-item-action">{{ b_c.barrio_canton }}</a>
+            {% endfor %}
+        {% else %}
+            <p>No hay barrios ni cantones registrados aun</p>
+        {% endif %}
+    </div>
+{% endblock %}
