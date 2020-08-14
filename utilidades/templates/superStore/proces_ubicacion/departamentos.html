@@ -11,6 +11,7 @@
       DEPARTAMENTOS
     </a>
     {% if depto %}
+            <a href="/superStore/?&id_pais={{ id_pais }}" class="list-group-item list-group-item-action">Todos los deptos</a>
         {% for dep in depto %}
             <a href="{% url 'tienda:muni' dep.id %}" class="list-group-item list-group-item-action">{{ dep.departamento }}</a>
         {% endfor %}

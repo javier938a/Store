@@ -32,7 +32,6 @@
                     {% else %}
                         <th style="background-color:orchid;">No selecionado</th>
                     {% endifequal %}
-                    {{ dire.estado }}
                     <td><a class="btn btn-success" href="{% url 'tienda:dire_edi' dire.id %}">Editar</a></td>
                     <td><a class="btn btn-danger" href="{% url 'tienda:del_dire' dire.id %}">Eliminar</a></td>
                 </tr>

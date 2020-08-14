@@ -14,7 +14,7 @@ from .views import aniadir_favoritos
 from .views import listarFavoritos
 from .views import listarCategoria, listarSubCategoria1
 from .views import ListarPais, ListarDepartamentos, ListarMunicipio,ListarBCanton
-
+from .views import listarDeptoA, listarMuniA, listarBacanA
 app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
@@ -61,4 +61,7 @@ urlpatterns=[
     path('pais/depto/<int:pk>', ListarDepartamentos.as_view(), name='depto'),
     path('pais/depto/muni/<int:pk>', ListarMunicipio.as_view(), name='muni'),
     path('pais/depto/muni/barcant/<int:pk>', ListarBCanton.as_view(), name='bacan'),
+    path('deptoAs/<int:pk>', listarDeptoA, name='adepto'),
+    path('deptoAs/muniAs/<int:pk>', listarMuniA, name='amuni'),
+    path('deptoAs/muniAs/b_c/<int:pk>', listarBacanA, name='ab_c'),
 ]

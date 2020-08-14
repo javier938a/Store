@@ -30,6 +30,7 @@ class ListarDepartamentos(ListView):#recivira como parametro el id del pais
 
     def get_context_data(self, **kwargs):
         context=super(ListarDepartamentos, self).get_context_data(**kwargs)
+        context['id_pais']=self.kwargs['pk']
         return context
     
     def get_queryset(self):
@@ -45,7 +46,7 @@ class ListarMunicipio(ListView):
     context_object_name='muni'
     def get_context_data(self, **kwargs):
         context = super(ListarMunicipio, self).get_context_data(**kwargs)
-
+        context['id_depto']=self.kwargs['pk']
         return context
 
     def get_queryset(self):
@@ -62,8 +63,9 @@ class ListarBCanton(ListView):
     context_object_name='bacan'
 
     def get_context_data(self, **kwargs):
-        contex=super(ListarBCanton, self).get_context_data(**kwargs)
-        return contex
+        context=super(ListarBCanton, self).get_context_data(**kwargs)
+        context['id_muni']=self.kwargs['pk']
+        return context
     
     def get_queryset(self):
         b_c= self.request.GET.get('bacan')

@@ -12,6 +12,7 @@
       MUNICIPIOS
     </a>
     {% if muni %}
+            <a href="/superStore/?&id_depto={{id_depto}}" class="list-group-item list-group-item-action">Todos los municipios</a>
         {% for mun in muni %}
             <a href="{% url 'tienda:bacan' mun.id %}" class="list-group-item list-group-item-action">{{ mun.municipio }}</a>
         {% endfor %}

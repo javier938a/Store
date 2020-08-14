@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import User, tbl_mayorista, tbl_cliente, tbl_direccion, tbl_producto, tbl_venta, tbl_categoria
+from .models import User, tbl_mayorista, tbl_cliente, tbl_direccion, tbl_producto, tbl_venta, tbl_categoria, tbl_pais
 from .models import tbl_cesta
 
 class CreateUserForm(UserCreationForm):#extienda de la clase UserCreationForm
@@ -36,24 +36,36 @@ class CreatePerfilCliente(forms.ModelForm):#Registra el perfil del cliente
 class CreatePerfilMayorista(forms.ModelForm):#Registra el perfil del proveedor
     class Meta:
         model = tbl_mayorista
-        fields = ('foto_perfil','user','genero','nombre_empresa','telefono','fecha_nacimiento',)
+        fields = ('foto_perfil','user','objetivo','genero','nombre_empresa','telefono','fecha_nacimiento','barrio_canton',)
         labels = {
             'foto_perfil':'Foto de Perfil',
             'user':'Usuario',
+            'objetivo':'Acerca de la Empresa',
             'genero':'Genero',
             'nombre_empresa':'Empresa',
             'telefono':'Telefono',
             'fecha_nacimiento':'Fecha de nacimiento',
+            'barrio_canton':'Barrio o Canton'
 
         }
         widgets={
             'foto_perfil':forms.FileInput(attrs={'class':'form-control', 'id':'foto'}),
             'user':forms.Select(attrs={'class':'form-control'}),
+            'objetivo':forms.Textarea(attrs={'class':'form-control'}),
             'genero':forms.Select(attrs={'class':'form-control'}),
             'nombre_empresa':forms.TextInput(attrs={'class':'form-control'}),
             'telefono':forms.TextInput(attrs={'class':'form-control'}),
             'fecha_nacimiento':forms.DateInput(attrs={'class':'form-control vDateField'}),
+            'barrio_canton':forms.Select(attrs={'class':'form-control'}),
         } 
+class FormDireP(forms.Form):
+    pais = forms.ModelMultipleChoiceField(queryset=None,required=False, label="Pais", widget=forms.SelectMultiple(attrs={'class':'form-control'}))
+    depto = forms.ChoiceField(label="Departamento",required=False, widget=forms.SelectMultiple(attrs={'class':'form-control'}))
+    muni = forms.ChoiceField(label="Municipio",required=False, widget=forms.SelectMultiple(attrs={'class':'form-control'}))
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['pais'].queryset = tbl_pais.objects.all()
+
 
 class FormCrearDireccion(forms.ModelForm):#para registrar las multiples direcciones que pueda tener un cliente
     class Meta:
@@ -157,7 +169,3 @@ class CategoriaForm(forms.ModelForm):
     class Meta:
         model = tbl_categoria
         fields=('categoria',)
-
-
-
-

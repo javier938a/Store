@@ -32,7 +32,8 @@ from .proces_favoritos.crud_favoritos import aniadir_favoritos
 from .proces_favoritos.crud_favoritos import listarFavoritos #Listar favoritos
 from .proces_categoria.crud_categoria import listarCategoria, listarSubCategoria1
 from .proces_ubicacion.crud_ubicacion import ListarPais, ListarDepartamentos, ListarMunicipio, ListarBCanton
-
+from .forms import FormDireP
+from .inicio.inicio_usuario import listarDeptoA, listarMuniA, listarBacanA
 # Create your views here.
 class index(ListView):#Mostrando index Pagina Principal
     #login_url ='tienda:login'
@@ -47,6 +48,10 @@ class index(ListView):#Mostrando index Pagina Principal
         clave = self.request.GET.get('clave')#busqueda por clave de busqueda..
         id_Subcategoria = self.request.GET.get('id_sub')#buscando por subcategoria..
         id_boc = self.request.GET.get('boc')#id barrio o canton
+        id_pais = self.request.GET.get('id_pais')#buscar por departamento
+        id_depto=self.request.GET.get('id_depto')#Buscar por municipio
+        id_muni=self.request.GET.get('id_muni')
+        print(id_pais)
         id_prove = self.request.session.get('id_prove', 0)
         paises = tbl_pais.objects.all()#obteniendo el listado de todos los
         context['paises']=paises
@@ -77,19 +82,27 @@ class index(ListView):#Mostrando index Pagina Principal
         print(clave)
         print("id de la subCategoria")
         print(id_Subcategoria)
-        
-        if id_boc is not None:
-            context['producto']=tbl_producto.objects.filter(Q(mayorista__barrio_canton__id=id_boc))
+        if id_muni is not None:
+            context['producto']=tbl_producto.objects.filter(Q(mayorista__barrio_canton__municipio__id=id_muni))
         else:
-            if id_Subcategoria is not None:
-                context['producto']=tbl_producto.objects.filter(Q(sub_categoria1__id=id_Subcategoria))
+            if id_depto is not None:
+                context['producto']=tbl_producto.objects.filter(Q(mayorista__barrio_canton__municipio__departamento__id=id_depto))
             else:
-                if clave==None:#se verifica que exista clave si no existe se muestran todos
-                    print("Esta es la clave!")
-                    context['producto']=tbl_producto.objects.all()
+                if id_pais is not None:
+                    context['producto']=tbl_producto.objects.filter(Q(mayorista__barrio_canton__municipio__departamento__pais__id=id_pais))
                 else:
-                    context['producto']=tbl_producto.objects.filter(Q(producto__icontains=clave))
-    
+                    if id_boc is not None:
+                        context['producto']=tbl_producto.objects.filter(Q(mayorista__barrio_canton__id=id_boc))
+                    else:
+                        if id_Subcategoria is not None:
+                            context['producto']=tbl_producto.objects.filter(Q(sub_categoria1__id=id_Subcategoria))
+                        else:
+                            if clave==None:#se verifica que exista clave si no existe se muestran todos
+                                print("Esta es la clave!")
+                                context['producto']=tbl_producto.objects.all()
+                            else:
+                                context['producto']=tbl_producto.objects.filter(Q(producto__icontains=clave))
+                
 
             
     
@@ -197,11 +210,14 @@ def RegistrarPerfilCliente(request):
 
 def RegistrarPerfilProveedor(request):
     template = 'superStore/registrar_usuario/reg_perfil_provee.html'
+    FormDir=FormDireP()
+    print("Aqui---->")
+    print(FormDir.is_valid())
     form = None
     if request.method == "POST":
         form = CreatePerfilMayorista(request.POST, request.FILES)
         s=form.is_valid()
-        print(form)
+        print(form.errors)
         print("esto dice")
         print(s)
         if form.is_valid():
@@ -214,7 +230,7 @@ def RegistrarPerfilProveedor(request):
     return render(
         request,
         template,
-        context={'form':form}
+        context={'form':form,'formDir':FormDir}
     )
 
 

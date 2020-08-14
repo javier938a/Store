@@ -111,8 +111,64 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-row">
+                    <label for="dire">Direccion Actual:</label>
+                    <input id="dire" class="form-control" type="text" name="dir" value="{{ proveedor.barrio_canton.municipio.departamento.pais }}, {{ proveedor.barrio_canton.municipio.departamento }}, {{ proveedor.barrio_canton.municipio }}, {{ proveedor.barrio_canton }}" disabled>
+                </div>
                 <div class="form-row"> 
-
+                    <div class="form-group col-md-12">
+                        <label for="id_pais">Pais:</label>
+                        <select id="id_pais" class="form-control" name="pais" multiple="" required>
+                            <option value="">---------</option>
+                            {% if paises %}
+                                {% for pais in paises %}
+                                    <option value="{{ pais.id }}">{{ pais.pais }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                        <div class="valid-feedback">
+                            Es correcto!
+                        </div>
+                        <div class="invalid-feedback">
+                            No es correcto!
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="id_depto">Departamento:</label>
+                        <select id="id_depto" class="form-control" name="depto" multiple="" required></select>    
+                        <div class="valid-feedback">
+                            Es correcto!
+                        </div>
+                        <div class="invalid-feedback">
+                            No es correcto!
+                        </div>                    
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="id_muni">Municipio:</label>
+                        <select id="id_muni" class="form-control" name="muni" multiple="" required></select>
+                        <div class="valid-feedback">
+                            Es correcto!
+                        </div>
+                        <div class="invalid-feedback">
+                            No es correcto!
+                        </div>                     
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="id_barrio_canton">Barrio o Canton:</label>
+                        <select id="id_barrio_canton" class="form-control" name="barrio_canton" multiple="" required></select>
+                        <div class="valid-feedback">
+                            Es correcto!
+                        </div>
+                        <div class="invalid-feedback">
+                            No es correcto!
+                        </div> 
+                    </div>
                 </div>
                 <button class="btn btn-primary" type="submit">Guardar</button>
                 <a class="btn btn-success" href="{% url 'tienda:index' %}">Inicio</a>

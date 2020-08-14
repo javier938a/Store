@@ -467,27 +467,33 @@ $(document).ready(function () {
     //al dar click en el boton seguir se agregara un nuevo seguidor al proveedor
     $("#btnSeguir").click(function (evt) {
         evt.preventDefault();
-        $.ajax({
-            url: $("#btnSeguir").attr("href"),
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                if (data.res == true) {
-                    if ($("#btnSeguir").hasClass("btn-primary") == true) {//si el resultado da true se verifica si el boton tiene el color btn-primary si esta se elimina ese color y se agrega el success
-                        $("#btnSeguir").removeClass("btn-primary");
-                        $("#btnSeguir").addClass('btn-success');
+        let tipo_user = document.querySelector('meta[name="tipo_user"]').content;
+        if(tipo_user=="Cliente"){
+            $.ajax({
+                url: $("#btnSeguir").attr("href"),
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.res == true) {
+                        if ($("#btnSeguir").hasClass("btn-primary") == true) {//si el resultado da true se verifica si el boton tiene el color btn-primary si esta se elimina ese color y se agrega el success
+                            $("#btnSeguir").removeClass("btn-primary");
+                            $("#btnSeguir").addClass('btn-success');
+                        }
+                        $("#btnSeguir").addClass('btn btn-success');//si no esta primary se agrega succes y se actualiza el numero de amigos que se recibe del servidor
+                        $("#numero_amigos").html(data.numero_amigos);
+                    } else {//si es falso el resultado significa que se elimino el seguidor
+                        if ($("#btnSeguir").hasClass('btn-success') == true) {
+                            $("#btnSeguir").removeClass("btn-success");
+                            $("#btnSeguir").addClass('btn-primary');
+                        }
+                        $("#numero_amigos").html(data.numero_amigos);
                     }
-                    $("#btnSeguir").addClass('btn btn-success');//si no esta primary se agrega succes y se actualiza el numero de amigos que se recibe del servidor
-                    $("#numero_amigos").html(data.numero_amigos);
-                } else {//si es falso el resultado significa que se elimino el seguidor
-                    if ($("#btnSeguir").hasClass('btn-success') == true) {
-                        $("#btnSeguir").removeClass("btn-success");
-                        $("#btnSeguir").addClass('btn-primary');
-                    }
-                    $("#numero_amigos").html(data.numero_amigos);
                 }
-            }
-        });
+            });
+        }else{
+            $("#mensaje_pro").html('<p class="alert alert-danger">Lo sentimos usted es un vendedor no puede seguir a otro vendedor.</p>');
+        }
+
     });
     $("#ver_detalle_producto").click(function (evt) {
         evt.preventDefault();
@@ -587,32 +593,37 @@ $(document).ready(function () {
     $(".aniadir_favorito").submit(function () {
         boton = $("button", this)
         //alert("Holqqq");
+        let tipo_user = document.querySelector('meta[name="tipo_user"]').content;
         const csrftoken = getCookie('csrftoken');
-        datos = {
-            csrfmiddlewaretoken: csrftoken,
-            'cliente_id': $("#cliente_id").val(),
-        };
-        //alert(datos.cliente_id);
-        $.ajax({
-            url: $(this).attr("action"),
-            type: 'GET',
-            data: datos,
-            dataType: 'json',
-            success: function (data) {
-                if (data.res == true) {
-                    //alert(boton.hasClass('btn-success'));
-                    if (boton.hasClass('btn-primary') == true) {//verificando si el boton tiene btn-succes
-                        boton.addClass('btn-success');
-                        boton.removeClass('btn-primary');
+        if(tipo_user=="Cliente"){
+            datos = {
+                csrfmiddlewaretoken: csrftoken,
+                'cliente_id': $("#cliente_id").val(),
+            };
+            //alert(datos.cliente_id);
+            $.ajax({
+                url: $(this).attr("action"),
+                type: 'GET',
+                data: datos,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.res == true) {
+                        //alert(boton.hasClass('btn-success'));
+                        if (boton.hasClass('btn-primary') == true) {//verificando si el boton tiene btn-succes
+                            boton.addClass('btn-success');
+                            boton.removeClass('btn-primary');
+                        }
+                    } else {
+                        if (boton.hasClass('btn-success')) {//verificando si el boton esta en primary color
+                            boton.addClass('btn-primary');
+                            boton.removeClass('btn-success');
+                        }
                     }
-                } else {
-                    if (boton.hasClass('btn-success')) {//verificando si el boton esta en primary color
-                        boton.addClass('btn-primary');
-                        boton.removeClass('btn-success');
-                    }
-                }
-            },
-        });
+                },
+            });
+        }else{
+            $("#msjErrorFav").html('<p class="alert alert-danger">Lo sentimos mucho no se puede añadir a favorito ya que usted es vendedor.</p>')
+        }
         return false;
     });
 });

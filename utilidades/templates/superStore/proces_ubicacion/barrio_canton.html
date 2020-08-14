@@ -10,9 +10,10 @@
         <a href="#" class="list-group-item list-group-item-action active">
         BARRIO O CANTON
         </a>
+        <a href="/superStore?&boc={{ id_muni }}" class="list-group-item list-group-item-action">Todos los Municipios</a>
         {% if bacan %}
             {% for b_c in bacan %}
-                <a href="/superStore?&boc={{ b_c.id }}" class="list-group-item list-group-item-action">{{ b_c.barrio_canton }}</a>
+                <a href="/superStore?boc={{ b_c.id }}" class="list-group-item list-group-item-action">{{ b_c.barrio_canton }}</a>
             {% endfor %}
         {% else %}
             <p>No hay barrios ni cantones registrados aun</p>

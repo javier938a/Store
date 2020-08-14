@@ -42,23 +42,28 @@
                         {{ form.fecha_nacimiento.label_tag }}
                         {{ form.fecha_nacimiento }}
                     </div>
-                    <div class="form-group col-md-3">
-                        {{ form.pais }}
+                    <div class="form-group col-md-12">
+                        {{ form.objetivo.label_tag }}
+                        {{ form.objetivo }}
                     </div>
-                    <div class="form-group col-md-3">
-                        {{ form.departamento }}
+                    <div class="form-group col-md-12">
+                        <form id="idDir" action="">
+                            {{ formDir }}
+                        </form>
                     </div>
-                    <div class="form-group col-md-3">
-                        {{ form.municipio }}
-                    </div>
-                    <div class="form-group col-md-3">
-                        {{ form.barrio_caton }}
+                    <div class="form-group col-md-12">
+                        {{ form.barrio_canton.label_tag }}
+                        {{ form.barrio_canton }}
                     </div>
                     <div class="form-group col-md-12">
                         <button class="btn btn-success" type="submit" >Guardar y siguiente</button> 
                     </div>
+
                 </div>
             </form>
+            <div style="color:yellow;" class="col-md-12">
+                {{ form.errors }}
+            </div>
         </div>
     </div>
 

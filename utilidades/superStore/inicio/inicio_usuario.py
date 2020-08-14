@@ -1,4 +1,4 @@
-from superStore.models import tbl_cliente, User, tbl_cliente, tbl_mayorista
+from superStore.models import tbl_cliente, User, tbl_cliente, tbl_mayorista, tbl_departamento, tbl_municipio, tbl_barrio_canton
 from django.views.generic import DetailView, ListView,TemplateView, UpdateView
 from django.shortcuts import render
 from superStore.models import tbl_categoria
@@ -8,6 +8,9 @@ from superStore.models import tbl_direccion
 from django.shortcuts import redirect
 from django.core.files import File
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.http import JsonResponse
+from django.core.serializers import serialize
+from superStore.models import tbl_pais
 import urllib
 import os
  
@@ -101,13 +104,15 @@ class EditarInformacionPerfilProveedor(UpdateView):
         proveedor = tbl_mayorista.objects.get(id=self.kwargs['pk'])#obteniendo el proveedor del la tabla mayorista
         usuario = User.objects.get(id=proveedor.user.id)#obteniendo el usuario de la tabla User cuyo proveedor sea el de el ID ingresado
         id_prove = self.request.session.get('id_prove')
+        paises = tbl_pais.objects.all()
         return render(
             request,
             self.template_name,
             context={'id_proveedor':self.kwargs['pk'],
                      'proveedor':proveedor,
                     'usuario':usuario,
-                    'id_prove':id_prove,})
+                    'id_prove':id_prove,
+                    'paises':paises,})
     def post(self, request, *args, **kwars):
         #campos de usuario
         first_name = request.POST.get('nombres')
@@ -125,6 +130,7 @@ class EditarInformacionPerfilProveedor(UpdateView):
         nombre_empresa = request.POST.get('nombre_empresa')
         telefono = request.POST.get('telefono')
         fecha_nacimiento = request.POST.get('fecha_nacimiento')
+        barrio_canton = request.POST.get('barrio_canton')
         #Direccion
 
         #barrio_canton es barrio_caton en la tabla tbl_mayorista
@@ -153,5 +159,31 @@ class EditarInformacionPerfilProveedor(UpdateView):
                 nombre_empresa=nombre_empresa,
                 telefono=telefono,
                 fecha_nacimiento=fecha_nacimiento,
+                barrio_canton=barrio_canton
             )
         return redirect("tienda:index")
+    
+#deptoAs/<int:pk>
+#pk sera el id del páis
+def listarDeptoA(request, pk):
+    depto=None
+    if request.is_ajax():
+        depto=tbl_departamento.objects.filter(pais__id=pk)
+
+    return JsonResponse(serialize('json', depto), safe=False) 
+
+#deptoAs/muniAs/<int:pk>
+def listarMuniA(request, pk):
+    muni=None
+    if request.is_ajax():
+        muni = tbl_municipio.objects.filter(departamento__id=pk)
+    
+    return JsonResponse(serialize('json', muni), safe=False)
+
+#deptoAs/muniAs/b_c/<int:pk>
+def listarBacanA(request, pk):
+    bacan=None
+    if request.is_ajax():
+        bacan = tbl_barrio_canton.objects.filter(municipio__id=pk)
+    
+    return JsonResponse(serialize('json', bacan), safe=False)
