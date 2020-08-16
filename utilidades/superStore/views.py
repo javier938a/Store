@@ -34,6 +34,7 @@ from .proces_categoria.crud_categoria import listarCategoria, listarSubCategoria
 from .proces_ubicacion.crud_ubicacion import ListarPais, ListarDepartamentos, ListarMunicipio, ListarBCanton
 from .forms import FormDireP
 from .inicio.inicio_usuario import listarDeptoA, listarMuniA, listarBacanA
+import random
 # Create your views here.
 class index(ListView):#Mostrando index Pagina Principal
     #login_url ='tienda:login'
@@ -43,6 +44,9 @@ class index(ListView):#Mostrando index Pagina Principal
     context_object_name='cate_list'
     def get_context_data(self, **kwargs):
         context = super(index, self).get_context_data(**kwargs)
+        rand = random.randint(10, 1000)
+        print("aleatorio: "+str(rand))
+        context['rand']=rand
         user = self.request.user
         id_cli = self.request.session.get('id_cli',0)
         clave = self.request.GET.get('clave')#busqueda por clave de busqueda..

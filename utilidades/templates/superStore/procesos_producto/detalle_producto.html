@@ -27,6 +27,12 @@
 
 {% block contenido %}
 {# Informacion del producto a comprar #}
+<div class="social">
+  <ul>
+    <li><a id="face" href="#" target="_blank" class="icon-facebook"><i class="fab fa-facebook-square"></i></a></li>
+    <li><a id="twitt" href="#" target="_blank" class="icon-twitter"><i class="fab fa-twitter-square"></i></a></li>
+  </ul>
+</div>
 <div class="container">
   <ul class="nav nav-tabs nav-pills">
     <li class="nav-item">
@@ -134,39 +140,39 @@
                     </div>
                 </div>
                 <div style="margin-top: 20px; " class="row">
-                  <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                  {# agregando segundo boton #}
+                  <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                    <a href="{% url 'tienda:agregar_cesta' detalle_producto.id %}" class="btn btn-primary">Agregar a Cesta</a>
+                  </div>
+                  {# agregando tercer boton #}
+                  <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                    <a href="{% url 'tienda:reg_venta' detalle_producto.id  %}" class="btn btn-primary">Comprar</a>
+                  </div>
+                  {# agregando tercer boton #}
+                </div>
+                <div class="row">
+                  <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                     <div>
                       <a id="chat" class="btn btn-primary contact" href="">contactar al vendedor</a>
                     </div>
                   </div>
-                  {# agregando segundo boton #}
-                  <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                    <a href="{% url 'tienda:agregar_cesta' detalle_producto.id %}" class="btn btn-primary">Agregar a Cesta</a>
-                  </div>
-                  {# agregando tercer boton #}
-                  <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                    <a href="{% url 'tienda:reg_venta' detalle_producto.id  %}" class="btn btn-primary">Comprar</a>
-                  </div>
-                  {# agregando tercer boton #}
-                  <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                      {# agregando el boton de favoritos #}
-                      <form class="aniadir_favorito" action="{% url 'tienda:favorito' detalle_producto.id %}" method="post">
-                        {% csrf_token %}
-                        <input id="cliente_id" type="hidden" name="cliente_id" value="{{ cliente_id }}">
-                        {% ifequal existe_fav True %}
-                          <button type="submit"  class="btn btn-success" name="boton">Añadir a <br>Favoritos</button>                                        
-                        {% endifequal %}
-                        {% ifequal existe_fav False %}
-                          <button type="submit"  class="btn btn-primary" name="boton">Añadir a <br>Favoritos</button>                                        
-                        {% endifequal %}
-                        </form>
-                        <div id="msjErrorFav">
+                  {# boton de añadir a favoritos.. #}
+                  <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                    {# agregando el boton de favoritos #}
+                    <form class="aniadir_favorito" action="{% url 'tienda:favorito' detalle_producto.id %}" method="post">
+                      {% csrf_token %}
+                      <input id="cliente_id" type="hidden" name="cliente_id" value="{{ cliente_id }}">
+                      {% ifequal existe_fav True %}
+                        <button type="submit"  class="btn btn-success" name="boton">Añadir a <br>Favoritos</button>                                        
+                      {% endifequal %}
+                      {% ifequal existe_fav False %}
+                        <button type="submit"  class="btn btn-primary" name="boton">Añadir a <br>Favoritos</button>                                        
+                      {% endifequal %}
+                      </form>
+                      <div id="msjErrorFav">
 
-                        </div>
-                  </div>
-                  <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                    <a href="#" class="btn btn-primary">Compartir</a>
-                  </div>
+                      </div>
+                </div>
                 </div>
             </div>
         </div>

@@ -143,8 +143,8 @@ class DetalleProducto(DetailView):
                 print("Exists "+str(tbl_favoritos.objects.filter(cliente__id=cliente_id).exists()))
                 if tbl_favoritos.objects.filter(producto__id=self.kwargs['pk']).exists():
                     context['existe_fav']=True
-            else:
-                context['existe_fav']=False
+                else:
+                    context['existe_fav']=False
 
             #print("id del cliente: "+str(context['cliente_id']))
         #print("jjjj "+str(self.request.user.tipo_usuario_id.tipo_usuario))

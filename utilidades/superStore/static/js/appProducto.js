@@ -35,6 +35,21 @@ function getCookie(name) {
   })();
 
 $(document).ready(function () {
+    $("#face").on('click', function(evt){
+        evt.preventDefault();
+        let urlActual = window.location;
+        urlFace = 'https://www.facebook.com/sharer/sharer.php?u='
+        urlFaceCom=urlFace+urlActual;
+        window.open(urlFaceCom,'_blank');
+        
+    });
+    $("#twitt").on('click',function(evt){
+        evt.preventDefault();
+        let urlActual=window.location;
+        urlTwitt = 'https://twitter.com/intent/tweet?text='
+        urlTwitttCom = urlTwitt+urlActual;
+        window.open(urlTwitttCom, '_blank');
+    });
     //aplicando efecto lightbox a las miniaturas de imagenes
     $(document).on('click', '[data-toggle="lightbox"]', function(evt){
         evt.preventDefault();
@@ -594,6 +609,7 @@ $(document).ready(function () {
         boton = $("button", this)
         //alert("Holqqq");
         let tipo_user = document.querySelector('meta[name="tipo_user"]').content;
+        //alert(tipo_user);
         const csrftoken = getCookie('csrftoken');
         if(tipo_user=="Cliente"){
             datos = {
