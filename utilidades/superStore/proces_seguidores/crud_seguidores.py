@@ -4,6 +4,7 @@ from superStore.models import tbl_seguidores, tbl_cliente, tbl_mayorista
 from django.db.models import Q
 from django.utils import timezone
 from fcm_django.models import FCMDevice
+import random
 
 def verificar_existe_seguidor(request, pk):
     if request.is_ajax():
@@ -42,7 +43,9 @@ def agregar_nuevo_seguidor(request, pk):
         print("id prove"+str(prove))
         esta = tbl_seguidores.objects.filter(cliente=cliente, mayorista=prove)
         if esta.exists()==False: #primero se verifica si el cliente existe como seguidor, y si existe se elimina
-            seguidor = tbl_seguidores(cliente=cliente, mayorista=prove, fecha_de_seguidor=fecha_de_seguidor)#crea el registro objeto seguidor con el cliente y mayorista 
+            num_aleato=(random.uniform(1,10000)/100)*147
+            grupo_privado="it_"+str(num_aleato)
+            seguidor = tbl_seguidores(cliente=cliente, mayorista=prove, fecha_de_seguidor=fecha_de_seguidor, grupo_privado=grupo_privado)#crea el registro objeto seguidor con el cliente y mayorista 
             seguidor.save()#guarda correctamente
             res=True#si no hay error res cambia a true indicando que se agrego un nuevo amigo
             #obteniendo los seguidores del proveedor
@@ -68,3 +71,33 @@ def agregar_nuevo_seguidor(request, pk):
         'numero_amigos':numero_amigos,
         'res':res,
     }, safe=True)
+
+def listar_seguidores_proveedores(request, pk):#listara las tiendas que el cliente sigue
+    sigues = None
+    lista_sigues=[]
+    if request.is_ajax():
+        print(request.method)
+        if request.method=="GET":
+            sigues = tbl_seguidores.objects.filter(Q(cliente__user__id=pk))
+            for i in sigues:
+                datos_dic = {'pk':str(i.id), 'empresa':str(i.mayorista.nombre_empresa), 'foto_perfil':str(i.mayorista.foto_perfil), 'grupo':str(i.grupo_privado)}
+                print(datos_dic)
+                lista_sigues.append(datos_dic)
+
+            print(lista_sigues)
+        
+    return JsonResponse(lista_sigues, safe=False)
+
+def listar_seguidores_cliente(request, pk):#listara los clientes que siguen a un proveedor
+    seguidor=None
+    lista_seguidor=[]
+    if request.is_ajax():
+        if request.method=="GET":
+            seguidor = tbl_seguidores.objects.filter(Q(mayorista__user__id=pk))
+            for i in seguidor:
+                datos_dic = {'pk':str(i.id), 'cliente':str(i.cliente.user.username), 'foto_perfil':str(i.cliente.foto_perfil), 'grupo':str(i.grupo_privado)}
+                lista_seguidor.append(datos_dic)
+    print(lista_seguidor)
+        
+    return JsonResponse(lista_seguidor, safe=False)
+        

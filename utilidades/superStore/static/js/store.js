@@ -119,6 +119,64 @@ $(document).ready(function(){
             }
         });
     });
+    $("#close").on('click',function(evt){
+        evt.preventDefault();
+        //alert("Holaaa");
+        $("#sala_chat").css('display', 'none');
+        $("#boton_chat").css('display','block')
+    });
+
+    $("#open_chat").on('click',function(evt){
+        evt.preventDefault();
+        //alert("Hola");
+        $("#sala_chat").css('display', 'block');
+        $("#boton_chat").css('display','none')
+        let tipo_user = document.querySelector('meta[name="tipo_user"]').content;
+        //alert(tipo_user);
+        const csrftoken = getCookie('csrftoken');
+        datos={
+            csrfmiddlewaretoken: csrftoken,
+        }    
+        user_id=document.querySelector('meta[name="user_id"]').content;    
+        if(tipo_user=="Cliente"){//listaria los vendedores
+            let url = '/superStore/seguidores/sigues/'+user_id;
+            //alert(url);
+            $.ajax({
+                type:"GET",
+                url:url,
+                data:datos,
+                dataType:'json',
+                success:function(data){
+                    console.log(data);
+                    for(i in data){
+                        id = data[i].pk;
+                        empresa=data[i].empresa;
+                        console.log(id);
+                        grupo=data[i].grupo;
+                        $("#lista_seguidor").append('<p><a id='+grupo+' class="itemchat" href=#>'+empresa+'</a></p>');
+                    }
+                }
+            });
+        }else{
+           let url = '/superStore/seguidores/seguidor/'+user_id;
+           $.ajax({
+               type:'GET',
+               url:url,
+               data:datos,
+               dataType:'json',
+               success:function(data){
+                console.log(data);
+                for(i in data){
+                    id = data[i].pk;
+                    cliente=data[i].cliente;
+                    console.log(id);
+                    grupo=data[i].grupo;
+                    $("#lista_seguidor").append('<p><a id='+grupo+' class="itemchat" href=#>'+cliente+'</a></p>');
+                }                  
+               }
+           }) 
+        }
+    });
    /* //reciviendo los socket
     var url = 'ws://'+window.location.host+'/ws/notificacion/'+$("#idprov").val()+'/';
     //alert(url);

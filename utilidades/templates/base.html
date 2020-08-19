@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="tipo_user" content="{{ user.tipo_usuario_id.tipo_usuario }}">
+    <meta name="user_id" content="{{ user.id }}">
     {% block metas %}
 
     {% endblock %}
@@ -108,6 +110,17 @@
                   <li class="nav-item">
                     <a href="{% url 'tienda:list_venta' %}" class="nav-link">Compras</a> 
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Vendedores</a>
+                  </li>
+                  <div class="dropdown">{# Buzon de mensajes #}
+                    <button id="noti" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Mensajes
+                    </button>
+                    <div id="list_noti" class="dropdown-menu h-scroll" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#"></a>
+                    </div>
+                  </div>
               {% endifequal %}
 
               {% ifequal user.tipo_usuario_id.tipo_usuario "Proveedor" %}{# en dado caso el usuario logiado es proveedor se le mostrara el menu del proveedor #}
@@ -128,6 +141,17 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'tienda:list_venta' %}">Ventas</a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">seguidores</a>
+                  </li>
+                  <div class="dropdown">{# Buzon de mensajes #}
+                    <button id="noti" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Mensajes
+                    </button>
+                    <div id="list_noti" class="dropdown-menu h-scroll" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#"></a>
+                    </div>
+                  </div>
                   {% if id_prove %}                
                       <div class="dropdown">{# seccion de notificaciones #}
                         <button id="noti" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -204,7 +228,35 @@
         {% endblock %}  
 
       {% endblock %}
+      {# barra de menu #}
+      <div id="sala_chat" class="chat">
+        <div class="container" >
+          <div id="cont_chat">
+            <a id="close" href="#"><img src="{% static "img/close.png" %}" width="20px" height="20px" alt=""></a>
+          </div>
+          <div id="comentar" class="row">
+            <div class="col-12">
+              <div id="lista_seguidor">{#aqui se mostraran los seguiores para chatear con ellos #}
 
+              </div>
+            </div>
+          </div>      
+        </div>
+      </div>
+      <div id="boton_chat" class="abrir_chat">
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <a id="open_chat" href="#">
+                chat
+                <span>
+                  <i class="fas fa-sms"></i>
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
       {% block pie %}
         {# pie de pagina del sitio #}
         <!-- Footer -->
@@ -271,9 +323,10 @@
           </div>
           <!-- Copyright -->
         </footer>
-      {% endblock %}
-    </div>
 
+      {% endblock %}
+
+      </div>
     {% block script %}
 
     {% endblock %}

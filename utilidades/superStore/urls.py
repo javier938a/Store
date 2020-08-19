@@ -15,6 +15,7 @@ from .views import listarFavoritos
 from .views import listarCategoria, listarSubCategoria1
 from .views import ListarPais, ListarDepartamentos, ListarMunicipio,ListarBCanton
 from .views import listarDeptoA, listarMuniA, listarBacanA
+from .views import listar_seguidores_cliente, listar_seguidores_proveedores
 app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
@@ -64,4 +65,6 @@ urlpatterns=[
     path('deptoAs/<int:pk>', listarDeptoA, name='adepto'),
     path('deptoAs/muniAs/<int:pk>', listarMuniA, name='amuni'),
     path('deptoAs/muniAs/b_c/<int:pk>', listarBacanA, name='ab_c'),
+    path('seguidores/seguidor/<int:pk>', listar_seguidores_cliente, name='list_cliente'),
+    path('seguidores/sigues/<int:pk>', listar_seguidores_proveedores, name='list_vendedor'),
 ]
