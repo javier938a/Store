@@ -119,18 +119,20 @@ $(document).ready(function(){
             }
         });
     });
-    $("#close").on('click',function(evt){
+    $("#salir_chat").on('click',function(evt){
         evt.preventDefault();
         //alert("Holaaa");
-        $("#sala_chat").css('display', 'none');
-        $("#boton_chat").css('display','block')
+        $("#sala").css('display', 'none');
+        $("#abrir_chat").css('display','block')
     });
 
-    $("#open_chat").on('click',function(evt){
+    $("#abrir").on('click',function(evt){
+        $("#usuario").html('');
         evt.preventDefault();
+        console.log("Entro");
         //alert("Hola");
-        $("#sala_chat").css('display', 'block');
-        $("#boton_chat").css('display','none')
+        $("#sala").css('display', 'block');
+        $("#abrir_chat").css('display','none')
         let tipo_user = document.querySelector('meta[name="tipo_user"]').content;
         //alert(tipo_user);
         const csrftoken = getCookie('csrftoken');
@@ -153,7 +155,16 @@ $(document).ready(function(){
                         empresa=data[i].empresa;
                         console.log(id);
                         grupo=data[i].grupo;
-                        $("#lista_seguidor").append('<p><a id='+grupo+' class="itemchat" href=#>'+empresa+'</a></p>');
+                        ruta_img= data[i].foto_perfil;
+                        item = '<div id="'+grupo+'">\
+                                    <a class="chatear" href="#">\
+                                        <div class="item-user">\
+                                            <img src="/media/'+ruta_img+'" width="100px" height="100px" alt="">\
+                                            <span>'+empresa+'</span>\
+                                        </div>\
+                                    </a>\
+                                </div>';
+                        $("#usuario").append(item);
                     }
                 }
             });
@@ -171,11 +182,65 @@ $(document).ready(function(){
                     cliente=data[i].cliente;
                     console.log(id);
                     grupo=data[i].grupo;
-                    $("#lista_seguidor").append('<p><a id='+grupo+' class="itemchat" href=#>'+cliente+'</a></p>');
+                    ruta_img = data[i].foto_perfil;
+                    item = '<div id="'+grupo+'">\
+                                <a class="chatear" href="#">\
+                                    <div class="item-user">\
+                                        <img src="/media/'+ruta_img+'" width="45px" height="45px" alt="">\
+                                        <span>'+cliente+'</span>\
+                                    </div>\
+                                </a>\
+                            </div>';                    
+                    $("#usuario").append(item);
                 }                  
                }
            }) 
         }
+    });
+    let n_chat=0;
+    $(document).on('click','.close_chat', function(evt){
+        $(".chat_privado").remove();
+        n_chat = n_chat-1;
+    });
+
+    $(document).on('click','.chatear', function(evt){
+        evt.preventDefault();
+        //alert("Has dado click");
+        n_chat++;
+        alert(n_chat);
+        chat = '<div id="chat_'+n_chat+'" class="chat_privado">\
+                    <div class="chat_cabecera">\
+                        <span>\
+                            titulo\
+                        </span>\
+                        <a class="close_chat" href="#"><i class="far fa-times-circle"></i></a>\
+                        <a class="minimize_chat" href="#"><i class="fas fa-window-minimize"></i></a>\
+                    </div>\
+                    <div class="chat_body">\
+                        <div class="chat_vista">\
+                            <div class="mensaje1">\
+                                <div class="enca1">usuario 1</div>\
+                                <div class="body1">\
+                                    mensaje1\
+                                </div>\
+                            </div>\
+                            <div class="mensaje2">\
+                                <div class="enca2">usuario 2</div>\
+                                <div class="body2">\
+                                    Lorem ipsum dolor sit amet\
+                                </div>\
+                            </div>\
+                        </div>\
+                    </div>\
+                    <div class="chat_sms">\
+                        <form class="sendSms" action="" method="get">\
+                            <textarea name="" id="" cols="18" rows="2">\
+                            </textarea>\
+                        </form>\
+                    </div>\
+                </div>';
+            $("#chat-content").append(chat);
+
     });
    /* //reciviendo los socket
     var url = 'ws://'+window.location.host+'/ws/notificacion/'+$("#idprov").val()+'/';

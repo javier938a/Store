@@ -18,7 +18,7 @@
     display: none;
 }
 /* propiedades del chat*/
-.abrir_chat{
+/*.abrir_chat{
     background: #ae181f;
     width: 30%;
     color: #fff;
@@ -58,10 +58,73 @@
     position: absolute;
     right: 5px;
     top:1px;
+}*/
+
+#abrir_chat{
+    width: 16%;
+    height: 5%;
+    border: 3px solid white;
+    background: tomato;
+    position: fixed;
+    top: 95%;
+    left: 84%;
+}
+#abrir_chat a{
+    color: white;
+    text-decoration: none;
 }
 
+#sala{/* la sala tendria un ancho del 16% y un alto del 100%*/
+    width: 16%;
+    height: 100%;
+    background: tomato;
+    border: 4px solid yellow;
+    position: fixed;
+    top: 0;
+    left: 84%;
+    display: none;
 
+}
+#sala #listado{/*el listado tendria una comparticion del 90% lo demas repartiria en 5% el formulario de busqueda y el 5% para el de cerrar*/
+   height: 90%; 
+   position: relative;
+}
+/* colocando fijo un scrol al div donde se mostraran los usuario */
 
+#sala #listado #usuario{
+    position: fixed;
+    width: 100%;
+    height: 90%;
+    border: 5px solid #fff;
+    overflow-y: scroll;
+}
+
+#sala #close_sala{
+    height: 5%;
+}
+#sala #buscar_user{
+    margin: 3%;
+    position: relative;
+    height: 5%;
+
+}
+#sala #buscar_user #user{
+    display: inline;
+
+}
+#sala #buscar_user #user input{
+    position: relative;
+    width: 85%;
+    border: 2px solid blue;
+}
+#sala #buscar_user span{
+    position: relative;
+    width: 15%;
+}
+
+#sala #close_sala #salir_chat{
+    float: right;
+}
 
 .h-scroll{
     position: fixed;
@@ -72,6 +135,96 @@
     float: none;
     margin: 0 auto;
 }
+
+/*aplicando estilos a la sala de chat*/
+ .chat_privado{
+    position: fixed;
+    width: 20%;
+    height: 50%;
+    background-color: violet;
+    border: 2px solid #00abf0;
+    top: 46%;
+    left: 64%;
+    z-index: 8000px;
+}
+.chat_privado .chat_cabecera{
+    position: relative;
+    width: 100%;
+    height: 25%;
+}
+
+.chat_privado .chat_body{
+    position: relative;
+    height: 65%;
+}
+.chat_privado .chat_sms{
+    position: relative;
+    width: 100%;
+    height: 10%;
+}
+.chat_privado .chat_cabecera{
+    text-align: center;
+}
+.chat_privado .chat_cabecera a{
+    float: right;
+}
+
+/*aplicando apariencia a los mensajes*/
+.chat_privado .chat_body .chat_vista{
+    position: fixed;
+    width: 20%;
+    height: 32%;
+    border: 3px solid #3b5998;
+    overflow-y: scroll;
+} 
+.chat_privado .chat_body .chat_vista .mensaje1{
+    position: relative;
+    width: 50%;
+    height: 35%;
+}
+
+.chat_privado .chat_body .chat_vista .mensaje2{
+    position: relative;
+    width: 50%;
+    height: 35%;
+    float: right;
+}
+
+.chat_privado .chat_body .chat_vista .mensaje1 .enca1{
+    height: 30%;
+    background: rgba(14, 176, 240, 0.877);
+    border-radius: 5px;
+}
+.chat_privado .chat_body .chat_vista .mensaje1 .body1{
+    position: relative;
+    height: auto;
+    background: turquoise;
+    color: black;
+    border-radius: 15px;
+}
+
+.chat_privado .chat_body .chat_vista .mensaje2 .enca2{
+    height: 30%;
+    background: rgba(14, 176, 240, 0.877);
+    border-radius: 5px;
+}
+
+.chat_privado .chat_body .chat_vista .mensaje2 .body2{
+    position: relative;
+    height: auto;
+    background: rgb(25, 124, 25);
+    border-radius: 15px;
+
+}
+
+.chat_privado .chat_sms{
+    position: relative;
+}
+.chat_privado .chat_sms form textarea{
+    width: 100%;
+    height: auto;
+}
+
 /*aplicando css a el formulario comentar de detalle de producto */
 
 /*#comentar{
