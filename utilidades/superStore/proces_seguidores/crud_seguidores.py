@@ -43,7 +43,7 @@ def agregar_nuevo_seguidor(request, pk):
         print("id prove"+str(prove))
         esta = tbl_seguidores.objects.filter(cliente=cliente, mayorista=prove)
         if esta.exists()==False: #primero se verifica si el cliente existe como seguidor, y si existe se elimina
-            num_aleato=(random.uniform(1,10000)/100)*147
+            num_aleato=random.randint(1,1000000)
             grupo_privado="it_"+str(num_aleato)
             seguidor = tbl_seguidores(cliente=cliente, mayorista=prove, fecha_de_seguidor=fecha_de_seguidor, grupo_privado=grupo_privado)#crea el registro objeto seguidor con el cliente y mayorista 
             seguidor.save()#guarda correctamente

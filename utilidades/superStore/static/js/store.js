@@ -156,8 +156,9 @@ $(document).ready(function(){
                         console.log(id);
                         grupo=data[i].grupo;
                         ruta_img= data[i].foto_perfil;
-                        item = '<div id="'+grupo+'">\
-                                    <a class="chatear" href="#">\
+                        //alert(grupo);
+                        item = '<div>\
+                                    <a id="op_'+grupo+'" class="chatear" href="#">\
                                         <div class="item-user">\
                                             <img src="/media/'+ruta_img+'" width="100px" height="100px" alt="">\
                                             <span>'+empresa+'</span>\
@@ -183,8 +184,9 @@ $(document).ready(function(){
                     console.log(id);
                     grupo=data[i].grupo;
                     ruta_img = data[i].foto_perfil;
-                    item = '<div id="'+grupo+'">\
-                                <a class="chatear" href="#">\
+                    alert(grupo);
+                    item = '<div>\
+                                <a id="op_'+grupo+'" class="chatear" href="#">\
                                     <div class="item-user">\
                                         <img src="/media/'+ruta_img+'" width="45px" height="45px" alt="">\
                                         <span>'+cliente+'</span>\
@@ -197,23 +199,38 @@ $(document).ready(function(){
            }) 
         }
     });
-    let n_chat=0;
-    $(document).on('click','.close_chat', function(evt){
-        $(".chat_privado").remove();
-        n_chat = n_chat-1;
-    });
-
+            //abriendo el socket
+    //alert(url_chat);
+    var socket = null; 
+    
     $(document).on('click','.chatear', function(evt){
         evt.preventDefault();
-        //alert("Has dado click");
-        n_chat++;
-        alert(n_chat);
-        chat = '<div id="chat_'+n_chat+'" class="chat_privado">\
+        var url_chat = 'ws://'+window.location.host+'/ws/chat/'+$(this).attr('id').replace('op_','')+'/';
+        socket = new WebSocket(url_chat);
+
+        id=$(this).attr('id').replace('op_','');
+        socket.onopen = function(e){
+            console.log("Iniciando coneccion con: "+id);
+        }
+
+        socket.onmessage = function(e){
+            datos=JSON.parse(e.data);
+            alert(datos.message);
+            $(".body1").append('<p>'+datos.message+'</p>');
+        }
+
+        socket.onclose = function(e){
+            console.log("Terminando la coneccion con "+id);
+        }
+
+        idchat=$(this).attr('id').replace('op_','');
+        //alert(idchat);
+        chat = '<div id="bz_'+idchat+'" class="chat_privado">\
                     <div class="chat_cabecera">\
                         <span>\
                             titulo\
                         </span>\
-                        <a class="close_chat" href="#"><i class="far fa-times-circle"></i></a>\
+                        <a id="cl_'+idchat+'" class="close_chat" href="#"><i class="far fa-times-circle"></i></a>\
                         <a class="minimize_chat" href="#"><i class="fas fa-window-minimize"></i></a>\
                     </div>\
                     <div class="chat_body">\
@@ -234,16 +251,28 @@ $(document).ready(function(){
                     </div>\
                     <div class="chat_sms">\
                         <form class="sendSms" action="" method="get">\
-                            <textarea name="" id="" cols="18" rows="2">\
-                            </textarea>\
+                            <textarea id="sms"  name="" id="" cols="18" rows="2"></textarea>\
                         </form>\
                     </div>\
                 </div>';
             $("#chat-content").append(chat);
-
+    });
+    $(document).on('keypress','.sendSms', function(e){
+        if(e.which==13){
+            socket.send(JSON.stringify({
+                'message':$("#sms").val(),
+            }));
+        }
+    });
+    $(document).on('click','.close_chat', function(evt){
+        evt.preventDefault();
+        id_bz = $(this).attr('id').replace('cl_','#bz_');
+        $(id_bz).remove();
+        //alert(id_bz);
+        
     });
    /* //reciviendo los socket
-    var url = 'ws://'+window.location.host+'/ws/notificacion/'+$("#idprov").val()+'/';
+    var url = 'ws://'+window.location.host+'/ws/chat/'+$("#idprov").val()+'/';
     //alert(url);
     var socket = new WebSocket(url);
         socket.onopen = function(e){
