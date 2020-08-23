@@ -177,17 +177,36 @@
     border: 3px solid #3b5998;
     overflow-y: scroll;
 } 
-.chat_privado .chat_body .chat_vista .mensaje1{
+.chat_privado .chat_body .chat_vista .contsms1{
+    position: relative;
+}
+.chat_privado .chat_body .chat_vista .contsms1 .mensaje1{
     position: relative;
     width: 50%;
     height: 35%;
 }
-
-.chat_privado .chat_body .chat_vista .mensaje2{
+.chat_privado .chat_body .chat_vista .contsms1 .ladoDer{
     position: relative;
     width: 50%;
     height: 35%;
-    float: right;
+    left: 50%;
+
+}
+.chat_privado .chat_body .chat_vista .contsms2{
+    position: relative;
+}
+.chat_privado .chat_body .chat_vista .contsms2 .mensaje2{
+    position: relative;
+    width: 50%;
+    height: 35%;
+    left: 50%;
+}
+.chat_privado .chat_body .chat_vista .contsms2 .ladoIz{
+    position: relative;
+    width: 50%;
+    height: 35%;
+    left: 0%;
+
 }
 
 .chat_privado .chat_body .chat_vista .mensaje1 .enca1{
@@ -195,6 +214,7 @@
     background: rgba(14, 176, 240, 0.877);
     border-radius: 5px;
 }
+
 .chat_privado .chat_body .chat_vista .mensaje1 .body1{
     position: relative;
     height: auto;

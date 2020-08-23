@@ -158,7 +158,7 @@ $(document).ready(function(){
                         ruta_img= data[i].foto_perfil;
                         //alert(grupo);
                         item = '<div>\
-                                    <a id="op_'+grupo+'" class="chatear" href="#">\
+                                    <a id="op_'+grupo+'" class="chatear" href="'+empresa+'">\
                                         <div class="item-user">\
                                             <img src="/media/'+ruta_img+'" width="100px" height="100px" alt="">\
                                             <span>'+empresa+'</span>\
@@ -184,9 +184,9 @@ $(document).ready(function(){
                     console.log(id);
                     grupo=data[i].grupo;
                     ruta_img = data[i].foto_perfil;
-                    alert(grupo);
+                    //alert(grupo);
                     item = '<div>\
-                                <a id="op_'+grupo+'" class="chatear" href="#">\
+                                <a id="op_'+grupo+'" class="chatear" href="'+cliente+'">\
                                     <div class="item-user">\
                                         <img src="/media/'+ruta_img+'" width="45px" height="45px" alt="">\
                                         <span>'+cliente+'</span>\
@@ -208,60 +208,81 @@ $(document).ready(function(){
         var url_chat = 'ws://'+window.location.host+'/ws/chat/'+$(this).attr('id').replace('op_','')+'/';
         socket = new WebSocket(url_chat);
 
-        id=$(this).attr('id').replace('op_','');
+        id=$(this).attr('id').replace('op_','');//obtengoel id que este caso seria el grupo al que corresponde el chat privado y le quito el prefijo op que no me sirve de nada
         socket.onopen = function(e){
             console.log("Iniciando coneccion con: "+id);
         }
-
         socket.onmessage = function(e){
             datos=JSON.parse(e.data);
-            alert(datos.message);
-            $(".body1").append('<p>'+datos.message+'</p>');
+            if(datos.tipo_usuario=="Cliente"){
+                mensaje1 = '<div class="contsms1">\
+                                <div class="mensaje1">\
+                                    <div class="enca1">'+datos.usuario+'</div>\
+                                        <div class="body1">\
+                                            '+datos.message+'\
+                                        </div>\
+                                </div>\
+                                <div class="ladoIz"></div>\
+                            </div>';
+                                $('#view_chat_'+idchat+'').append(mensaje1);
+            }else{
+                mensaje2 = '<div class="contsms2">\
+                                <div class="ladoDer"></div>\
+                                <div class="mensaje2">\
+                                    <div class="enca2">'+datos.usuario+'</div>\
+                                        <div class="body2">\
+                                            '+datos.message+'\
+                                        </div>\
+                                </div>\
+                            </div>';
+                            $('#view_chat_'+idchat+'').append(mensaje2);
+            }           
         }
-
+    
         socket.onclose = function(e){
             console.log("Terminando la coneccion con "+id);
         }
 
         idchat=$(this).attr('id').replace('op_','');
+        cli_o_prove = $(this).attr('href');
+        //alert(cli_o_prove);
         //alert(idchat);
         chat = '<div id="bz_'+idchat+'" class="chat_privado">\
                     <div class="chat_cabecera">\
                         <span>\
-                            titulo\
+                            '+cli_o_prove+'\
                         </span>\
                         <a id="cl_'+idchat+'" class="close_chat" href="#"><i class="far fa-times-circle"></i></a>\
                         <a class="minimize_chat" href="#"><i class="fas fa-window-minimize"></i></a>\
                     </div>\
                     <div class="chat_body">\
-                        <div class="chat_vista">\
-                            <div class="mensaje1">\
-                                <div class="enca1">usuario 1</div>\
-                                <div class="body1">\
-                                    mensaje1\
-                                </div>\
-                            </div>\
-                            <div class="mensaje2">\
-                                <div class="enca2">usuario 2</div>\
-                                <div class="body2">\
-                                    Lorem ipsum dolor sit amet\
-                                </div>\
-                            </div>\
+                        <div id = "view_chat_'+idchat+'" class="chat_vista">\
+                        \
                         </div>\
                     </div>\
                     <div class="chat_sms">\
-                        <form class="sendSms" action="" method="get">\
-                            <textarea id="sms"  name="" id="" cols="18" rows="2"></textarea>\
+                        <form id="form_'+idchat+'" class="sendSms" action="" method="get">\
+                            <textarea id="text'+idchat+'" class="sms"  name="" id="" cols="18" rows="2"></textarea>\
                         </form>\
                     </div>\
                 </div>';
+
+        //recivir y cerrar socker
+
             $("#chat-content").append(chat);
     });
+
+
     $(document).on('keypress','.sendSms', function(e){
+        //alert("Hola Mundo");
         if(e.which==13){
+            idText = $(this).attr('id');
+            texto = idText.replace('form_','#text')
+            //alert($(texto).val());
             socket.send(JSON.stringify({
-                'message':$("#sms").val(),
+                'message':$(texto).val(),
             }));
+           $(texto).val(''); 
         }
     });
     $(document).on('click','.close_chat', function(evt){
@@ -271,6 +292,8 @@ $(document).ready(function(){
         //alert(id_bz);
         
     });
+
+
    /* //reciviendo los socket
     var url = 'ws://'+window.location.host+'/ws/chat/'+$("#idprov").val()+'/';
     //alert(url);
