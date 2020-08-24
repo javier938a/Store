@@ -236,7 +236,8 @@ $(document).ready(function(){
                                 </div>\
                             </div>';
                             $('#view_chat_'+idchat+'').append(mensaje2);
-            }           
+            }     
+            $('#view_chat_'+idchat+'').animate({scrollTop:1000000}, 1000000);      
         }
     
         socket.onclose = function(e){
@@ -255,7 +256,7 @@ $(document).ready(function(){
                         <a id="cl_'+idchat+'" class="close_chat" href="#"><i class="far fa-times-circle"></i></a>\
                         <a class="minimize_chat" href="#"><i class="fas fa-window-minimize"></i></a>\
                     </div>\
-                    <div class="chat_body">\
+                    <div id="vista_'+idchat+'" class="chat_body">\
                         <div id = "view_chat_'+idchat+'" class="chat_vista">\
                         \
                         </div>\
@@ -283,6 +284,7 @@ $(document).ready(function(){
                 'message':$(texto).val(),
             }));
            $(texto).val(''); 
+                      
         }
     });
     $(document).on('click','.close_chat', function(evt){

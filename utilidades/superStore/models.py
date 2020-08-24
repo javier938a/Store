@@ -215,14 +215,14 @@ class tbl_mensajes_enviados_mayorista(models.Model):#son los mensajes que envia 
         return self.cuerpo
     
 
-class tbl_respuesta_mayorista_cliente(models.Model):#son las respuestas del cliente al mayorista
+class tbl_respuesta_mayorista_cliente(models.Model):#cliente al mayorista
     mensaje_cliente = models.ForeignKey(tbl_mensajes_enviados_cliente, on_delete=models.SET_NULL, null=True)#mensaje del cliente al proveedor
     respuesta_mayorista = models.ForeignKey(tbl_mensajes_enviados_mayorista, on_delete=models.SET_NULL, null=True)#Respuesta del proveedor al cliente
     def __str__(self):
         return " %s " % str(self.respuesta_mayorista)
 
 
-class tbl_respuesta_cliente_mayorista(models.Model):#son las respuestas del cliente al mayorista o que recibe el mayorista del cliente
+class tbl_respuesta_cliente_mayorista(models.Model):#Respuesta del mayorista al cliente
     mensaje_mayorista = models.ForeignKey(tbl_mensajes_enviados_mayorista, on_delete=models.SET_NULL, null=True)
     respuesta_cliente = models.ForeignKey(tbl_mensajes_enviados_cliente, on_delete=models.SET_NULL, null=True)
 
