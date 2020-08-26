@@ -144,9 +144,24 @@
     background-color: violet;
     border: 2px solid #00abf0;
     top: 46%;
-    left: 64%;
     z-index: 8000px;
 }
+.pos-chat-1{
+    left: 64%;
+}
+
+.pos-chat-2{
+    left: 44% !important;
+}
+
+.pos-chat-3{
+    left: 24% !important;
+}
+
+.pos-chat-4{
+    left: 4% !important;
+}
+
 .chat_privado .chat_cabecera{
     position: relative;
     width: 100%;

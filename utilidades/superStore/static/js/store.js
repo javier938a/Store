@@ -202,9 +202,15 @@ $(document).ready(function(){
             //abriendo el socket
     //alert(url_chat);
     var socket = null; 
-    
+    var id_mensaje_cliente=0
+    var id_mensaje_prove=0
+    var n_chat=0;
+    var posicion='';
     $(document).on('click','.chatear', function(evt){
         evt.preventDefault();
+            n_chat=n_chat+1;
+            alert(posicion);
+        
         var url_chat = 'ws://'+window.location.host+'/ws/chat/'+$(this).attr('id').replace('op_','')+'/';
         socket = new WebSocket(url_chat);
 
@@ -214,6 +220,10 @@ $(document).ready(function(){
         }
         socket.onmessage = function(e){
             datos=JSON.parse(e.data);
+            id_mensaje_cliente=datos.id_mensaje_cliente;
+            id_mensaje_prove=datos.id_mensaje_prove;
+            console.log('Mensaje cliente: '+id_mensaje_cliente+' Mensaje proveedor: '+id_mensaje_prove);
+            
             if(datos.tipo_usuario=="Cliente"){
                 mensaje1 = '<div class="contsms1">\
                                 <div class="mensaje1">\
@@ -248,7 +258,19 @@ $(document).ready(function(){
         cli_o_prove = $(this).attr('href');
         //alert(cli_o_prove);
         //alert(idchat);
-        chat = '<div id="bz_'+idchat+'" class="chat_privado">\
+ 
+        if(n_chat===1){
+            posicion = 'pos-chat-1';
+                
+        }else if(n_chat===2){
+            posicion = 'pos-chat-2';
+        }else if(n_chat===3){
+            posicion=' pos-chat-3';
+        }else if(n_chat===4){
+            posicion=' pos-chat-4';
+        } 
+  
+        chat = '<div id="bz_'+idchat+'" class="chat_privado '+posicion+'">\
                     <div class="chat_cabecera">\
                         <span>\
                             '+cli_o_prove+'\
@@ -282,6 +304,8 @@ $(document).ready(function(){
             //alert($(texto).val());
             socket.send(JSON.stringify({
                 'message':$(texto).val(),
+                'id_mensaje_prove':id_mensaje_prove,
+                'id_mensaje_cliente':id_mensaje_cliente,
             }));
            $(texto).val(''); 
                       
@@ -289,7 +313,26 @@ $(document).ready(function(){
     });
     $(document).on('click','.close_chat', function(evt){
         evt.preventDefault();
+        n_chat=n_chat-1;//restando un numero cuando se cierre el chat
+
+        alert(n_chat);
         id_bz = $(this).attr('id').replace('cl_','#bz_');
+
+        if($(id_bz).hasClass('pos-chat-1')==true){
+            posicion='pos-chat-1';
+            n_chat=1;
+            ////socket.onclose();
+        }else if($(id_bz).hasClass('pos-chat-2')==true){
+            posicion='pos-chat-2';
+            n_chat=2;
+        }else if($(id_bz).hasClass('pos-chat-3')==true){
+            n_chat=3;
+            posicion='pos-chat-3';
+        }else if($(id_bz).hasClass('pos-chat-4')==true){
+            n_chat=4;
+            posicion='pos-chat-4';
+        }
+
         $(id_bz).remove();
         //alert(id_bz);
         

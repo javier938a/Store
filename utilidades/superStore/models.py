@@ -196,35 +196,35 @@ class tbl_favoritos(models.Model):
     def __str__(self):
         return "%s" % (self.producto.producto)
 
-class tbl_mensajes_enviados_cliente(models.Model):#son los mensajes que el cliente envia al mayorista
-    cliente = models.ForeignKey(tbl_cliente, on_delete=models.SET_NULL, null=True)#remitente
-    mayorista = models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True)#direccion
-    cuerpo = models.TextField(max_length=500, help_text="Ingrese el mensaje")#mensaje
-    fecha_hora=models.DateTimeField(help_text="Ingrese la fecha y la hora")#horay fecha en que se realizo el mensaje
+class tbl_mensaje_cliente(models.Model):
+    cliente= models.ForeignKey(tbl_cliente, on_delete=models.SET_NULL, null=True)
+    mensaje=models.TextField(max_length=1000)
+    fecha_envio = models.DateTimeField(null=True)
+    grupo_privado=models.CharField(max_length=500)
 
     def __str__(self):
-        return self.cuerpo
-
-class tbl_mensajes_enviados_mayorista(models.Model):#son los mensajes que envia el mayorista al cliente
-    mayorista = models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True)#remitente
-    cliente = models.ForeignKey(tbl_cliente, on_delete=models.SET_NULL, null=True)#direccion
-    cuerpo = models.TextField(max_length=500, help_text="Ingrese el mensaje")
-    fecha_hora = models.DateTimeField(help_text="Ingrese la fecha y la hora")
-
-    def __str__(self):
-        return self.cuerpo
+        return "%s --> %s" %(str(self.cliente), self.mensaje)
     
 
-class tbl_respuesta_mayorista_cliente(models.Model):#cliente al mayorista
-    mensaje_cliente = models.ForeignKey(tbl_mensajes_enviados_cliente, on_delete=models.SET_NULL, null=True)#mensaje del cliente al proveedor
-    respuesta_mayorista = models.ForeignKey(tbl_mensajes_enviados_mayorista, on_delete=models.SET_NULL, null=True)#Respuesta del proveedor al cliente
-    def __str__(self):
-        return " %s " % str(self.respuesta_mayorista)
-
-
-class tbl_respuesta_cliente_mayorista(models.Model):#Respuesta del mayorista al cliente
-    mensaje_mayorista = models.ForeignKey(tbl_mensajes_enviados_mayorista, on_delete=models.SET_NULL, null=True)
-    respuesta_cliente = models.ForeignKey(tbl_mensajes_enviados_cliente, on_delete=models.SET_NULL, null=True)
+class tbl_mensaje_mayorista(models.Model):
+    mayorista = models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True)
+    mensaje=models.TextField(max_length=1000)
+    fecha_envio=models.DateTimeField(null=True)
+    grupo_privado = models.CharField(max_length=500)
 
     def __str__(self):
-        return "%s" % str(self.respuesta_cliente)
+        return "%s --> %s" %(str(self.mayorista),self.mensaje)
+
+class tbl_respuesta_cliente(models.Model):
+    mensaje_cliente=models.ForeignKey(tbl_mensaje_cliente, on_delete=models.SET_NULL, null=True)
+    mensaje_mayorista = models.ForeignKey(tbl_mensaje_mayorista, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return "%s --> %s" % (str(self.mensaje_cliente), str(self.mensaje_mayorista))
+
+class tbl_respuesta_mayorista(models.Model):
+    mensaje_mayorista = models.ForeignKey(tbl_mensaje_mayorista, on_delete=models.SET_NULL, null=True)
+    mensaje_cliente = models.ForeignKey(tbl_mensaje_cliente, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return "%s --> %s" % (str(self.mensaje_mayorista) , str(self.mensaje_cliente))
