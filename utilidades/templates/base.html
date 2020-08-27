@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="tipo_user" content="{{ user.tipo_usuario_id.tipo_usuario }}">
     <meta name="user_id" content="{{ user.id }}">
+    {% if user.is_authenticated %}
+      <meta name="user" content="{{ user.username }}">
+    {% endif %}
     {% block metas %}
 
     {% endblock %}

@@ -90,7 +90,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
         await self.accept()
     
-    async def disconnect(self):
+    async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
@@ -100,6 +100,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json=json.loads(text_data)
         message=text_data_json['message']
+        group = text_data_json['group']
         tipo_usuario = await self.get_tipo_usuario()
         grupo_privado = self.room_name
         id_mensaje_cliente=0
@@ -130,7 +131,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'usuario':usuario,
                 'tipo_usuario':tipo_usuario,
                 'id_mensaje_cliente':id_mensaje_cliente,
-                'id_mensaje_prove':id_mensaje_prove
+                'id_mensaje_prove':id_mensaje_prove,
+                'group':group,
             }
         )
     
@@ -140,18 +142,55 @@ class ChatConsumer(AsyncWebsocketConsumer):
         usuario = event['usuario']
         id_mensaje_cliente = event['id_mensaje_cliente']
         id_mensaje_prove = event['id_mensaje_prove']
+        group=event['group']
         await self.send(text_data=json.dumps({
             'message':message,
             'usuario':usuario,
             'tipo_usuario':tipo_usuario,
             'id_mensaje_cliente':id_mensaje_cliente,
-            'id_mensaje_prove':id_mensaje_prove
+            'id_mensaje_prove':id_mensaje_prove,
+            'group':group,
         }))
 
+class NotiConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        print("Te has conectado al websocket")
+        #print(self.scope)
+        self.room_name = self.scope['url_route']['kwargs']['user']
+        self.room_group_name = "noti_%s" % self.room_name
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
+        await self.accept()
+    
+    async def disconnect(self, close_code):
+        print("Te has desconectado..")
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
 
+    async def receive(self,text_data):
+        noti = json.loads(text_data)
+        grupo=None
+        if 'grupo' in noti:
+            grupo = noti['grupo']
+        
+        await self.channel_layer.group_send(
+            self.room_group_name,{
+                'type':'noti_message',
+                'grupo':grupo,
+            }
+        )
+        print('grupo: '+str(grupo))
+    
+    async def noti_message(self, event):
+        grupo = event['grupo']
 
-
-
+        await self.send(text_data=json.dumps({
+            'grupo':grupo,
+        }))
 
 
 

@@ -80,7 +80,7 @@ def listar_seguidores_proveedores(request, pk):#listara las tiendas que el clien
         if request.method=="GET":
             sigues = tbl_seguidores.objects.filter(Q(cliente__user__id=pk))
             for i in sigues:
-                datos_dic = {'pk':str(i.id), 'empresa':str(i.mayorista.nombre_empresa), 'foto_perfil':str(i.mayorista.foto_perfil), 'grupo':str(i.grupo_privado)}
+                datos_dic = {'pk':str(i.id), 'empresa':str(i.mayorista.nombre_empresa),'usuario':str(i.mayorista.user.username), 'foto_perfil':str(i.mayorista.foto_perfil), 'grupo':str(i.grupo_privado)}
                 print(datos_dic)
                 lista_sigues.append(datos_dic)
 
