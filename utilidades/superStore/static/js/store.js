@@ -15,9 +15,40 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+function conversacion(message, id_mensaje_cliente, id_mensaje_prove,group,tipo_usuario){
+        
+    console.log('Mensaje cliente: '+id_mensaje_cliente+' Mensaje proveedor: '+id_mensaje_prove);
+    if(tipo_usuario=="Cliente"){
+        mensaje1 = '<div class="contsms1">\
+                        <div class="mensaje1">\
+                            <div class="enca1">'+datos.usuario+'</div>\
+                                <div class="body1">\
+                                    '+message+'\
+                                </div>\
+                        </div>\
+                        <div class="ladoIz"></div>\
+                    </div>';
+                        $('#view_chat_'+group+'').append(mensaje1);
+    }else{
+        mensaje2 = '<div class="contsms2">\
+                        <div class="ladoDer"></div>\
+                        <div class="mensaje2">\
+                            <div class="enca2">'+datos.usuario+'</div>\
+                                <div class="body2">\
+                                    '+message+'\
+                                </div>\
+                        </div>\
+                    </div>';
+                    $('#view_chat_'+group+'').append(mensaje2);
+    }     
+    $('#view_chat_'+group+'').animate({scrollTop:1000000}, 1000000);  
+}
+
 $(document).ready(function(){
     var user_meta = document.querySelector('meta[name="user"]');
     var conecciones = new Map();
+    var posiciones = new Map();//asignara las posiciones asignadas
     var posicion='';
     if(user_meta!=null){
         user = user_meta.content;
@@ -31,11 +62,84 @@ $(document).ready(function(){
         websocket.onmessage = function(e){
             datos = JSON.parse(e.data);
             grupo = datos.grupo;
-            //alert(datos.grupo);
-            if(conecciones.has(grupo)){
-                alert("El chat ya esta abierto!");
+            cli_o_prove='';
+            usuario=datos.usuario;
+            empresa = datos.empresa;
+            //alert("usuario: "+usuario+" grupo: "+grupo+" empresa: "+empresa);
+            tipo_user = document.querySelector('meta[name="tipo_user"]').content;
+            if(tipo_user=="Cliente"){
+                cli_o_prove = empresa;
             }else{
-                alert("El chat no esta abierto!");
+                cli_o_prove=usuario;
+            }
+            posicion = '';
+            //alert(datos.grupo);
+            if(conecciones.has(grupo)!=true){
+
+                if(posiciones.has('pos1')!=true){
+                    posicion = 'pos-chat-1';
+                    posiciones.set('pos1', posicion);
+                }else if(posiciones.has('pos2')!=true){
+                    posicion = 'pos-chat-2';
+                    posiciones.set('pos2',posicion);
+                }else if(posiciones.has('pos3')!=true){
+                    posicion = 'pos-chat-3';
+                    posiciones.set('pos3',posicion);
+                }else if(posiciones.has('pos4')!=true){
+                    posicion = 'pos-chat-4';
+                    posiciones.set('pos4',posicion);
+                }
+                chat = '<div id="bz_'+grupo+'" class="chat_privado '+posicion+'">\
+                            <div class="chat_cabecera">\
+                                <span>\
+                                    '+cli_o_prove+'\
+                                </span>\
+                                <a id="cl_'+grupo+'" class="close_chat" href="#"><i class="far fa-times-circle"></i></a>\
+                                <a class="minimize_chat" href="#"><i class="fas fa-window-minimize"></i></a>\
+                            </div>\
+                            <div id="vista_'+grupo+'" class="chat_body">\
+                                <div id = "view_chat_'+grupo+'" class="chat_vista">\
+                                    \
+                                </div>\
+                            </div>\
+                            <div class="chat_sms">\
+                                <form id="form_'+grupo+'" class="sendSms" action="" method="get">\
+                                    <textarea id="text'+grupo+'" class="sms"  name="" id="" cols="18" rows="2"></textarea>\
+                                    </form>\
+                            </div>\
+                        </div>';
+                $("#chat-content").append(chat);//agregando la sala a la vista
+                
+                var url_chat = 'ws://'+window.location.host+'/ws/chat/'+grupo+'/';
+                socket = new WebSocket(url_chat);
+                conecciones.set(grupo, [usuario,socket,]);
+                conecciones.get(grupo)[1].onopen = function(e){
+                    console.log("Iniciando coneccion con: "+grupo);
+                    
+                }
+
+                conecciones.get(grupo)[1].onmessage = function(e){
+                    datos=JSON.parse(e.data);
+                    id_mensaje_cliente=datos.id_mensaje_cliente;
+                    id_mensaje_prove=datos.id_mensaje_prove;
+                    group = datos.group;
+                    tipo_usuario=datos.tipo_usuario;
+                    message = datos.message;
+                    //llamando a la funcion de conversacion :)
+                    conversacion(message,id_mensaje_cliente, id_mensaje_prove, group, tipo_usuario);
+     
+                    console.log(conecciones); 
+                    console.log(posiciones);  
+                }
+
+                conecciones.get(grupo)[1].onclose = function(e){
+                    console.log("Terminando la coneccion con "+grupo);
+                }
+
+
+
+            }else{
+            
             }
             console.log('grupo: '+datos.grupo);
         }
@@ -84,9 +188,10 @@ $(document).ready(function(){
                         console.log(id);
                         grupo=data[i].grupo;
                         ruta_img= data[i].foto_perfil;
+                        //alert(usuario);
                         //alert(grupo);
                         item = '<div>\
-                                    <a id="op_'+grupo+'" class="chatear" href="'+usuario+'">\
+                                    <a id="op_'+grupo+'" class="chatear" href="'+usuario+'/'+empresa+'">\
                                         <div class="item-user">\
                                             <img src="/media/'+ruta_img+'" width="100px" height="100px" alt="">\
                                             <span>'+empresa+'</span>\
@@ -133,19 +238,66 @@ $(document).ready(function(){
     var id_mensaje_cliente=0
     var id_mensaje_prove=0
     var n_chat=0;
-    
+    var dic_pos = new Map();
 
     $(document).on('click','.chatear', function(evt){
         evt.preventDefault();
         grupo = $(this).attr('id').replace('op_','');
-        usuario = $(this).attr('href');
+        user_href = $(this).attr('href');
+        usuario='';
+        cli_o_prove = '';
+        if(user_href.indexOf('/')>0){
+            cli_o_prove = user_href.substring(user_href.indexOf('/')+1,user_href.length);
+            usuario = user_href.substring(0, user_href.indexOf('/'));
+            //alert(usuario);
+        }else{
+            usuario = $(this).attr('href');
+            cli_o_prove=usuario;
+        } 
+        posicion = '';
         //alert('usuario: '+usuario);
         if(conecciones.has(grupo)!=true){
             n_chat=n_chat+1;
+            if(posiciones.has('pos1')!=true){
+                posicion = 'pos-chat-1';
+                posiciones.set('pos1', posicion);
+            }else if(posiciones.has('pos2')!=true){
+                posicion = 'pos-chat-2';
+                posiciones.set('pos2',posicion);
+            }else if(posiciones.has('pos3')!=true){
+                posicion = 'pos-chat-3';
+                posiciones.set('pos3',posicion);
+            }else if(posiciones.has('pos4')!=true){
+                posicion = 'pos-chat-4';
+                posiciones.set('pos4',posicion);
+            }
+            chat = '<div id="bz_'+grupo+'" class="chat_privado '+posicion+'">\
+                        <div class="chat_cabecera">\
+                            <span>\
+                                '+cli_o_prove+'\
+                            </span>\
+                            <a id="cl_'+grupo+'" class="close_chat" href="#"><i class="far fa-times-circle"></i></a>\
+                            <a class="minimize_chat" href="#"><i class="fas fa-window-minimize"></i></a>\
+                        </div>\
+                        <div id="vista_'+grupo+'" class="chat_body">\
+                            <div id = "view_chat_'+grupo+'" class="chat_vista">\
+                            \
+                            </div>\
+                        </div>\
+                        <div class="chat_sms">\
+                            <form id="form_'+grupo+'" class="sendSms" action="" method="get">\
+                                <textarea id="text'+grupo+'" class="sms"  name="" id="" cols="18" rows="2"></textarea>\
+                            </form>\
+                        </div>\
+                    </div>';
+    
+                $("#chat-content").append(chat);
+
             //alert(posicion);
             var url_chat = 'ws://'+window.location.host+'/ws/chat/'+grupo+'/';
             socket = new WebSocket(url_chat);
-            conecciones.set(grupo, [usuario,socket]);
+
+            conecciones.set(grupo, [usuario,socket,]);
     
     
             id=$(this).attr('id').replace('op_','');//obtengoel id que este caso seria el grupo al que corresponde el chat privado y le quito el prefijo op que no me sirve de nada
@@ -158,84 +310,26 @@ $(document).ready(function(){
                 id_mensaje_cliente=datos.id_mensaje_cliente;
                 id_mensaje_prove=datos.id_mensaje_prove;
                 group = datos.group;
-                console.log('Mensaje cliente: '+id_mensaje_cliente+' Mensaje proveedor: '+id_mensaje_prove);
-                if(datos.tipo_usuario=="Cliente"){
-                    mensaje1 = '<div class="contsms1">\
-                                    <div class="mensaje1">\
-                                        <div class="enca1">'+datos.usuario+'</div>\
-                                            <div class="body1">\
-                                                '+datos.message+'\
-                                            </div>\
-                                    </div>\
-                                    <div class="ladoIz"></div>\
-                                </div>';
-                                    $('#view_chat_'+group+'').append(mensaje1);
-                }else{
-                    mensaje2 = '<div class="contsms2">\
-                                    <div class="ladoDer"></div>\
-                                    <div class="mensaje2">\
-                                        <div class="enca2">'+datos.usuario+'</div>\
-                                            <div class="body2">\
-                                                '+datos.message+'\
-                                            </div>\
-                                    </div>\
-                                </div>';
-                                $('#view_chat_'+group+'').append(mensaje2);
-                }     
-                $('#view_chat_'+group+'').animate({scrollTop:1000000}, 1000000);   
-                console.log(conecciones);   
+                tipo_usuario=datos.tipo_usuario;
+                message = datos.message;
+                //llamando a la funcion de conversacion :)
+                conversacion(message,id_mensaje_cliente, id_mensaje_prove, group, tipo_usuario);
+ 
+                console.log(conecciones); 
+                console.log(posiciones);  
             }
         
             conecciones.get(grupo)[1].onclose = function(e){
                 console.log("Terminando la coneccion con "+id);
             }
     
-            idchat=$(this).attr('id').replace('op_','');
-            cli_o_prove = $(this).attr('href');
-            //alert(cli_o_prove);
-            //alert(idchat);
-     
-            if(n_chat===1){
-                posicion = 'pos-chat-1';
-                    
-            }else if(n_chat===2){
-                posicion = 'pos-chat-2';
-            }else if(n_chat===3){
-                posicion=' pos-chat-3';
-            }else if(n_chat===4){
-                posicion=' pos-chat-4';
-            } 
-      
-            chat = '<div id="bz_'+idchat+'" class="chat_privado '+posicion+'">\
-                        <div class="chat_cabecera">\
-                            <span>\
-                                '+cli_o_prove+'\
-                            </span>\
-                            <a id="cl_'+idchat+'" class="close_chat" href="#"><i class="far fa-times-circle"></i></a>\
-                            <a class="minimize_chat" href="#"><i class="fas fa-window-minimize"></i></a>\
-                        </div>\
-                        <div id="vista_'+idchat+'" class="chat_body">\
-                            <div id = "view_chat_'+idchat+'" class="chat_vista">\
-                            \
-                            </div>\
-                        </div>\
-                        <div class="chat_sms">\
-                            <form id="form_'+idchat+'" class="sendSms" action="" method="get">\
-                                <textarea id="text'+idchat+'" class="sms"  name="" id="" cols="18" rows="2"></textarea>\
-                            </form>\
-                        </div>\
-                    </div>';
-    
-            //recivir y cerrar socker
-    
-                $("#chat-content").append(chat);
         }else{
             alert("Ya existe un chat asociado al grupo!!");
         }
 
             
     });
-
+    
      noti=null;
     $(document).on('keypress','.sendSms', function(e){
         //alert("Hola Mundo");
@@ -248,16 +342,31 @@ $(document).ready(function(){
             url_noti = 'ws://'+window.location.host+'/ws/noti/'+conecciones.get(grupo)[0]+'/';
             //alert(url_noti);
             var noti = new WebSocket(url_noti);
-            console.log(noti);
-            //alert(grupo);
+
             noti.onopen = function(e){
+                tipo_usuario = document.querySelector('meta[name="tipo_user"]').content;
+                usuario=""
+                if(tipo_usuario=="Proveedor"){
+                    usuario= document.querySelector('meta[name="user"]').content;
+                    empresa=document.querySelector('meta[name="empresa"]').content;
+                }else{
+                    usuario=document.querySelector('meta[name="user"]').content;
+                    empresa=usuario;
+                }
+
                 noti.send(JSON.stringify({
                     'grupo':grupo,
+                    'usuario':usuario,
+                    'empresa':empresa,
                 }))
+            }
+            noti.onmessage = function(e){
+                //alert(e.data);
             }
             noti.onclose = function(e){
                 noti.close();
             }
+
             conecciones.get(grupo)[1].send(JSON.stringify({
                 'message':$(texto).val(),
                 'id_mensaje_prove':id_mensaje_prove,
@@ -268,8 +377,9 @@ $(document).ready(function(){
            $(texto).val(''); 
            //noti.close();          
         }else{
-            console.log(noti);
-            if(noti!=null){
+            //console.log(noti);
+            if(noti!=undefined){
+                console.log("hellow "+String.parse(noti));
                 noti.close();
             }
             
@@ -280,25 +390,20 @@ $(document).ready(function(){
 
     $(document).on('click','.close_chat', function(evt){
         evt.preventDefault();
-        n_chat=n_chat-1;//restando un numero cuando se cierre el chat
-
+        
         //alert(n_chat);
         grupo = $(this).attr('id').replace('cl_','');
         id_bz = $(this).attr('id').replace('cl_','#bz_');
 
         if($(id_bz).hasClass('pos-chat-1')==true){
-            posicion='pos-chat-1';
-            n_chat=1;
+            posiciones.delete('pos1')
             ////socket.onclose();
         }else if($(id_bz).hasClass('pos-chat-2')==true){
-            posicion='pos-chat-2';
-            n_chat=2;
+            posiciones.delete('pos2')
         }else if($(id_bz).hasClass('pos-chat-3')==true){
-            n_chat=3;
-            posicion='pos-chat-3';
+            posiciones.delete('pos3')
         }else if($(id_bz).hasClass('pos-chat-4')==true){
-            n_chat=4;
-            posicion='pos-chat-4';
+            posiciones.delete('pos4')
         }
         conecciones.get(grupo)[1].close();//eliminando el grupo...
         conecciones.delete(grupo);//eliminando objeto socket y usuario

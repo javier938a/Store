@@ -57,7 +57,8 @@ class index(ListView):#Mostrando index Pagina Principal
         id_depto=self.request.GET.get('id_depto')#Buscar por municipio
         id_muni=self.request.GET.get('id_muni')
         print(id_pais)
-        id_prove = self.request.session.get('id_prove', 0)
+        id_prove = self.request.session.get('id_prove', 0)#creando una variable vacia en la session para almacenar el id del prove
+        empresa = self.request.session.get('empresa','')
         paises = tbl_pais.objects.all()#obteniendo el listado de todos los
         context['paises']=paises
         print("Esta es la clave "+str(clave))
@@ -71,9 +72,13 @@ class index(ListView):#Mostrando index Pagina Principal
                     context['id_cli']=id_cli #agrega al contexto el id del cliente
             else:
                 if tbl_mayorista.objects.filter(user=user).exists():
-                    id_prove = tbl_mayorista.objects.get(user=user).id#obtiene el id del mayorista en dado caso sea mayorista
+                    proveedor = tbl_mayorista.objects.get(user=user)#obtiene el id del mayorista en dado caso sea mayorista
+                    id_prove=proveedor.id
+                    empresa=proveedor.nombre_empresa
                     self.request.session['id_prove']=id_prove#agregar a sesion la variable id_prove
                     context['id_prove'] = id_prove #agrega al contexto el id del proveedor
+                    self.request.session['empresa']=empresa
+                    context['empresa']=empresa
                     #Obteniendo el listado de notificaciones de nuevos seguidores
                     '''fecha = timezone.now()
                     fecha_hoy = fecha.date()

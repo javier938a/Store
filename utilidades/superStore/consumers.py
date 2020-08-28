@@ -174,22 +174,33 @@ class NotiConsumer(AsyncWebsocketConsumer):
     async def receive(self,text_data):
         noti = json.loads(text_data)
         grupo=None
+        usuario=None
+        empresa=None
         if 'grupo' in noti:
             grupo = noti['grupo']
+        if 'usuario'in noti:
+            usuario = noti['usuario']
+        if 'empresa' in noti:
+            empresa = noti['empresa']
         
         await self.channel_layer.group_send(
             self.room_group_name,{
                 'type':'noti_message',
                 'grupo':grupo,
+                'usuario':usuario,
+                'empresa':empresa,
             }
         )
         print('grupo: '+str(grupo))
     
     async def noti_message(self, event):
         grupo = event['grupo']
-
+        usuario = event['usuario']
+        empresa = event['empresa']
         await self.send(text_data=json.dumps({
             'grupo':grupo,
+            'usuario':usuario,
+            'empresa':empresa,
         }))
 
 
