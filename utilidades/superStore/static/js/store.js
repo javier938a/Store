@@ -1,4 +1,5 @@
 
+
 ///importScripts('/static/js/csrf_scrip.js');
 function getCookie(name) {
     let cookieValue = null;
@@ -109,6 +110,7 @@ $(document).ready(function(){
                             </div>\
                         </div>';
                 $("#chat-content").append(chat);//agregando la sala a la vista
+                $('#bz_'+grupo).css('display','none');
                 
                 var url_chat = 'ws://'+window.location.host+'/ws/chat/'+grupo+'/';
                 socket = new WebSocket(url_chat);
@@ -123,6 +125,7 @@ $(document).ready(function(){
                     id_mensaje_cliente=datos.id_mensaje_cliente;
                     id_mensaje_prove=datos.id_mensaje_prove;
                     group = datos.group;
+                    $('#bz_'+grupo).css('display','block');
                     tipo_usuario=datos.tipo_usuario;
                     message = datos.message;
                     //llamando a la funcion de conversacion :)
@@ -239,7 +242,7 @@ $(document).ready(function(){
     var id_mensaje_prove=0
     var n_chat=0;
     var dic_pos = new Map();
-
+    noti=null;
     $(document).on('click','.chatear', function(evt){
         evt.preventDefault();
         grupo = $(this).attr('id').replace('op_','');
@@ -254,6 +257,35 @@ $(document).ready(function(){
             usuario = $(this).attr('href');
             cli_o_prove=usuario;
         } 
+        url_noti = 'ws://'+window.location.host+'/ws/noti/'+usuario+'/';
+        //alert(url_noti);
+        var noti = new WebSocket(url_noti);
+
+        noti.onopen = function(e){
+            tipo_usuario = document.querySelector('meta[name="tipo_user"]').content;
+            usuario=""
+            if(tipo_usuario=="Proveedor"){
+                usuario= document.querySelector('meta[name="user"]').content;
+                empresa=document.querySelector('meta[name="empresa"]').content;
+            }else{
+                usuario=document.querySelector('meta[name="user"]').content;
+                empresa=usuario;
+            }
+
+            noti.send(JSON.stringify({
+                'grupo':grupo,
+                'usuario':usuario,
+                'empresa':empresa,
+            }))
+        }
+        noti.onmessage = function(e){
+            //alert(e.data);
+        }
+        noti.onclose = function(e){
+            noti.close();
+        }
+
+
         posicion = '';
         //alert('usuario: '+usuario);
         if(conecciones.has(grupo)!=true){
@@ -329,8 +361,7 @@ $(document).ready(function(){
 
             
     });
-    
-     noti=null;
+
     $(document).on('keypress','.sendSms', function(e){
         //alert("Hola Mundo");
         if(e.which==13){
@@ -339,34 +370,6 @@ $(document).ready(function(){
             grupo = idText.replace('form_','');
             //alert("Hola Mundo! "+grupo);
             //alert($(texto).val());
-            url_noti = 'ws://'+window.location.host+'/ws/noti/'+conecciones.get(grupo)[0]+'/';
-            //alert(url_noti);
-            var noti = new WebSocket(url_noti);
-
-            noti.onopen = function(e){
-                tipo_usuario = document.querySelector('meta[name="tipo_user"]').content;
-                usuario=""
-                if(tipo_usuario=="Proveedor"){
-                    usuario= document.querySelector('meta[name="user"]').content;
-                    empresa=document.querySelector('meta[name="empresa"]').content;
-                }else{
-                    usuario=document.querySelector('meta[name="user"]').content;
-                    empresa=usuario;
-                }
-
-                noti.send(JSON.stringify({
-                    'grupo':grupo,
-                    'usuario':usuario,
-                    'empresa':empresa,
-                }))
-            }
-            noti.onmessage = function(e){
-                //alert(e.data);
-            }
-            noti.onclose = function(e){
-                noti.close();
-            }
-
             conecciones.get(grupo)[1].send(JSON.stringify({
                 'message':$(texto).val(),
                 'id_mensaje_prove':id_mensaje_prove,
@@ -530,7 +533,6 @@ $(document).ready(function(){
         socket.onopen = function(e){
             //alert("Conexion establecida!");
         }
-
         socket.onmessage = function(e){
             sms = JSON.parse(e.data);
             alert(sms.messaje);

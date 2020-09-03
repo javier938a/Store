@@ -1,9 +1,10 @@
 from django.http import JsonResponse
 from django.core.serializers import serialize
-from superStore.models import tbl_seguidores, tbl_cliente, tbl_mayorista
+from superStore.models import tbl_seguidores, tbl_cliente, tbl_mayorista, tbl_clients_connect
 from django.db.models import Q
 from django.utils import timezone
 from fcm_django.models import FCMDevice
+from channels.layers import get_channel_layer
 import random
 
 def verificar_existe_seguidor(request, pk):

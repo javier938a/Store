@@ -228,3 +228,13 @@ class tbl_respuesta_mayorista(models.Model):
 
     def __str__(self):
         return "%s --> %s" % (str(self.mensaje_mayorista) , str(self.mensaje_cliente))
+
+
+class tbl_clients_connect(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    canal = models.TextField(help_text="Ingrese el canal unico", max_length=10000)
+    estado = models.BooleanField(help_text="seleccione para saber si esta conectado", null=True)
+    fecha_connect = models.DateTimeField(help_text="fecha y hora de conecccion", null=True, blank=True)
+    fecha_disconnect= models.DateTimeField(help_text="fecha y hora de desconeccion", null=True, blank=True)
+    def __str__(self):
+        return "%s --> %s" % (str(self.usuario), str(self.canal))
