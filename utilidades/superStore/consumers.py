@@ -9,6 +9,7 @@ from django.db.models import Q
 from django.utils import timezone
 from .models import tbl_seguidores
 from .models import tbl_mensaje_cliente, tbl_mensaje_mayorista, tbl_respuesta_cliente, tbl_respuesta_mayorista
+from .models import tbl_clients_connect
 
 class ChatConsumer(AsyncWebsocketConsumer):
     @sync_to_async
@@ -68,7 +69,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 mensaje_cliente=mensaje_cliente
             )
         return id_respuesta_client_prove[0].id
-            
 
     async def connect(self):
         print("se ha conectado")
@@ -153,9 +153,43 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }))
 
 class NotiConsumer(AsyncWebsocketConsumer):
+    @database_sync_to_async
+    def guardar_canal(self):
+        clients = tbl_clients_connect.objects.filter(Q(usuario=self.scope['user']))
+        if(clients.exists()!=True):
+            tbl_clients_connect.objects.create(
+                canal=self.channel_name, 
+                usuario=self.scope['user'],
+                fecha_connect=timezone.now(),
+                estado=True,
+            )
+        else:
+            print(self.channel_name)
+            tbl_clients_connect.objects.filter(Q(usuario=self.scope['user'])).update(
+                canal=self.channel_name,
+                fecha_connect=timezone.now(),
+                estado=True
+            )
+            print("este usuario ya existe: "+str(clients[0].usuario))
+
+    @database_sync_to_async
+    def cerrar_canal(self):
+        tbl_clients_connect.objects.filter(Q(usuario__id=self.scope['user'].id)).update(
+            fecha_disconnect=timezone.now(),
+            estado=bool(0)
+        )
+    
+    @database_sync_to_async
+    def canal_usuario(self,usuario):
+        usuario = User.objects.get(username=usuario)
+        canal = tbl_clients_connect.objects.get(usuario=usuario).canal
+        return str(canal)
+
+
     async def connect(self):
         print("Te has conectado al websocket")
         #print(self.scope)
+        await self.guardar_canal()#Guardando o actualizando canal
         self.room_name = self.scope['url_route']['kwargs']['user']
         self.room_group_name = "noti_%s" % self.room_name
         await self.channel_layer.group_add(
@@ -166,6 +200,7 @@ class NotiConsumer(AsyncWebsocketConsumer):
     
     async def disconnect(self, close_code):
         print("Te has desconectado..")
+        await self.cerrar_canal()
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
