@@ -178,7 +178,7 @@
             </div>
         </div>
         <div class="col-md-6 col-lg-6 col-xl-6">
-            <div class="container">
+            <div style="z-index: -2000px;" class="container">
                 <div class="list-group">
                     <a href="#" class="list-group-item list-group-item-action active">
                       <div class="d-flex w-100 justify-content-between">
@@ -272,26 +272,6 @@
         <button class="btn btn-primary" type="submit">Comentar</button>
       </form>
     </div>
-</div>
-{#Sala de chat con el vendedor#}
-<div class="chat" id="sala_chat">
-  <div class="container">
-    <div id="cont_chat">
-      {% load static %}
-      <a id="close" href="#"><img src="{% static "img/close.png" %}" width="20px" height="20px" alt=""></a>
-    </div>
-    <div id="comentar" class="row">
-      <div class="col-12">
-        <form action="">
-          <textarea  name="" id="ver_sms" cols="20" rows="3">
-            
-          </textarea>
-          <input id="mensaje" type="text" name="" id="" id="mensaje">
-          <button id="send" type="submit">Enviar</button>
-        </form>
-      </div>
-    </div>
-  </div>
 </div>
 {% endblock %}
 

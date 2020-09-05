@@ -144,7 +144,7 @@
     background-color: violet;
     border: 2px solid #00abf0;
     top: 46%;
-    z-index: 8000px;
+    z-index: 8000000px;
 }
 .pos-chat-1{
     left: 64%;
@@ -258,6 +258,39 @@
 .chat_privado .chat_sms form textarea{
     width: 100%;
     height: auto;
+}
+
+.open_chat{
+    position: fixed;
+    background: tomato;
+    border: 4px solid white;
+    width: 20%;
+    height: 5%;
+    top: 95%;
+
+}
+.open_chat .close_min{
+    float: right;
+}
+
+.open_chat a{
+    color: white;
+}
+
+.pos-mini-1{
+    left: 64% !important;
+}
+
+.pos-mini-2{
+    left: 44% !important;
+}
+
+.pos-mini-3{
+    left: 24% !important;
+}
+
+.pos-mini-4{
+    left: 4% !important;
 }
 
 /*aplicando css a el formulario comentar de detalle de producto */

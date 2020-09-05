@@ -96,7 +96,7 @@ $(document).ready(function(){
                                     '+cli_o_prove+'\
                                 </span>\
                                 <a id="cl_'+grupo+'" class="close_chat" href="#"><i class="far fa-times-circle"></i></a>\
-                                <a class="minimize_chat" href="#"><i class="fas fa-window-minimize"></i></a>\
+                                <a id="min_'+grupo+'" class="min_chat" href="'+cli_o_prove+'/'+posicion+'"><i class="fas fa-window-minimize"></i></a>\
                             </div>\
                             <div id="vista_'+grupo+'" class="chat_body">\
                                 <div id = "view_chat_'+grupo+'" class="chat_vista">\
@@ -309,7 +309,7 @@ $(document).ready(function(){
                                 '+cli_o_prove+'\
                             </span>\
                             <a id="cl_'+grupo+'" class="close_chat" href="#"><i class="far fa-times-circle"></i></a>\
-                            <a class="minimize_chat" href="#"><i class="fas fa-window-minimize"></i></a>\
+                            <a id="min_'+grupo+'" class="min_chat" href="'+cli_o_prove+'/'+posicion+'"><i class="fas fa-window-minimize"></i></a>\
                         </div>\
                         <div id="vista_'+grupo+'" class="chat_body">\
                             <div id = "view_chat_'+grupo+'" class="chat_vista">\
@@ -399,20 +399,92 @@ $(document).ready(function(){
         id_bz = $(this).attr('id').replace('cl_','#bz_');
 
         if($(id_bz).hasClass('pos-chat-1')==true){
-            posiciones.delete('pos1')
+            posiciones.delete('pos1');
             ////socket.onclose();
         }else if($(id_bz).hasClass('pos-chat-2')==true){
-            posiciones.delete('pos2')
+            posiciones.delete('pos2');
         }else if($(id_bz).hasClass('pos-chat-3')==true){
-            posiciones.delete('pos3')
+            posiciones.delete('pos3');
         }else if($(id_bz).hasClass('pos-chat-4')==true){
-            posiciones.delete('pos4')
+            posiciones.delete('pos4');
         }
         conecciones.get(grupo)[1].close();//eliminando el grupo...
         conecciones.delete(grupo);//eliminando objeto socket y usuario
         $(id_bz).remove();
         //alert(id_bz);
         
+    });
+    $(document).on('click','.min_chat', function(e){
+        e.preventDefault();
+        idMinChat = $(this).attr('id');
+        grupo = idMinChat.replace('min_','');
+        chat=idMinChat.replace('min_','#bz_');
+        enlace = $(this).attr('href');
+        name= enlace.substring(0, enlace.indexOf('/'));
+        pos_chat=enlace.substring(enlace.indexOf('/')+1,enlace.length);
+        pos_abrir='';
+        switch(pos_chat){
+            case 'pos-chat-1':
+                pos_abrir='pos-mini-1';
+                break;
+            case 'pos-chat-2':
+                pos_abrir='pos-mini-2';
+                break;
+            case 'pos-chat-3':
+                pos_abrir='pos-mini-3';
+                break;
+            case 'pos-chat-4':
+                pos_abrir='pos-mini-4';
+                break;            
+        }
+
+        min_chat = '<div id="maxi_'+grupo+'" class="open_chat '+pos_abrir+'">\
+                        <a href="#" id="max_'+grupo+'" class="max_chat">\
+                                '+name+'\
+                        </a>\
+                        <a class="close_min" id="cl_min_'+grupo+'" href="#"><span><i class="far fa-times-circle"></i></span></a>\
+                    </div>';    
+        $('#chat-content').append(min_chat);
+
+        $(chat).css('display','none');
+
+    });
+
+    $(document).on('click','.max_chat', function(e){
+        e.preventDefault();
+        idMaxChat = $(this).attr('id');
+        max_btn = idMaxChat.replace('max_','#maxi_');
+        chat=idMaxChat.replace('max_','#bz_');
+        $(chat).css('display','block');
+        $(max_btn).remove();
+
+    });
+
+    $(document).on('click','.close_min',function(e){
+        e.preventDefault();
+        idBotonClose = $(this).attr('id');
+        grupo=idBotonClose.replace('cl_min_','');
+        idChat = idBotonClose.replace('cl_min_','#bz_');//obteniendo el id del chat maximizado oculto
+        idChatMin = idBotonClose.replace('cl_min_','#maxi_')//obteniendo el id del chat minimizado
+
+        if($(idChat).hasClass('pos-chat-1')==true){
+            posiciones.delete('pos1');
+            
+            ////socket.onclose();
+        }else if($(idChat).hasClass('pos-chat-2')==true){
+            posiciones.delete('pos2');
+            
+        }else if($(idChat).hasClass('pos-chat-3')==true){
+            posiciones.delete('pos3');
+            
+        }else if($(idChat).hasClass('pos-chat-4')==true){
+            posiciones.delete('pos4');
+            
+        }
+        conecciones.get(grupo)[1].close();//cerrando la coneccion del grupo...
+        conecciones.delete(grupo);//eliminando objeto socket y usuario
+        $(idChat).remove();//eliminando el chat del Dom
+        $(idChatMin).remove();//eliminando el boton de maximizar chat
     });
 
 

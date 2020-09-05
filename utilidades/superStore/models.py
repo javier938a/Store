@@ -104,7 +104,7 @@ class tbl_seguidores(models.Model):
     cliente = models.ForeignKey(tbl_cliente, on_delete=models.SET_NULL, null=True)
     fecha_de_seguidor = models.DateTimeField(null=True)
     grupo_privado = models.CharField(max_length=50, help_text="Escriba nombre grupo privado", null=True)
-
+    
 
     def __str__(self):
         return "%s %s"%(self.mayorista, self.cliente)
