@@ -8,8 +8,8 @@ from .models import tbl_mayorista, tbl_cliente
 from django.db.models import Q
 from django.utils import timezone
 from .models import tbl_seguidores
-from .models import tbl_mensaje_cliente, tbl_mensaje_mayorista, tbl_respuesta_cliente, tbl_respuesta_mayorista
 from .models import tbl_clients_connect
+from .models import tbl_bandeja_de_entrada_cliente, tbl_bandeja_de_salida_cliente, tbl_bandeja_de_entrada_mayorista, tbl_bandeja_de_salida_mayorista
 
 class ChatConsumer(AsyncWebsocketConsumer):
     @sync_to_async
@@ -27,48 +27,68 @@ class ChatConsumer(AsyncWebsocketConsumer):
         else:
             idUsuario = seguidor.mayorista.id
         return idUsuario
-
     @database_sync_to_async
-    def guardar_mensaje_prove_client(self, tipo_usuario, mensaje, grupo_privado):
-        id_mensaje_client_usuario =None
-
-        if tipo_usuario=="Cliente":
-            cliente = tbl_seguidores.objects.get(grupo_privado=grupo_privado).cliente#obteniendo el cliente en base añ grupo
-    
-            id_mensaje_client_usuario=tbl_mensaje_cliente.objects.get_or_create(
+    def guardar_mensaje(self, mensaje):
+        tipo_usuario = self.scope['user'].tipo_usuario_id.tipo_usuario
+        grupo = self.room_name
+        seguidor = tbl_seguidores.objects.get(grupo_privado=grupo)
+        cliente=seguidor.cliente
+        mayorista=seguidor.mayorista
+        if(tipo_usuario=="Cliente"):#si el tipo de usuario es cliente el mensaje se almacena en la bandeja de salida
+            mensaje_entrada = tbl_bandeja_de_entrada_cliente.objects.last()
+            if mensaje_entrada is not None:
+                men1=tbl_bandeja_de_salida_cliente.objects.create(
+                    mayorista=mayorista,   
+                    cliente=cliente,
+                    mensaje_entrada=mensaje_entrada,
+                    mensaje=mensaje,
+                    fecha=timezone.now(),
+                    grupo=str(grupo)
+                )
+            else:
+                men1=tbl_bandeja_de_salida_cliente.objects.create(
+                    mayorista=mayorista,   
+                    cliente=cliente,
+                    mensaje_entrada=mensaje_entrada,
+                    mensaje=mensaje,
+                    fecha=timezone.now(),
+                    grupo=str(grupo)
+                )
+                
+            men2=tbl_bandeja_de_entrada_mayorista.objects.create(
+                cliente=cliente,
+                mayorista=mayorista,
+                mensaje=mensaje,
+                fecha=timezone.now(),
+                grupo=str(grupo)
+            )
+            print('men1 '+str(men1.id)+' men2'+str(men2.id))
+        else:
+            mensaje_entrada=tbl_bandeja_de_entrada_mayorista.objects.last()
+            if mensaje_entrada is not None:
+                tbl_bandeja_de_salida_mayorista.objects.create(
+                    cliente=cliente,
+                    mayorista=mayorista,
+                    mensaje_entrada=mensaje_entrada,
+                    mensaje=mensaje,
+                    fecha=timezone.now(),
+                    grupo=str(grupo)
+                )
+            else:
+                tbl_bandeja_de_salida_mayorista.objects.create(
+                    cliente=cliente,
+                    mayorista=mayorista,
+                    mensaje=mensaje,
+                    fecha=timezone.now(),
+                    grupo=str(grupo)
+                )                
+            tbl_bandeja_de_entrada_cliente.objects.create(
+                mayorista=mayorista,
                 cliente=cliente,
                 mensaje=mensaje,
-                fecha_envio=timezone.now(),
-                grupo_privado=grupo_privado
+                fecha=timezone.now(),
+                grupo=str(grupo)
             )
-        else:
-            mayorista = tbl_seguidores.objects.get(grupo_privado=grupo_privado).mayorista
-            
-            id_mensaje_client_usuario = tbl_mensaje_mayorista.objects.get_or_create(
-               mayorista=mayorista,
-               mensaje=mensaje,
-               fecha_envio=timezone.now(),
-               grupo_privado=grupo_privado 
-            )
-        return id_mensaje_client_usuario[0].id
-    
-    @database_sync_to_async
-    def respuesta_mensaje_client_prove(self,tipo_usuario, id_mensaje_cliente, id_mensaje_mayorista):
-        id_respuesta_client_prove=None
-        mensaje_cliente = tbl_mensaje_cliente.objects.get(id=id_mensaje_cliente)
-        mensaje_mayorista = tbl_mensaje_mayorista.objects.get(id=id_mensaje_mayorista)
-
-        if tipo_usuario=="Cliente":
-            id_respuesta_client_prove = tbl_respuesta_cliente.objects.get_or_create(
-                mensaje_cliente=mensaje_cliente,
-                mensaje_mayorista=mensaje_mayorista
-            )
-        else:
-            id_respuesta_client_prove = tbl_respuesta_mayorista.objects.get_or_create(
-                mensaje_mayorista=mensaje_mayorista,
-                mensaje_cliente=mensaje_cliente
-            )
-        return id_respuesta_client_prove[0].id
 
     async def connect(self):
         print("se ha conectado")
@@ -102,27 +122,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message=text_data_json['message']
         group = text_data_json['group']
         tipo_usuario = await self.get_tipo_usuario()
-        grupo_privado = self.room_name
-        id_mensaje_cliente=0
-        id_mensaje_prove=0
-        if 'id_mensaje_cliente' in text_data_json:
-            id_mensaje_cliente=text_data_json['id_mensaje_cliente']
-        
-        if 'id_mensaje_prove' in text_data_json:
-            id_mensaje_prove = text_data_json['id_mensaje_prove']
+        await self.guardar_mensaje(message)#guardando mensaje   
         
         if tipo_usuario=="Proveedor":
             usuario=await self.get_name_proveedor()
-            id_mensaje_prove = await self.guardar_mensaje_prove_client(tipo_usuario, message, grupo_privado)
-            if id_mensaje_cliente > 0:
-                id_respuesta_cliente = await self.respuesta_mensaje_client_prove(tipo_usuario ,id_mensaje_cliente, id_mensaje_prove)
-                print(str(id_mensaje_cliente)+" es respuesta de "+str(id_mensaje_prove)+" igual a "+str(id_respuesta_cliente))
+
         else:
             usuario = str(self.scope['user'])
-            id_mensaje_cliente = await self.guardar_mensaje_prove_client(tipo_usuario, message, grupo_privado)
-            if id_mensaje_prove > 0:
-                id_respuesta_prove = await self.respuesta_mensaje_client_prove(tipo_usuario, id_mensaje_cliente, id_mensaje_prove)
-                print(str(id_mensaje_prove)+" es respuesta de "+str(id_mensaje_cliente)+" igual a "+str(id_respuesta_prove))
 
         await self.channel_layer.group_send(
             self.room_group_name,{
@@ -130,8 +136,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'message': message,
                 'usuario':usuario,
                 'tipo_usuario':tipo_usuario,
-                'id_mensaje_cliente':id_mensaje_cliente,
-                'id_mensaje_prove':id_mensaje_prove,
                 'group':group,
             }
         )
@@ -140,15 +144,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = event['message']
         tipo_usuario = event['tipo_usuario']
         usuario = event['usuario']
-        id_mensaje_cliente = event['id_mensaje_cliente']
-        id_mensaje_prove = event['id_mensaje_prove']
         group=event['group']
         await self.send(text_data=json.dumps({
             'message':message,
             'usuario':usuario,
             'tipo_usuario':tipo_usuario,
-            'id_mensaje_cliente':id_mensaje_cliente,
-            'id_mensaje_prove':id_mensaje_prove,
             'group':group,
         }))
 

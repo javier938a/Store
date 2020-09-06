@@ -245,7 +245,7 @@ $(document).ready(function(){
     noti=null;
     $(document).on('click','.chatear', function(evt){
         evt.preventDefault();
-        grupo = $(this).attr('id').replace('op_','');
+        grupo = $(this).attr('id').replace('op_','');       
         user_href = $(this).attr('href');
         usuario='';
         cli_o_prove = '';
@@ -324,6 +324,7 @@ $(document).ready(function(){
                     </div>';
     
                 $("#chat-content").append(chat);
+                //cargando el lista del chat
 
             //alert(posicion);
             var url_chat = 'ws://'+window.location.host+'/ws/chat/'+grupo+'/';
