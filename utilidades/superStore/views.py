@@ -35,6 +35,7 @@ from .proces_ubicacion.crud_ubicacion import ListarPais, ListarDepartamentos, Li
 from .forms import FormDireP
 from .inicio.inicio_usuario import listarDeptoA, listarMuniA, listarBacanA
 from .proces_seguidores.crud_seguidores import listar_seguidores_cliente, listar_seguidores_proveedores
+from .proces_chat.crud_chat import get_mensajes_chat
 import random
 # Create your views here.
 class index(ListView):#Mostrando index Pagina Principal

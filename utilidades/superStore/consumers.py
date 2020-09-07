@@ -35,61 +35,60 @@ class ChatConsumer(AsyncWebsocketConsumer):
         cliente=seguidor.cliente
         mayorista=seguidor.mayorista
         if(tipo_usuario=="Cliente"):#si el tipo de usuario es cliente el mensaje se almacena en la bandeja de salida
-            mensaje_entrada = tbl_bandeja_de_entrada_cliente.objects.last()
-            if mensaje_entrada is not None:
-                men1=tbl_bandeja_de_salida_cliente.objects.create(
-                    mayorista=mayorista,   
-                    cliente=cliente,
-                    mensaje_entrada=mensaje_entrada,
-                    mensaje=mensaje,
-                    fecha=timezone.now(),
-                    grupo=str(grupo)
-                )
-            else:
-                men1=tbl_bandeja_de_salida_cliente.objects.create(
-                    mayorista=mayorista,   
-                    cliente=cliente,
-                    mensaje_entrada=mensaje_entrada,
-                    mensaje=mensaje,
-                    fecha=timezone.now(),
-                    grupo=str(grupo)
-                )
-                
-            men2=tbl_bandeja_de_entrada_mayorista.objects.create(
+            men1=tbl_bandeja_de_salida_cliente.objects.create(
+                mayorista=mayorista,   
                 cliente=cliente,
-                mayorista=mayorista,
                 mensaje=mensaje,
                 fecha=timezone.now(),
                 grupo=str(grupo)
             )
-            print('men1 '+str(men1.id)+' men2'+str(men2.id))
-        else:
-            mensaje_entrada=tbl_bandeja_de_entrada_mayorista.objects.last()
-            if mensaje_entrada is not None:
-                tbl_bandeja_de_salida_mayorista.objects.create(
+            mensaje_salida_anterior = tbl_bandeja_de_salida_mayorista.objects.last()
+            print("hOLAAAA")
+            print(mensaje_salida_anterior)
+            if mensaje_salida_anterior is not None:
+                men2=tbl_bandeja_de_entrada_mayorista.objects.create(
                     cliente=cliente,
                     mayorista=mayorista,
-                    mensaje_entrada=mensaje_entrada,
+                    mensaje_salida=mensaje_salida_anterior,
                     mensaje=mensaje,
                     fecha=timezone.now(),
                     grupo=str(grupo)
                 )
             else:
-                tbl_bandeja_de_salida_mayorista.objects.create(
+                men2=tbl_bandeja_de_entrada_mayorista.objects.create(
                     cliente=cliente,
                     mayorista=mayorista,
                     mensaje=mensaje,
                     fecha=timezone.now(),
                     grupo=str(grupo)
                 )                
-            tbl_bandeja_de_entrada_cliente.objects.create(
-                mayorista=mayorista,
+            print('men1 '+str(men1.id)+' men2'+str(men2.id))
+        else:
+            tbl_bandeja_de_salida_mayorista.objects.create(
                 cliente=cliente,
+                mayorista=mayorista,
                 mensaje=mensaje,
                 fecha=timezone.now(),
                 grupo=str(grupo)
-            )
-
+            )    
+            mensaje_salida_anterior=tbl_bandeja_de_salida_cliente.objects.last()            
+            if mensaje_salida_anterior is not None:
+                tbl_bandeja_de_entrada_cliente.objects.create(
+                    mayorista=mayorista,
+                    cliente=cliente,
+                    mensaje_salida=mensaje_salida_anterior,
+                    mensaje=mensaje,
+                    fecha=timezone.now(),
+                    grupo=str(grupo)
+                )
+            else: 
+                tbl_bandeja_de_entrada_cliente.objects.create(
+                    mayorista=mayorista,
+                    cliente=cliente,
+                    mensaje=mensaje,
+                    fecha=timezone.now(),
+                    grupo=str(grupo)
+                )
     async def connect(self):
         print("se ha conectado")
         self.room_name=self.scope['url_route']['kwargs']['room_name']

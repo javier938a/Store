@@ -205,20 +205,9 @@ class tbl_clients_connect(models.Model):
     def __str__(self):
         return "%s --> %s" % (str(self.usuario), str(self.canal))
 
-class tbl_bandeja_de_entrada_cliente(models.Model):
-    mayorista=models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True)
-    cliente = models.ForeignKey(tbl_cliente, on_delete=models.SET_NULL, null=True)
-    mensaje=models.TextField(max_length=1000)
-    fecha=models.DateTimeField(null=True)
-    grupo=models.CharField(max_length=40)
-    
-    def __str__(self):
-        return "%s --> %s" % (str(self.mayorista), self.mensaje)
-
 class tbl_bandeja_de_salida_cliente(models.Model):
     mayorista=models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True)
     cliente=models.ForeignKey(tbl_cliente, on_delete=models.SET_NULL, null=True)
-    mensaje_entrada=models.ForeignKey(tbl_bandeja_de_entrada_cliente, on_delete=models.SET_NULL, null=True, blank=True)
     mensaje=models.TextField(max_length=1000)
     fecha=models.DateTimeField(null=True)
     grupo=models.CharField(max_length=40)
@@ -226,9 +215,31 @@ class tbl_bandeja_de_salida_cliente(models.Model):
     def __str__(self):
         return "%s --> %s" %(str(self.cliente),self.mensaje)
 
+class tbl_bandeja_de_entrada_cliente(models.Model):
+    mayorista=models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True)
+    cliente = models.ForeignKey(tbl_cliente, on_delete=models.SET_NULL, null=True)
+    mensaje_salida=models.ForeignKey(tbl_bandeja_de_salida_cliente, on_delete=models.SET_NULL, null=True)
+    mensaje=models.TextField(max_length=1000)
+    fecha=models.DateTimeField(null=True)
+    grupo=models.CharField(max_length=40)
+    
+    def __str__(self):
+        return "%s --> %s" % (str(self.mayorista), self.mensaje)
+
+class tbl_bandeja_de_salida_mayorista(models.Model):
+    cliente=models.ForeignKey(tbl_cliente, on_delete=models.SET_NULL, null=True)
+    mayorista=models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True)
+    mensaje=models.TextField(max_length=1000)
+    fecha=models.DateTimeField(null=True)
+    grupo=models.CharField(max_length=40)
+
+    def __str__(self):
+        return "%s --> %s" % (str(self.mayorista), self.mensaje)
+
 class tbl_bandeja_de_entrada_mayorista(models.Model):
     cliente=models.ForeignKey(tbl_cliente, on_delete=models.SET_NULL, null=True)
     mayorista=models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True)
+    mensaje_salida=models.ForeignKey(tbl_bandeja_de_salida_mayorista, on_delete=models.SET_NULL, null=True, blank=True)
     mensaje=models.TextField(max_length=1000)
     fecha=models.DateTimeField(null=True)
     grupo=models.CharField(max_length=40)
@@ -236,16 +247,7 @@ class tbl_bandeja_de_entrada_mayorista(models.Model):
     def __str__(self):
         return "%s --> %s" %(str(self.cliente), self.mensaje)
 
-class tbl_bandeja_de_salida_mayorista(models.Model):
-    cliente=models.ForeignKey(tbl_cliente, on_delete=models.SET_NULL, null=True)
-    mayorista=models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True)
-    mensaje_entrada=models.ForeignKey(tbl_bandeja_de_entrada_mayorista, on_delete=models.SET_NULL, null=True, blank=True)
-    mensaje=models.TextField(max_length=1000)
-    fecha=models.DateTimeField(null=True)
-    grupo=models.CharField(max_length=40)
 
-    def __str__(self):
-        return "%s --> %s" % (str(self.mayorista), self.mensaje)
 
     
 

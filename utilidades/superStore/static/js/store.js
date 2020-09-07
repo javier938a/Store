@@ -324,8 +324,8 @@ $(document).ready(function(){
                     </div>';
     
                 $("#chat-content").append(chat);
+                get_bandeja_entrada_cliente(grupo);
                 //cargando el lista del chat
-
             //alert(posicion);
             var url_chat = 'ws://'+window.location.host+'/ws/chat/'+grupo+'/';
             socket = new WebSocket(url_chat);
@@ -355,6 +355,7 @@ $(document).ready(function(){
             conecciones.get(grupo)[1].onclose = function(e){
                 console.log("Terminando la coneccion con "+id);
             }
+            
     
         }else{
             alert("Ya existe un chat asociado al grupo!!");
@@ -362,6 +363,65 @@ $(document).ready(function(){
 
             
     });
+
+    function get_bandeja_entrada_cliente(grupo){
+        const csrftoken= getCookie('csrftoken');
+        url = '/superStore/bde_cliente/'+grupo+'';
+        $.ajax({
+            type:'GET',
+            url:url,
+            data:{
+                csrfmiddlewaretoken:csrftoken,
+            },
+            dataType:'json',
+            success:function(R){
+                console.log("Entro aqui al primer ajax")
+                //console.log(R[0]);
+                for(var i in R){
+                   //console.log(R[i]);
+                    id=R[i].id;
+                    mayorista=R[i].mayorista;
+                    cliente=R[i].cliente;
+                    mensaje=R[i].mensaje;
+                    fecha=R[i].fecha;
+                    grupo=R[i].grupo;
+                    mensaje1 = '<div class="contsms1">\
+                                    <div class="mensaje1">\
+                                        <div class="enca1">'+cliente+'</div>\
+                                        <div class="body1">\
+                                            '+mensaje+'\
+                                        </div>\
+                                    </div>\
+                                    <div class="ladoIz"></div>\
+                                </div>';
+                    $('#view_chat_'+grupo+'').append(mensaje1);
+                    respuesta=R[i].respuesta;
+                        console.log('respuesta: '+respuesta);
+                        for(var res in respuesta){
+                            console.log("Entro al for: "+res)
+                            id=respuesta[res].id;
+                            mayorista=respuesta[res].mayorista;
+                            cliente=respuesta[res].cliente;
+                            mensaje=respuesta[res].mensaje;
+                            fecha=respuesta[res].fecha;
+                            grupo=respuesta[res].grupo;
+                            //alert(grupo);
+                            mensaje2 = '<div class="contsms2">\
+                                            <div class="ladoDer"></div>\
+                                                <div class="mensaje2">\
+                                                <div class="enca2">'+mayorista+'</div>\
+                                                <div class="body2">\
+                                                    '+mensaje+'\
+                                                </div>\
+                                            </div>\
+                                        </div>';
+                            $('#view_chat_'+grupo+'').append(mensaje2);
+    
+                        }                                             
+                }
+            }
+        });
+    }
 
     $(document).on('keypress','.sendSms', function(e){
         //alert("Hola Mundo");
@@ -373,8 +433,6 @@ $(document).ready(function(){
             //alert($(texto).val());
             conecciones.get(grupo)[1].send(JSON.stringify({
                 'message':$(texto).val(),
-                'id_mensaje_prove':id_mensaje_prove,
-                'id_mensaje_cliente':id_mensaje_cliente,
                 'group':grupo,
             }));
 

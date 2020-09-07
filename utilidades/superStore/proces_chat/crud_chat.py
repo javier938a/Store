@@ -4,88 +4,46 @@ from django.core.serializers import serialize
 from django.http import JsonResponse
 from django.db.models import Q
 
-def get_bandeja_de_entrada_cliente(request, grupo):
+def get_mensajes_chat(request, grupo):
     bandeja_entrada = None
-    bandeja=[]
+    chat_cliente=[]
+    
     if request.method=="GET":
+        mensaje=None
         if request.is_ajax():
-            bandeja_entrada = tbl_bandeja_de_entrada_cliente.objects.filter(grupo=grupo)
-            for i in bandeja_entrada:
-                mensajes={
-                    'mayorista':str(i.mayorista),
-                    'cliente':str(i.cliente),
-                    'mensaje':str(i.mensaje),
-                    'fecha':str(i.fecha),
-                    'grupo':str(i.grupo)
+            bandeja_salida = tbl_bandeja_de_salida_cliente.objects.filter(grupo=grupo)
+            for sms in bandeja_salida:
+                bandeja_entrada=tbl_bandeja_de_entrada_cliente.objects.filter(mensaje_salida=sms)
+                respuesta=[]#lista donde se almacenaran las respuestas a los mensajes
+                for r in bandeja_entrada:#recorriendo las respuestas
+                    res={
+                        'id':str(r.id),
+                        'mayorista':str(r.mayorista),
+                        'mensaje':str(r.mensaje),
+                        'fecha':str(r.fecha),
+                        'grupo':str(r.grupo),
+                    }
+                    respuesta.append(res)#agregando las respuestas mensaje por mensaje
+                    
+                mensaje={
+                    'id':str(sms.id),
+                    'cliente':str(sms.cliente),
+                    'mensaje':str(sms.mensaje),
+                    'fecha':str(sms.fecha),
+                    'grupo':str(sms.grupo),
+                    'respuesta':respuesta,
                 }
-                bandeja.append(mensajes)
+                chat_cliente.append(mensaje)
+            
+            
+                    
+            #print(chat_cliente)
+                    
+
     
     return JsonResponse(
-        bandeja,
-        safe=True
-    )
-
-def get_bandeja_salida_cliente(self, pk):
-    bandeja_salida=None
-    grupo=None
-    salida=None
-    if request.method=="GET":
-        grupo = request.GET.get('grupo')
-        if request.is_ajax():
-            bandeja_salida = tbl_bandeja_de_salida_cliente.objects.filter(Q(mensaje_entrada__id=pk)&Q(grupo=grupo))
-            for i in bandeja_salida:
-                mensaje={
-                    'mayorista':str(i.mayorista),
-                    'cliente':str(i.cliente),
-                    'mensaje':str(i.mensaje),
-                    'fecha':str(i.fecha),
-                    'grupo':str(i.grupo)
-                }
-                salida.append(mensaje)
-    
-    return JsonResponse(
-        salida,
-        safe=True
-    )
-
-
-def get_bandeja_entrada_mayorista(request, grupo):
-    bandeja_entrada = None
-    bandeja=[]
-    if request.method=="GET":
-        if request.is_ajax():
-            bandeja_entrada = tbl_bandeja_de_entrada_mayorista.objects.filter(grupo=grupo)
-            for i in bandeja_entrada:
-                mensaje={
-                    'cliente':str(i.cliente),
-                    'mayorista':str(i.mayorista),
-                    'mensaje':str(i.mensaje),
-                    'fecha':str(i.fecha),
-                    'grupo':str(i.grupo)
-                }
-                bandeja.append(mensaje)
-    return  bandeja
-
-def get_bandeja_salida_mayorista(request, pk):
-    bandeja_salida=None
-    bandeja=[]
-    grupo=None
-    if request.method=='GET':
-        if request.is_ajax():
-            grupo = request.GET.get('grupo')
-            bandeja_salida = tbl_bandeja_de_salida_mayorista.objects.filter(Q(mensaje_entrada__id=pk)&Q(grupo=grupo))
-            for i in bandeja_salida:
-                mensaje = {
-                    'cliente':str(i.cliente),
-                    'mayorista':str(i.mayorista),
-                    'mensaje':str(i.mensaje),
-                    'fecha':str(i.fecha),
-                    'grupo':str(i.grupo)
-                }
-                bandeja.append(mensaje)
-    return JsonResponse(
-        bandeja,
-        safe=True
+        chat_cliente,
+        safe=False
     )
 
 
