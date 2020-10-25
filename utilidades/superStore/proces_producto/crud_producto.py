@@ -29,8 +29,11 @@ class RegistrarProducto(CreateView):#esta vista sirve para registrar producto se
     def form_valid(self, form):
         precio_unitario = form.cleaned_data.get('precio_unitario')#Obteniendo el precio unitario del formulario
         cantidad = form.cleaned_data.get('cantidad')#Obteniendo la cantidad total de producto
-        total = float(precio_unitario)*float(cantidad)#Obteniendo el precio total del producto
-        form.instance.precio_total = total#Agregandolo a el campo del formulario
+        total_precio_compra = float(precio_unitario)*float(cantidad)#Obteniendo el precio total del producto
+        form.instance.precio_total = total_precio_compra#Agregandolo a el campo del formulario
+        precio_venta=form.cleaned_data.get('precio_venta')#Obteniendo el precio de venta del producto
+        total_precio_venta=float(cantidad)*float(precio_venta)
+        form.instance.precio_total_venta=total_precio_venta#asignandolo al campo de total precio de venta
         fecha_registro = timezone.now()
         form.instance.fecha_registro = fecha_registro
         #obteniendo los seguidores del proveedor
@@ -91,9 +94,12 @@ class EditarProducto(UpdateView):
     def form_valid(self, form):
         precio_unitario = form.cleaned_data.get('precio_unitario')#Obteniendo el precio unitario del formulario
         cantidad = form.cleaned_data.get('cantidad')#Obteniendo la cantidad total de producto
-        total = float(precio_unitario)*float(cantidad)#Obteniendo el precio total del producto
-        print("Total es: "+str(precio_unitario)+" * "+str(cantidad)+" = "+str(total))
-        form.instance.precio_total = total#Agregandolo a el campo del formulario
+        total_precio_compra = float(precio_unitario)*float(cantidad)#Obteniendo el precio total del producto
+        print("Total es: "+str(precio_unitario)+" * "+str(cantidad)+" = "+str(total_precio_compra))
+        precio_venta=form.cleaned_data.get('precio_venta')
+        total_precio_venta=float(cantidad)*float(precio_venta)
+        form.instance.precio_total = total_precio_compra#Agregandolo a el campo del formulario
+        form.instance.precio_total_venta=total_precio_venta#agregando el precio total de venta que es lo que se espera obtener al mes
         form_valid = super(EditarProducto, self).form_valid(form)
 
         return form_valid

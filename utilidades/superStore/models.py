@@ -124,6 +124,7 @@ class tbl_sub_categoria1(models.Model):
         return reverse("categoria-detalle",args=[str(self.id)])
 
 class tbl_producto(models.Model):#Tabla producto que almacenara todos los producto de todos los proveedores
+    codigo_producto = models.CharField(max_length=50, help_text="Ingrese el codigo del producto", null=True)
     foto_producto1 = models.ImageField(verbose_name="Imagen", upload_to='foto_producto', null=True, blank=True)
     foto_producto2 = models.ImageField(verbose_name="Imagen", upload_to='foto_producto', null=True, blank=True)
     foto_producto3 = models.ImageField(verbose_name="Imagen", upload_to='foto_producto', null=True, blank=True)
@@ -135,8 +136,10 @@ class tbl_producto(models.Model):#Tabla producto que almacenara todos los produc
     costo_envio = models.FloatField(help_text="Costo del envio", null=True)
     medio_de_envio = models.CharField(max_length=100, help_text="empresa por donde se envia el producto", null=True)
     cantidad = models.IntegerField(help_text="Ingrese la cantidad del producto")
-    precio_unitario = models.FloatField(help_text="Ingrese el precio unitario del producto")
+    precio_unitario = models.FloatField(help_text="Ingrese el precio unitario de compra del producto")
+    precio_venta = models.FloatField(help_text="Ingrese el precio unitario de venta del producto", null=True)
     precio_total = models.FloatField(help_text="precio total en inventario", blank=True, null=True)
+    precio_total_venta=models.FloatField(help_text="Ingrese el precio total de venta", null=True)
     sub_categoria1 = models.ForeignKey(tbl_sub_categoria1, on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block css_agregado %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/vender.css" %}">
+{% endblock %}
+
+{% block titulo %}
+    <title>Vender</title>
+{% endblock %}
+
+
+{% block contenido %}
+    <div>
+        <Button id="btn_listprod" type="button" class="btn btn-primary" data-toggle='modal' data-target="#list_prod">Agregar Productos</Button>
+        <div class="modal fade" id="list_prod" tabindex="-1" aria-labelledby="">
+            <div class="modal-dialog">
+                <div class="modal-content" style="width: 100vh;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="lbl1">Seleccionar Producto</h5>
+                        <button type="button" class="close" data-dismiss="modal" arial-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="prodajax" method="post" action="{% url 'tienda:listprod' %}">
+                            {% csrf_token %}
+                            <div style="height: 10vh;" class="form-control">
+                                <label for="txt_clave_prod">Nombre del producto</label>
+                                <input id="txt_clave_prod" type="text">
+                                <button>Buscar</button>
+                                <label for="txt_cantidad">Cantidad:</label>
+                                <input id="txt_cantidad" type="text" style="width: 10vh; height:5vh;">
+                            </div>
+                            
+                        </form>
+                        <div style="height: 5vh;;">
+
+                        </div>
+                        <div id="content_table" style=" height:50vh; overflow-y:scroll;">
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button id="save" type="button" class="btn btn-primary">Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="table_ventas">{# div donde de mostraras las vendas efectuadas #}
+        <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Cliente</th>
+                <th scope="col">Producto</th>
+                <th scope="col">cantidad</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {% load static %}
+    <script src="{% static "js/opvender.js" %}"></script>
+{% endblock %}

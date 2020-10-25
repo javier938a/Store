@@ -1,3 +1,4 @@
+from asyncio import events
 import json
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
@@ -10,6 +11,33 @@ from django.utils import timezone
 from .models import tbl_seguidores
 from .models import tbl_clients_connect
 from .models import tbl_bandeja_de_entrada_cliente, tbl_bandeja_de_salida_cliente, tbl_bandeja_de_entrada_mayorista, tbl_bandeja_de_salida_mayorista
+from .models import tbl_producto
+from django.core.serializers import serialize
+class BuscarProductos(AsyncWebsocketConsumer):
+    async def connect(self):
+        print('Conectando..')
+        await self.accept()
+    async def disconnect(self, close_code):
+        print('desconectado..')
+    async def receive(self, text_data):
+        claves=json.loads(text_data)
+        clave_nombre=claves['clave_nombre']#para buscar por nombre de producto
+        lista_productos= await self.get_producto_nombre(clave_nombre=clave_nombre)#buscando los productos por nombre
+        await self.send(text_data=lista_productos)
+    
+    @database_sync_to_async
+    def get_producto_nombre(self, clave_nombre):
+        productos=None
+        if len(clave_nombre)>0:
+            productos = tbl_producto.objects.filter(Q(producto__icontains=clave_nombre.lower())& Q(mayorista__user__id=self.scope['user'].id))
+        elif len(clave_nombre)==0:
+            productos = tbl_producto.objects.filter(Q(mayorista__user__id=self.scope['user'].id))
+        #print(productos)
+        list_productos=[]
+        productos_json=serialize('json', productos)
+        
+        return productos_json
+        
 
 class ChatConsumer(AsyncWebsocketConsumer):
     @sync_to_async

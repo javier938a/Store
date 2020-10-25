@@ -57,6 +57,11 @@
 
       <link rel="stylesheet" href="{% static "css/estilos.css" %}">
     {% endblock %}
+
+    {% block css_agregado %}
+
+    {% endblock %}
+
     {% block titulo %}
       <title>Inicio</title>
   {% endblock %}
@@ -145,6 +150,9 @@
                 {% endif %}
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'tienda:list_venta' %}">Ventas</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'tienda:vender'%}">Vender</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="#">seguidores</a>

@@ -1,0 +1,11 @@
+.selected{
+    cursor: pointer;
+}
+.selected:hover{
+    background-color: #8b189d;
+    color:white;
+}
+.fila_selecionada{
+    background-color: #8b189d;
+    color: white;
+}

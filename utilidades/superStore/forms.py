@@ -95,8 +95,9 @@ class FormCrearDireccion(forms.ModelForm):#para registrar las multiples direccio
 class FormCrearProducto(forms.ModelForm):
     class Meta:
         model = tbl_producto
-        fields = ('foto_producto1','foto_producto2','foto_producto3','mayorista', 'producto','info_producto','medio_de_envio', 'cantidad', 'precio_unitario','costo_envio','sub_categoria1')
+        fields = ('codigo_producto','foto_producto1','foto_producto2','foto_producto3','mayorista', 'producto','info_producto','medio_de_envio', 'cantidad', 'precio_unitario','precio_venta','costo_envio','sub_categoria1')
         labels = {
+            'codigo_producto':'Codigo de Producto',
             'foto_producto1':'Foto del producto No1',
             'foto_producto2':'Foto del producto No2',
             'foto_producto3':'Foto del producto No3',
@@ -105,11 +106,13 @@ class FormCrearProducto(forms.ModelForm):
             'info_producto':'Descripcion',
             'medio_de_envio':'Medio de envio',
             'cantidad':'Cantidad',
-            'precio_unitario':'Precio por Unidad',
+            'precio_unitario':'Precio de compra por Unidad',
+            'precio_venta':'Precio de venta por Unidad',
             'costo_envio':'Costo de envio',
             'sub_categoria1':'Categoria',
         }
         widgets = {
+            'codigo_producto':forms.TextInput(attrs={'class':'form-control'}),
             'foto_producto1':forms.FileInput(attrs={'class':'form-control'}),
             'foto_producto2':forms.FileInput(attrs={'class':'form-control'}),
             'foto_producto3':forms.FileInput(attrs={'class':'form-control'}),
@@ -119,6 +122,7 @@ class FormCrearProducto(forms.ModelForm):
             'medio_de_envio':forms.TextInput(attrs={'class':'form-control'}),
             'cantidad':forms.NumberInput(attrs={'class':'form-control'}),
             'precio_unitario':forms.NumberInput(attrs={'class':'form-control'}),
+            'precio_venta':forms.NumberInput(attrs={'class':'form-control'}),
             'costo_envio':forms.NumberInput(attrs={'class':'form-control'}),
             'sub_categoria1':forms.Select(attrs={'class':'form-control'})
         }
