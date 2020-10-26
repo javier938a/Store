@@ -47,13 +47,21 @@ class tbl_tipo_usuario(models.Model):
     def __str__(self):
         return self.tipo_usuario
 
+class UserManager(models.Manager):
+    def get_by_natural_key(self, username, first_name, last_name):
+        return self.get(username=username, first_name=first_name, last_name=last_name)
+
 class User(AbstractUser):
     tipo_usuario_id = models.ForeignKey(tbl_tipo_usuario, on_delete=models.SET_NULL, null=True)
+    objects=UserManager()
     #email = models.EmailField('email address', unique=True)
     #USERNAME_FIELD='email'
     #REQUIRED_FIELDS=['username']
     class Meta:
         db_table = "auth_user"
+    
+    def natural_key(self):
+        return (self.username, self.first_name, self.last_name)
 
 class tbl_cliente(models.Model):
     foto_perfil = models.ImageField(verbose_name="Imagen", max_length=300, upload_to="fotoPerfilCliente", blank=True, null=True)
@@ -164,7 +172,7 @@ class tbl_venta(models.Model):#almacenara las ventas efectuadas por los mayorist
     cantidad = models.IntegerField(help_text="Ingrese la cantida vendida")
     precio_unitario = models.DecimalField(decimal_places=3, max_digits=10, help_text="Ingrese el precio unitario del producto")
     precio_total = models.DecimalField(decimal_places=3, max_digits=10, help_text="Ingrese el precio total de la venta", null=True, blank=True)
-    direccion = models.ForeignKey(tbl_direccion, on_delete=models.SET_NULL, null=True)
+    direccion = models.ForeignKey(tbl_direccion, on_delete=models.SET_NULL, null=True, blank=True)
     estado_envio = models.ForeignKey(tbl_estado_envio, on_delete=models.SET_NULL, null=True, blank=True)
     def __str__(self):
         return "producto %s " % self.producto_id

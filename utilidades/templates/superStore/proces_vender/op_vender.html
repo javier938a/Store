@@ -23,12 +23,12 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form id="prodajax" method="post" action="{% url 'tienda:listprod' %}">
+                        <form id="prodajax" method="post">
                             {% csrf_token %}
                             <div style="height: 10vh;" class="form-control">
                                 <label for="txt_clave_prod">Nombre del producto</label>
                                 <input id="txt_clave_prod" type="text">
-                                <button>Buscar</button>
+                                <button type="submit">Buscar</button>
                                 <label for="txt_cantidad">Cantidad:</label>
                                 <input id="txt_cantidad" type="text" style="width: 10vh; height:5vh;">
                             </div>
@@ -43,30 +43,58 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button id="save" type="button" class="btn btn-primary">Agregar</button>
+                        <button id="agregar" type="button" class="btn btn-primary">Agregar</button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <button id="btn_listclient" type="button" class="btn btn-primary" data-toggle="modal" data-target="#list_client" data-whatever="">Agregar Clientes</button>
+        <div class="modal fade" id="list_client" tabindex="-1" aria-labelledby="cliente_modal" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content" style="width: 100vh;">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="cliente_modal">Buscar Cliente</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form id="clientajax" method="post">
+                        {% csrf_token %}
+                        <div style="height: 10vh;" class="form-control">
+                            <label for="txt_clave_cliente">Nombre del producto</label>
+                            <input id="txt_clave_cliente" type="text">
+                            <button type="submit">Buscar</button>
+                        </div>
+                    </form>
+                    <div style="height: 5vh;;">
+
+                    </div>
+                    <div id="content_clientes" style=" height:50vh; overflow-y:scroll;">
+
+                    </div>                    
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Send message</button>
+                </div>
+              </div>
+            </div>
+          </div>
     </div>
     <div id="table_ventas">{# div donde de mostraras las vendas efectuadas #}
         <table class="table">
             <thead class="thead-dark">
               <tr>
-                <th scope="col">Cliente</th>
                 <th scope="col">Producto</th>
                 <th scope="col">cantidad</th>
                 <th scope="col">Precio</th>
                 <th scope="col">Total</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
+            <tbody id="table_body">
+                {# Aqui iria el contenido de la venta #}
             </tbody>
           </table>
     </div>

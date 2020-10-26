@@ -13,7 +13,8 @@ from .models import tbl_clients_connect
 from .models import tbl_bandeja_de_entrada_cliente, tbl_bandeja_de_salida_cliente, tbl_bandeja_de_entrada_mayorista, tbl_bandeja_de_salida_mayorista
 from .models import tbl_producto
 from django.core.serializers import serialize
-class BuscarProductos(AsyncWebsocketConsumer):
+
+class BuscarProductosCliente(AsyncWebsocketConsumer):
     async def connect(self):
         print('Conectando..')
         await self.accept()
@@ -21,9 +22,17 @@ class BuscarProductos(AsyncWebsocketConsumer):
         print('desconectado..')
     async def receive(self, text_data):
         claves=json.loads(text_data)
+        tipo_busqueda=claves['tipo_busqueda']#esta clave es para saber si son clientes o productos los que debe buscar
         clave_nombre=claves['clave_nombre']#para buscar por nombre de producto
-        lista_productos= await self.get_producto_nombre(clave_nombre=clave_nombre)#buscando los productos por nombre
-        await self.send(text_data=lista_productos)
+        if tipo_busqueda=='producto':
+            lista_productos= await self.get_producto_nombre(clave_nombre=clave_nombre)#buscando los productos por nombre
+            print(tipo_busqueda)
+            await self.send(text_data=lista_productos)
+        elif tipo_busqueda=='cliente':
+            lista_clientes = await self.get_lista_cliente(clave_nombre=clave_nombre)#Listado de clientes
+            print(lista_clientes)
+            await self.send(text_data=lista_clientes)
+            
     
     @database_sync_to_async
     def get_producto_nombre(self, clave_nombre):
@@ -37,6 +46,17 @@ class BuscarProductos(AsyncWebsocketConsumer):
         productos_json=serialize('json', productos)
         
         return productos_json
+    
+    @database_sync_to_async
+    def get_lista_cliente(self, clave_nombre):
+        clientes=None
+        if len(clave_nombre)>0:
+            clientes=tbl_cliente.objects.filter(Q(user__username__icontains=clave_nombre) | Q(user__first_name__icontains=clave_nombre) | Q(user__last_name__icontains=clave_nombre))
+        elif len(clave_nombre)==0:
+            clientes=tbl_cliente.objects.all()
+        clientes_json=serialize('json', clientes, use_natural_foreign_keys=True, use_natural_primary_keys=True)
+
+        return clientes_json
         
 
 class ChatConsumer(AsyncWebsocketConsumer):
