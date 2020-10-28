@@ -12,7 +12,8 @@
 
 {% block contenido %}
     <div>
-        <Button id="btn_listprod" type="button" class="btn btn-primary" data-toggle='modal' data-target="#list_prod">Agregar Productos</Button>
+        <button id="nueva_venta" type="button" class="btn btn-primary" >Nueva Venta</button>
+        <Button id="btn_listprod" type="button" disabled class="btn btn-primary" data-toggle='modal' data-target="#list_prod">Agregar Productos</Button>
         <div class="modal fade" id="list_prod" tabindex="-1" aria-labelledby="">
             <div class="modal-dialog">
                 <div class="modal-content" style="width: 100vh;">
@@ -49,7 +50,7 @@
             </div>
         </div>
 
-        <button id="btn_listclient" type="button" class="btn btn-primary" data-toggle="modal" data-target="#list_client" data-whatever="">Agregar Clientes</button>
+        <button id="btn_listclient" type="button" disabled class="btn btn-primary" data-toggle="modal" data-target="#list_client" data-whatever="">Agregar Clientes</button>
         <div class="modal fade" id="list_client" tabindex="-1" aria-labelledby="cliente_modal" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content" style="width: 100vh;">
@@ -76,21 +77,46 @@
                     </div>                    
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Send message</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                  <button id="btn_select_cliente" type="button" class="btn btn-primary">Seleccionar</button>
                 </div>
               </div>
             </div>
           </div>
+          <button id="btn_cancelar_venta" class="btn btn-primary">Cancelar Venta</button>
     </div>
+    <div style="height: 25vh;">
+        <form action="" id="formRegVenta">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="" id="id_factura" value="">{# servira para obtener la factura#}
+                <input type="hidden" name="" id="id_cliente" value="">
+                <label for="">Numero de Factura</label>
+                <input id="txt_numero_fact" type="text" >
+                <label for="">Cliente:</label>
+                <input id="txt_cliente" type="text">
+            </div>
+            <div class="form-group">
+                <label for="">Direccion:</label>
+                <input id="txt_direccion" type="text">
+                <label for="">NIT:</label>
+                <input id="txt_nit" type="text">
+            </div>
+            <button type="submit" class="btn btn-primary">Efectuar venta</button>
+        </form>
+        
+    </div>
+
     <div id="table_ventas">{# div donde de mostraras las vendas efectuadas #}
         <table class="table">
             <thead class="thead-dark">
               <tr>
+                <th scope="col">ID</th>
                 <th scope="col">Producto</th>
                 <th scope="col">cantidad</th>
                 <th scope="col">Precio</th>
                 <th scope="col">Total</th>
+                <th scope="col">Operaciones</th>
               </tr>
             </thead>
             <tbody id="table_body">

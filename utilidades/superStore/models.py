@@ -48,8 +48,8 @@ class tbl_tipo_usuario(models.Model):
         return self.tipo_usuario
 
 class UserManager(models.Manager):
-    def get_by_natural_key(self, username, first_name, last_name):
-        return self.get(username=username, first_name=first_name, last_name=last_name)
+    def get_by_natural_key(self, username):
+        return self.get(username=username)
 
 class User(AbstractUser):
     tipo_usuario_id = models.ForeignKey(tbl_tipo_usuario, on_delete=models.SET_NULL, null=True)
@@ -57,8 +57,10 @@ class User(AbstractUser):
     #email = models.EmailField('email address', unique=True)
     #USERNAME_FIELD='email'
     #REQUIRED_FIELDS=['username']
+    
     class Meta:
         db_table = "auth_user"
+        unique_together = [['username' ,'first_name', 'last_name']]
     
     def natural_key(self):
         return (self.username, self.first_name, self.last_name)
@@ -165,6 +167,18 @@ class tbl_estado_envio(models.Model):#Se define al tabla estado del envio
     def __str__(self):
         return self.estado
 
+class tbl_factura(models.Model):
+    numero_factura=models.CharField(help_text="Numero de factura", max_length=50, null=True, blank=True)
+    cliente = models.CharField(max_length=50, help_text='Nombre del cliente', null=True, blank=True)
+    direccion=models.TextField(max_length=100, help_text='Direccion del cliente', null=True, blank=True)
+    Fecha_hora=models.DateTimeField(help_text='Fecha en que se genera la factura', null=True, blank=True)
+    nit=models.CharField(help_text='Nit de la empresa', max_length=17, null=True, blank=True)
+    
+    def __str__(self):
+        return "factura N° %s cliente %s "%(self.numero_factura, self.cliente)
+    
+
+
 class tbl_venta(models.Model):#almacenara las ventas efectuadas por los mayoristas por parte de los clientes
     cliente_id = models.ForeignKey(tbl_cliente, on_delete=models.CASCADE)
     producto_id = models.ForeignKey(tbl_producto, on_delete=models.CASCADE)
@@ -174,6 +188,7 @@ class tbl_venta(models.Model):#almacenara las ventas efectuadas por los mayorist
     precio_total = models.DecimalField(decimal_places=3, max_digits=10, help_text="Ingrese el precio total de la venta", null=True, blank=True)
     direccion = models.ForeignKey(tbl_direccion, on_delete=models.SET_NULL, null=True, blank=True)
     estado_envio = models.ForeignKey(tbl_estado_envio, on_delete=models.SET_NULL, null=True, blank=True)
+    factura = models.ForeignKey(tbl_factura, on_delete=models.SET_NULL, null=True, blank=True)
     def __str__(self):
         return "producto %s " % self.producto_id
 

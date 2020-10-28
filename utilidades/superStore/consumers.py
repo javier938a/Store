@@ -26,13 +26,13 @@ class BuscarProductosCliente(AsyncWebsocketConsumer):
         clave_nombre=claves['clave_nombre']#para buscar por nombre de producto
         if tipo_busqueda=='producto':
             lista_productos= await self.get_producto_nombre(clave_nombre=clave_nombre)#buscando los productos por nombre
-            print(tipo_busqueda)
+            #print(tipo_busqueda)
             await self.send(text_data=lista_productos)
         elif tipo_busqueda=='cliente':
             lista_clientes = await self.get_lista_cliente(clave_nombre=clave_nombre)#Listado de clientes
-            print(lista_clientes)
-            await self.send(text_data=lista_clientes)
-            
+            #print(lista_clientes)
+            await self.send(text_data=lista_clientes)       
+
     
     @database_sync_to_async
     def get_producto_nombre(self, clave_nombre):

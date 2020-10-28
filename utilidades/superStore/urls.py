@@ -17,7 +17,7 @@ from .views import ListarPais, ListarDepartamentos, ListarMunicipio,ListarBCanto
 from .views import listarDeptoA, listarMuniA, listarBacanA
 from .views import listar_seguidores_cliente, listar_seguidores_proveedores
 from .views import get_mensajes_chat
-from .views import OpVender, listar_productos
+from .views import OpVender, listar_productos, new_factura, efectuar_venta
 app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
@@ -71,5 +71,7 @@ urlpatterns=[
     path('seguidores/sigues/<int:pk>', listar_seguidores_proveedores, name='list_vendedor'),
     path('bde_cliente/<str:grupo>',get_mensajes_chat, name='bdecliente'),
     path('vender', OpVender.as_view(), name='vender'),
-    path('prodAjax', listar_productos, name='listprod')
+    path('prodAjax', listar_productos, name='listprod'),
+    path('newfact',new_factura, name='factura' ),
+    path('efectuar_venta', efectuar_venta, name='efectar_venta')
 ]

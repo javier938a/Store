@@ -4,6 +4,7 @@ from .models import tbl_departamento, tbl_municipio, tbl_barrio_canton, tbl_cest
 from .models import tbl_estado_envio, tbl_comentario_producto, tbl_seguidores, tbl_favoritos
 from .models import tbl_clients_connect
 from .models import tbl_bandeja_de_entrada_cliente, tbl_bandeja_de_salida_cliente, tbl_bandeja_de_entrada_mayorista, tbl_bandeja_de_salida_mayorista
+from .models import tbl_factura
 # Register your models here.
 admin.site.register(User)
 admin.site.register(tbl_mayorista)
@@ -28,3 +29,4 @@ admin.site.register(tbl_bandeja_de_entrada_cliente)
 admin.site.register(tbl_bandeja_de_salida_cliente)
 admin.site.register(tbl_bandeja_de_entrada_mayorista)
 admin.site.register(tbl_bandeja_de_salida_mayorista)
+admin.site.register(tbl_factura)

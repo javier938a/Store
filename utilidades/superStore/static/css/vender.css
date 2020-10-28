@@ -1,3 +1,4 @@
+
 .selected{
     cursor: pointer;
 }
@@ -8,4 +9,11 @@
 .fila_selecionada{
     background-color: #8b189d;
     color: white;
+}
+
+#btn_listprod:disabled{
+    background-color: #696669;
+}
+#btn_listclient:disabled{
+    background-color: #696669;
 }

@@ -100,10 +100,12 @@ $(document).ready(function (){
     }
 
     clave=''
+    titulo_modal=''
     mod=$('#list_prod').on('show.bs.modal', function(event){
         var button = $(event.relatedTarget);
         var recipient = button.data('whatever');
         var modal=$(this);
+        modal.find('.modal-title').text('Productos')
         url=$("#prodajax").attr('action');
         var csrftoken=getCookie('csrftoken');
         //alert(csrftoken);
@@ -112,18 +114,22 @@ $(document).ready(function (){
             'tipo_busqueda':'producto',
             'clave_nombre':clave,
         }));
+        titulo_modal= modal.find('.modal-title').text();//Se utilizara para saber si estoy agregando un producto o cliente
     });
-    $('#list_client').on('show.bs.modal', function (event) {
+    
+    mod_cliente=$('#list_client').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget) // Button that triggered the modal
         var recipient = button.data('whatever') // Extract info from data-* attributes
         // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
         // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
         var modal = $(this)
+        modal.find('.modal-title').text('Clientes')
         clave=$('#txt_clave_cliente').val();
         socket.send(JSON.stringify({
             'tipo_busqueda':'cliente',
             'clave_nombre':clave,
         }));
+        titulo_modal=modal.find('.modal-title').text();
       })
 
     $('#txt_clave_prod').keydown(function(event){
@@ -184,6 +190,7 @@ $(document).ready(function (){
         }));
     });
     var fila_content = [];
+    var fila_clientes=[]
     //resaltando filas
     $(document).on("click", ".selected", function(){
         idFila=$(this).attr('id');
@@ -191,17 +198,39 @@ $(document).ready(function (){
             $('#'+idFila+'').removeClass('fila_selecionada');
         }else{
             $('#'+idFila+'').addClass('fila_selecionada');
-            if(fila_content.length>0){
+            if(titulo_modal=='Productos'){
+                if(fila_content.length>0){
                     //alert(i);
-                fila_content.splice(0, fila_content.length);
+                    fila_content.splice(0, fila_content.length);
+                }
+                $(this).find("td").each(function(index){//Recorriendo la fila seleccionada
+                    //$(this).html()
+                    //console.log($(this).html());
+                    //alert($(this).html());
+                    fila_content.push($(this).html());
+                });                
+            }else if(titulo_modal=='Clientes'){
+                if(fila_clientes.length>0){
+                    fila_clientes.splice(0, fila_clientes.length);
+                }
+                $(this).find("td").each(function(index){
+                    fila_clientes.push($(this).html());
+                });
             }
-            $(this).find("td").each(function(index){//Recorriendo la fila seleccionada
-                //$(this).html()
-                //console.log($(this).html());
-                //alert($(this).html());
-                fila_content.push($(this).html());
-            });
+
         }
+    });
+
+    $("#btn_select_cliente").on('click', function(evt){
+        mod_cliente.modal('toggle');
+        $("#txt_clave_cliente").val('');
+        idCliente = fila_clientes[0]; 
+        usuario=fila_clientes[1];
+        nombres=fila_clientes[2];
+        //alert(idCliente);
+        //alert(nombres);
+        $("#id_cliente").val(idCliente);
+        $("#txt_cliente").val(nombres);
     });
 
     $("#agregar").on('click', function(evt){
@@ -213,15 +242,19 @@ $(document).ready(function (){
         total = parseFloat(fila_content[4].replace('$',''))*cantidad;
         
         fila_venta='<tr>\
+                        <td>'+fila_content[0]+'</td>\
                         <td>'+fila_content[1]+'</td>\
                         <td>'+cantidad+'</td>\
                         <td>'+fila_content[4]+'</td>\
                         <td>$'+total+'</td>\
+                        <td><button class="btn btn-primary">Eliminar</button></td>\
                     </tr>'
         $("#table_body").append(fila_venta);
 
     })
+    $("#btn_select_cliente").on('click', function(event){
 
+    });
     $("#clientajax").submit(function(evt){
         evt.preventDefault()
         socket.send(JSON.stringify({
@@ -229,6 +262,65 @@ $(document).ready(function (){
             'clave_nombre':$('#txt_clave_cliente').val(),
         }));
     });
+
+    $("#nueva_venta").on('click', function(evt){
+        $("#btn_listprod").prop('disabled',false);
+        $("#btn_listclient").prop('disabled', false);
+        $("#nueva_venta").prop('disabled',true);
+        var csrftoken=getCookie('csrftoken');
+        url='/superStore/newfact';
+        data={
+            csrfmiddlewaretoken:csrftoken
+        }
+        $.ajax({
+            type:'POST',
+            url:url,
+            data:data,
+            dataType:'json',
+            success:function(data){
+                //fact=JSON.parse(data);
+                id_factura=data[0].idfactura;
+                $("#id_factura").val(id_factura);
+                console.log(data[0].idfactura);
+            }           
+            
+        });
+    });
+
+    var ventas_prod=new Array()
+
+    $("#formRegVenta").submit(function(evt){
+        evt.preventDefault();
+        $("#table_ventas #table_body").find('tr').each(function(index){
+            id_cliente=$('#id_cliente').val();
+            id_prod=$(this).find('td').eq(0).html();
+            producto=$(this).find('td').eq(1).html();
+            cantidad=$(this).find('td').eq(2).html();
+            precio=$(this).find('td').eq(3).html();
+            total=$(this).find('td').eq(4).html();
+            id_factura=$('#id_factura').val();
+            fila_prod = {'idCliente':id_cliente,'idProducto':id_prod,'producto':producto, 'cantidad':cantidad, 'precio':precio, 'total':total, 'idFactura':id_factura};
+            ventas_prod.push(fila_prod);
+        })
+        ventas_json=JSON.stringify(ventas_prod);
+        var csrftoken=getCookie('csrftoken');
+        datos = {
+            csrfmiddlewaretoken:csrftoken,
+            'venta':ventas_json
+        };
+        url='/superStore/efectuar_venta';
+        $.ajax({
+            type:'POST',
+            url:url,
+            data:datos,
+            success:function(data){
+                alert(data);
+            }
+
+        });
+
+    });
+
 
 
 });
