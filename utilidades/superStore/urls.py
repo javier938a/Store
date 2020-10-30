@@ -17,7 +17,7 @@ from .views import ListarPais, ListarDepartamentos, ListarMunicipio,ListarBCanto
 from .views import listarDeptoA, listarMuniA, listarBacanA
 from .views import listar_seguidores_cliente, listar_seguidores_proveedores
 from .views import get_mensajes_chat
-from .views import OpVender, listar_productos, new_factura, efectuar_venta
+from .views import OpVender, listar_productos, new_factura, efectuar_venta, eliminar_factura
 app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
@@ -73,5 +73,6 @@ urlpatterns=[
     path('vender', OpVender.as_view(), name='vender'),
     path('prodAjax', listar_productos, name='listprod'),
     path('newfact',new_factura, name='factura' ),
-    path('efectuar_venta', efectuar_venta, name='efectar_venta')
+    path('efectuar_venta', efectuar_venta, name='efectar_venta'), 
+    path('eliminar_factura', eliminar_factura, name='eliminar_factura')
 ]

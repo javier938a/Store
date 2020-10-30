@@ -11,6 +11,7 @@
 
 
 {% block contenido %}
+    {#Botones#}
     <div>
         <button id="nueva_venta" type="button" class="btn btn-primary" >Nueva Venta</button>
         <Button id="btn_listprod" type="button" disabled class="btn btn-primary" data-toggle='modal' data-target="#list_prod">Agregar Productos</Button>
@@ -33,7 +34,6 @@
                                 <label for="txt_cantidad">Cantidad:</label>
                                 <input id="txt_cantidad" type="text" style="width: 10vh; height:5vh;">
                             </div>
-                            
                         </form>
                         <div style="height: 5vh;;">
 
@@ -83,7 +83,32 @@
               </div>
             </div>
           </div>
-          <button id="btn_cancelar_venta" class="btn btn-primary">Cancelar Venta</button>
+          <button id="btn_cancelar" type="button" disabled class="btn btn-primary" data-toggle="modal" data-target="#cancelar_venta">
+            Cancelar Venta
+          </button>
+          
+          <!-- Modal -->
+          <div class="modal fade" id="cancelar_venta" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="staticBackdropLabel">¿Eliminar Venta?</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  ¿Esta seguro que se desea eliminar esta venta?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                  <button id="btn_cancelar_venta" type="button" class="btn btn-primary">Si</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {#<button id="btn_cancelar_venta" disabled class="btn btn-primary">Cancelar Venta</button>#}
     </div>
     <div style="height: 25vh;">
         <form action="" id="formRegVenta">
@@ -92,17 +117,42 @@
                 <input type="hidden" name="" id="id_factura" value="">{# servira para obtener la factura#}
                 <input type="hidden" name="" id="id_cliente" value="">
                 <label for="">Numero de Factura</label>
-                <input id="txt_numero_fact" type="text" >
+                <input id="txt_numero_fact" name="codigo_factura" type="text" disabled>
                 <label for="">Cliente:</label>
-                <input id="txt_cliente" type="text">
+                <input id="txt_cliente" type="text" disabled>
             </div>
             <div class="form-group">
                 <label for="">Direccion:</label>
-                <input id="txt_direccion" type="text">
+                <input id="txt_direccion" type="text" disabled>
                 <label for="">NIT:</label>
-                <input id="txt_nit" type="text">
+                <input id="txt_nit" name="nit" type="text" disabled>
             </div>
-            <button type="submit" class="btn btn-primary">Efectuar venta</button>
+            <button id="btn_efectuar_venta" disabled type="submit" class="btn btn-primary">Efectuar venta</button>
+            {#boton de eliminar todas las ventas en la tabla#}
+            <button id="btn_limpiar_tabla_ventas" disabled type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteVentasTodas">
+                Eliminar todas las ventas agregadas
+              </button>
+              
+              {#cuadro model para pedir confirmacion de eliminacion de todas las ventas#}
+              <div class="modal fade" id="deleteVentasTodas" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="staticBackdropLabel">¿Eliminar todas las ventas agregadas?</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      ¿Esta seguro que desea eliminar todas las ventas?
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                      <button id="btn_eliminar_todas_ventas" type="button" class="btn btn-primary">Si! eliminar todas las ventas</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
         </form>
         
     </div>
@@ -128,5 +178,6 @@
 
 {% block script %}
     {% load static %}
+    <script src="{% static "js/jquery.mask.js" %}"></script>
     <script src="{% static "js/opvender.js" %}"></script>
 {% endblock %}

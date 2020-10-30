@@ -151,7 +151,9 @@ class tbl_producto(models.Model):#Tabla producto que almacenara todos los produc
     precio_total = models.FloatField(help_text="precio total en inventario", blank=True, null=True)
     precio_total_venta=models.FloatField(help_text="Ingrese el precio total de venta", null=True)
     sub_categoria1 = models.ForeignKey(tbl_sub_categoria1, on_delete=models.SET_NULL, blank=True, null=True)
+    codigo_barra=models.TextField(help_text="cogigo de barra", null=True, blank=True)
 
+    
     def __str__(self):
         return self.producto
     
@@ -180,7 +182,7 @@ class tbl_factura(models.Model):
 
 
 class tbl_venta(models.Model):#almacenara las ventas efectuadas por los mayoristas por parte de los clientes
-    cliente_id = models.ForeignKey(tbl_cliente, on_delete=models.CASCADE)
+    cliente_id = models.ForeignKey(tbl_cliente, on_delete=models.CASCADE, null=True, blank=True)
     producto_id = models.ForeignKey(tbl_producto, on_delete=models.CASCADE)
     fecha_hora_realizada = models.DateTimeField(null=True, blank = True)
     cantidad = models.IntegerField(help_text="Ingrese la cantida vendida")

@@ -43,18 +43,52 @@ def efectuar_venta(request):
                 print(type(precio))
                 total=float(venta['total'].replace('$',''))
                 idfactura=venta['idFactura']
-                print(idcliente)
-                cliente=tbl_cliente.objects.get(id=idcliente)
                 producto=tbl_producto.objects.get(id=id_prod)
                 factura=tbl_factura.objects.get(id=idfactura)
 
-                newVenta=tbl_venta(cliente_id=cliente, producto_id=producto, fecha_hora_realizada=fecha_hora_realizada,
+                print(idcliente)
+                print("Tamaño del idcliente"+str(idcliente))
+                newVenta=None
+                if(len(idcliente)>0):#Si se selecciona algun cliente se registra la venta a un cliente 
+                    cliente=tbl_cliente.objects.get(id=idcliente)
+                    newVenta=tbl_venta(cliente_id=cliente, producto_id=producto, fecha_hora_realizada=fecha_hora_realizada,
                                     cantidad=cantidad, precio_unitario=precio, precio_total=total, factura=factura
                                     )
+                else:#de lo contrario se registra la venta sin cliente
+                    newVenta=tbl_venta(producto_id=producto, fecha_hora_realizada=fecha_hora_realizada,
+                                    cantidad=cantidad, precio_unitario=precio, precio_total=total, factura=factura
+                                    )
+
                 newVenta.save()#Guardando la venta
+            #Actualizando los datos de las facturas
+            idFactura = request.POST.get('idfactura')
+            codigo_factura= request.POST.get('codigo_factura')
+            cliente_factura=request.POST.get('cliente_factura')
+            direccion_factura=request.POST.get('direccion_factura')
+            nit_factura=request.POST.get('nit_factura')
+            #Actualizando los datos de
+            factura_update=tbl_factura.objects.filter(id=idFactura).update(numero_factura=codigo_factura, cliente=cliente_factura,
+                                                                            Fecha_hora=timezone.now(),direccion=direccion_factura, nit=nit_factura)
+
+
             resultado=True#si es true es porque todas las ventas se han guardado correctamente
 
                 
     
     return JsonResponse({'resultado':resultado}, safe=True)
+
+def eliminar_factura(request):
+    res=False
+    if request.is_ajax():
+        if request.method=='POST':
+            idFactura=request.POST.get('idfactura')
+            print('Factura: '+str(idFactura))
+            result = tbl_factura.objects.filter(id=idFactura).delete()
+            print("Factura eliminada...")
+            print(result)
+            res=True
+    return JsonResponse({'res':res}, safe=True)
+
+        
+
 
