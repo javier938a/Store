@@ -112,14 +112,18 @@ $(document).ready(function (){
         url=$("#prodajax").attr('action');
         var csrftoken=getCookie('csrftoken');
         //alert(csrftoken);
+        
         clave=$('#txt_clave_prod').val();
         socket.send(JSON.stringify({
             'tipo_busqueda':'producto',
             'clave_nombre':clave,
         }));
         titulo_modal= modal.find('.modal-title').text();//Se utilizara para saber si estoy agregando un producto o cliente
+
     });
     
+
+
     mod_cliente=$('#list_client').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget) // Button that triggered the modal
         var recipient = button.data('whatever') // Extract info from data-* attributes
@@ -258,13 +262,13 @@ $(document).ready(function (){
                 //Calculando el total de la venta
                 total = parseFloat(fila_content[4].replace('$',''))*cantidad;
                 
-                fila_venta='<tr class="borrar_venta selected">\
+                fila_venta='<tr class="selected">\
                                 <td>'+fila_content[0]+'</td>\
                                 <td>'+fila_content[1]+'</td>\
-                                <td>'+cantidad+'</td>\
-                                <td>'+fila_content[4]+'</td>\
-                                <td>$'+total+'</td>\
-                                <td><button class="btn btn-primary">Eliminar</button></td>\
+                                <td><input id="prod_'+fila_content[0]+'" style="width:15vh;" class="cantidad_producto" type="text" value="'+cantidad+'" ></td>\
+                                <td id="precio_'+fila_content[0]+'">'+fila_content[4]+'</td>\
+                                <td id="total_'+fila_content[0]+'">$'+total+'</td>\
+                                <td><button class="borrar_venta btn btn-primary">Eliminar</button></td>\
                             </tr>'
                 $("#table_body").append(fila_venta);
                 $("#txt_cantidad").val('');
@@ -287,9 +291,51 @@ $(document).ready(function (){
         $(this).closest('tr').remove();
     });
 
-    $("#btn_select_cliente").on('click', function(event){
+    $(document).on('keyup',".cantidad_producto", function(evt){
+        console.log(evt.keyCode);
+        if((evt.keyCode>=48 && evt.keyCode<58) || (evt.keyCode>=96 && evt.keyCode<=105)){
+            //alert(evt.keyCode);
+            //alert($(this).attr("id"));
+            cantidad=$("#"+$(this).attr("id")+"").val();//utilizando el id para obtener el valor del imput
+            idprecio = $(this).attr("id").replace('prod_','#precio_');
+            precio=$(idprecio).html();
+            total = parseFloat(cantidad)*parseFloat(precio.replace('$',''));
+            ///alert('cantidad: '+cantidad+' precio:'+precio+' total: '+total);
+            console.log('cantidad: '+cantidad+' precio:'+precio+' total: '+total);
+            idtotal=$(this).attr("id").replace("prod_",'#total_');
 
+            //limpiando el total actual para poner el nuevo total
+            $(idtotal).html('');
+            $(idtotal).html('$'+total);
+            
+               
+            
+        }else if(evt.keyCode==8){
+            //alert(evt.keyCode);
+            //alert($(this).attr("id"));
+            cantidad=$("#"+$(this).attr("id")+"").val();//utilizando el id para obtener el valor del imput
+            if(cantidad==''){
+                cantidad='0';
+            }
+            idprecio = $(this).attr("id").replace('prod_','#precio_');
+            precio=$(idprecio).html();
+            total = parseFloat(cantidad)*parseFloat(precio.replace('$',''));
+            ///alert('cantidad: '+cantidad+' precio:'+precio+' total: '+total);
+            console.log('cantidad: '+cantidad+' precio:'+precio+' total: '+total);
+            idtotal=$(this).attr("id").replace("prod_",'#total_');
+
+            //limpiando el total actual para poner el nuevo total
+            $(idtotal).html('');
+            $(idtotal).html('$'+total);
+
+        }else if(evt.keyCode==130){
+            return false;
+        }
     });
+
+
+    
+
     $("#clientajax").submit(function(evt){
         evt.preventDefault()
         socket.send(JSON.stringify({
@@ -345,7 +391,7 @@ $(document).ready(function (){
             id_cliente=$('#id_cliente').val();
             id_prod=$(this).find('td').eq(0).html();
             producto=$(this).find('td').eq(1).html();
-            cantidad=$(this).find('td').eq(2).html();
+            cantidad=$(this).find('td').eq(2).find("input").val();//obteniendo el valor del input
             precio=$(this).find('td').eq(3).html();
             total=$(this).find('td').eq(4).html();
             id_factura=$('#id_factura').val();
