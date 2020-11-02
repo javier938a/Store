@@ -38,6 +38,7 @@ def efectuar_venta(request):
                 id_prod=venta['idProducto']
                 fecha_hora_realizada=timezone.now()
                 producto_name=venta['producto']
+                stock=venta['stock']#Obteniendo la cantidad de producto que hay en el inventario
                 cantidad=int(venta['cantidad'])
                 precio=float(venta['precio'].replace('$',''))
                 print(type(precio))
@@ -60,6 +61,26 @@ def efectuar_venta(request):
                                     )
 
                 newVenta.save()#Guardando la venta
+                #calculando el nuevo stock de el inventario y el nuevo precio_unitario(ose precio de compra) y
+                #el nuevo precio_venta_total
+                prod=tbl_producto.objects.get(Q(id=id_prod))
+                precio_compra=float(prod.precio_unitario)#Obteniendo y convirtiendo el precio de compra
+                precio_venta_float=float(precio)#convirtiendo el precio de venta traido del backend
+                stock_int=int(stock)#convirtiendo en int el stock del producto
+                cantidad_int=int(cantidad)#convientiendo en entero la cantidad vendida
+                nuevo_stock=stock_int-cantidad_int#obteniendo el nuevo stock del producto
+
+                nuevo_precio_total_venta=nuevo_stock*precio_venta_float#calculando el nuevo precio total de venta 
+                nuevo_precio_total_compra=nuevo_stock*precio_compra#calculando el nuevo precio total de compra
+            
+                # actualizando el stock de cada producto...
+                product_update = tbl_producto.objects.filter(Q(id=id_prod)).update(cantidad=nuevo_stock, precio_total=nuevo_precio_total_compra,
+                                                             precio_total_venta=nuevo_precio_total_venta)
+                print("Actualizando..")
+                print('nuevo stock: '+str(nuevo_stock))
+                print('nuevo precio total de venta: '+str(nuevo_precio_total_venta))
+                print('nuevo precio total de compra: '+str(nuevo_precio_total_compra))
+                print(product_update)
             #Actualizando los datos de las facturas
             idFactura = request.POST.get('idfactura')
             codigo_factura= request.POST.get('codigo_factura')
@@ -88,6 +109,17 @@ def eliminar_factura(request):
             print(result)
             res=True
     return JsonResponse({'res':res}, safe=True)
+
+def buscar_producto_barra(request):
+    producto_json=None
+    if request.is_ajax():
+        if request.method=='POST':
+            codigo_barra=request.POST.get('codigo_barra')
+            producto=tbl_producto.objects.filter(Q(codigo_barra=codigo_barra) & Q(mayorista__user__id=request.user.id))
+            producto_json=serialize('json',producto)
+            #print(producto_json)
+    return JsonResponse(producto_json, safe=False)
+        
 
         
 

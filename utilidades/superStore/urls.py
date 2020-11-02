@@ -1,3 +1,4 @@
+from os import name
 from django.urls import path, include
 from .views import index, register, RegistrarPerfilCliente, RegistrarPerfilProveedor, logiar, RegistrarDireccion
 from .views import RegistrarProducto, ListarProductos, EditarProducto, EliminarProducto, DetalleProducto, buscar_producto_tienda, cargar_todos_productos_tienda
@@ -17,7 +18,7 @@ from .views import ListarPais, ListarDepartamentos, ListarMunicipio,ListarBCanto
 from .views import listarDeptoA, listarMuniA, listarBacanA
 from .views import listar_seguidores_cliente, listar_seguidores_proveedores
 from .views import get_mensajes_chat
-from .views import OpVender, listar_productos, new_factura, efectuar_venta, eliminar_factura
+from .views import OpVender, listar_productos, new_factura, efectuar_venta, eliminar_factura, buscar_producto_barra
 app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
@@ -74,5 +75,6 @@ urlpatterns=[
     path('prodAjax', listar_productos, name='listprod'),
     path('newfact',new_factura, name='factura' ),
     path('efectuar_venta', efectuar_venta, name='efectar_venta'), 
-    path('eliminar_factura', eliminar_factura, name='eliminar_factura')
+    path('eliminar_factura', eliminar_factura, name='eliminar_factura'),
+    path('buscar_codigo_barra', buscar_producto_barra, name='buscar_code_barra')
 ]

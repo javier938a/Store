@@ -37,7 +37,7 @@ from .inicio.inicio_usuario import listarDeptoA, listarMuniA, listarBacanA
 from .proces_seguidores.crud_seguidores import listar_seguidores_cliente, listar_seguidores_proveedores
 from .proces_chat.crud_chat import get_mensajes_chat
 from .proces_vender.crud_vender import OpVender
-from .proces_vender.crud_vender import listar_productos, new_factura, efectuar_venta, eliminar_factura
+from .proces_vender.crud_vender import listar_productos, new_factura, efectuar_venta, eliminar_factura, buscar_producto_barra
 import random
 # Create your views here.
 class index(ListView):#Mostrando index Pagina Principal

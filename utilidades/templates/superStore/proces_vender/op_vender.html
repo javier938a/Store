@@ -31,8 +31,6 @@
                                 <label for="txt_clave_prod">Nombre del producto</label>
                                 <input id="txt_clave_prod" type="text">
                                 <button type="submit">Buscar</button>
-                                <label for="txt_cantidad">Cantidad:</label>
-                                <input id="txt_cantidad" type="text" style="width: 10vh; height:5vh;">
                             </div>
                         </form>
                         <div style="height: 5vh;;">
@@ -156,6 +154,12 @@
         </form>
         
     </div>
+    <div style="height: 10vh;">
+      <form id="frm_buscar_code_barra" action="">
+        <label for="code_barra">Codigo de barra:</label>
+        <input id="code_barra" placeholder="Ingrese codigo de barra" type="text" disabled>
+      </form>
+    </div>
 
     <div id="table_ventas">{# div donde de mostraras las vendas efectuadas #}
         <table class="table">
@@ -163,6 +167,7 @@
               <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Producto</th>
+                <th scope="col">Stock</th>
                 <th scope="col">cantidad</th>
                 <th scope="col">Precio</th>
                 <th scope="col">Total</th>

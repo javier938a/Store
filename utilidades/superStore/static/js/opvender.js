@@ -252,64 +252,78 @@ $(document).ready(function (){
         //alert($("#recipient-name").val());
         //alert("Holaaa")
         cantidad=parseInt($("#txt_cantidad").val());
-        if(fila_content.length>0){
-            if(parseInt(cantidad)>0){
-                $("#txt_cantidad").css({
-                    'border':'1px solid #E6E6E6'
-                })                
+        var prod_venta=new Array();
+        $("#table_body").find('tr').each(function(index){//validando que no se repita un producto al agregarlo con el escanner
+            fila=[]
+            $(this).find('td').each(function(index){
+                fila.push($(this).html());
+            });
+            prod_venta.push(fila)
+        });
+        console.log(prod_venta);
+        existe=false
+        prod_venta.forEach(function(element){
+            if(element[0]==fila_content[0]){
+                existe=true;
+            }
+        });
+        if(existe==false){
+            if(fila_content.length>0){             
                 mod.modal('toggle');
                 $("#txt_clave_prod").val('');
-                //Calculando el total de la venta
-                total = parseFloat(fila_content[4].replace('$',''))*cantidad;
-                
-                fila_venta='<tr class="selected">\
-                                <td>'+fila_content[0]+'</td>\
-                                <td>'+fila_content[1]+'</td>\
-                                <td><input id="prod_'+fila_content[0]+'" style="width:15vh;" class="cantidad_producto" type="text" value="'+cantidad+'" ></td>\
-                                <td id="precio_'+fila_content[0]+'">'+fila_content[4]+'</td>\
-                                <td id="total_'+fila_content[0]+'">$'+total+'</td>\
-                                <td><button class="borrar_venta btn btn-primary">Eliminar</button></td>\
-                            </tr>'
-                $("#table_body").append(fila_venta);
-                $("#txt_cantidad").val('');
+                //alert(fila_content[2]);
+                if(fila_content[2]>0){
+                    fila_venta='<tr class="selected">\
+                                    <td>'+fila_content[0]+'</td>\
+                                    <td>'+fila_content[1]+'</td>\
+                                    <td id="stock_'+fila_content[0]+'">'+fila_content[2]+'</td>\
+                                    <td><input id="prod_'+fila_content[0]+'" style="width:15vh;" class="cantidad_producto" type="text" value="'+1+'" ></td>\
+                                    <td id="precio_'+fila_content[0]+'">'+fila_content[4]+'</td>\
+                                    <td id="total_'+fila_content[0]+'">'+fila_content[4]+'</td>\
+                                    <td><button class="borrar_venta btn btn-primary">Eliminar</button></td>\
+                                </tr>'
+                    $("#table_body").append(fila_venta);                   
+                }else{
+                    alert("Ya no hay "+fila_content[1]+' en existencia en el inventario');
+                }
             }else{
-                alert("Debe de ingresar una cantida de producto")
-                $("#txt_cantidad").css({
-                    'border':'1px solid #B40404'
-                })
+                alert("Debe de seleccionar un producto en la lista..")
             }
         }else{
-            alert("Debe de seleccionar un producto en la lista..")
+            alert("Ya existe existe este producto en la lista,\npor favor si desea agregar otro, solo modificar la cantidad");
         }
-
-
-
     });
     //Eliminando una venta de la tabla
     $(document).on("click",".borrar_venta", function(evt){
         evt.preventDefault();
         $(this).closest('tr').remove();
     });
-
+    //esta funcion escucha el eventon de modificar la cantidad de producto, al teclear los numeros se actualiza el total de compra
     $(document).on('keyup',".cantidad_producto", function(evt){
         console.log(evt.keyCode);
         if((evt.keyCode>=48 && evt.keyCode<58) || (evt.keyCode>=96 && evt.keyCode<=105)){
             //alert(evt.keyCode);
             //alert($(this).attr("id"));
-            cantidad=$("#"+$(this).attr("id")+"").val();//utilizando el id para obtener el valor del imput
-            idprecio = $(this).attr("id").replace('prod_','#precio_');
-            precio=$(idprecio).html();
-            total = parseFloat(cantidad)*parseFloat(precio.replace('$',''));
-            ///alert('cantidad: '+cantidad+' precio:'+precio+' total: '+total);
-            console.log('cantidad: '+cantidad+' precio:'+precio+' total: '+total);
-            idtotal=$(this).attr("id").replace("prod_",'#total_');
+                idStock=$(this).attr("id").replace('prod_','#stock_')//obteniendo el id del producto y modificandolo para obtener el id del stock
+                stock=$(idStock).html();
+                cantidad=$("#"+$(this).attr("id")+"").val();//utilizando el id para obtener el valor del imput
+                //alert('cantidad: '+cantidad+' stock: '+stock)
+                if(parseInt(cantidad)<=parseInt(stock)){
+                    idprecio = $(this).attr("id").replace('prod_','#precio_');
+                    precio=$(idprecio).html();
+                    total = parseFloat(cantidad)*parseFloat(precio.replace('$',''));
+                    ///alert('cantidad: '+cantidad+' precio:'+precio+' total: '+total);
+                    console.log('cantidad: '+cantidad+' precio:'+precio+' total: '+total);
+                    idtotal=$(this).attr("id").replace("prod_",'#total_');
+        
+                    //limpiando el total actual para poner el nuevo total
+                    $(idtotal).html('');
+                    $(idtotal).html('$'+total); 
+                }else{
+                    $("#"+$(this).attr("id")+"").val('');
+                    alert("La cantida ingresada supera el Stock del inventario favor ingresar una cantidad menor o igual al stock");
+                }              
 
-            //limpiando el total actual para poner el nuevo total
-            $(idtotal).html('');
-            $(idtotal).html('$'+total);
-            
-               
-            
         }else if(evt.keyCode==8){
             //alert(evt.keyCode);
             //alert($(this).attr("id"));
@@ -346,6 +360,8 @@ $(document).ready(function (){
     //al presionar el boton de nueva venta se es necesario crear una factura en blanco para obtener el id de la factura
     var id_factura=0
     $("#nueva_venta").on('click', function(evt){
+        $("#code_barra").prop('disabled', false);//habilitando el campo del codigo de barra.
+        $("#code_barra").focus();//colocando el foco o cursor automaticamente en el imput de codigo de barra
         $("#nueva_venta").prop('disabled',true);
         $("#btn_listprod").prop('disabled',false);
         $("#btn_listclient").prop('disabled', false);
@@ -387,67 +403,76 @@ $(document).ready(function (){
         codigo_factura=$("#txt_numero_fact").val();
         direccion_factura=$("#txt_direccion").val();
         nit_factura=$("#txt_nit").val();
+        campo_vacio=false;//verificara si se ha ingresado un campo del total vacio.
         $("#table_ventas #table_body").find('tr').each(function(index){
             id_cliente=$('#id_cliente').val();
             id_prod=$(this).find('td').eq(0).html();
             producto=$(this).find('td').eq(1).html();
-            cantidad=$(this).find('td').eq(2).find("input").val();//obteniendo el valor del input
-            precio=$(this).find('td').eq(3).html();
-            total=$(this).find('td').eq(4).html();
+            stock=$(this).find('td').eq(2).html();
+            cantidad=$(this).find('td').eq(3).find("input").val();//obteniendo el valor del input
+            if(cantidad.length==0){//si se ingreso un espacio vacio entonces existe un campo vacio
+                campo_vacio=true;
+            }
+            precio=$(this).find('td').eq(4).html();
+            total=$(this).find('td').eq(5).html();
             id_factura=$('#id_factura').val();
-            fila_prod = {'idCliente':id_cliente,'idProducto':id_prod,'producto':producto, 'cantidad':cantidad, 'precio':precio, 'total':total, 'idFactura':id_factura};
+            fila_prod = {'idCliente':id_cliente,'idProducto':id_prod,'producto':producto, 'cantidad':cantidad,'stock':stock, 'precio':precio, 'total':total, 'idFactura':id_factura};
             ventas_prod.push(fila_prod);
         })
-        if(ventas_prod.length>0){//verificando que hay al menos un producto agregado a la tabla de ventas para efectuar la venta
-            ventas_json=JSON.stringify(ventas_prod);
-            var csrftoken=getCookie('csrftoken');
-            datos = {
-                csrfmiddlewaretoken:csrftoken,
-                'venta':ventas_json,
-                'idfactura':id_factura,
-                'codigo_factura':codigo_factura,
-                'cliente_factura':cliente_factura,
-                'direccion_factura':direccion_factura,
-                'nit_factura':nit_factura,
-            };
-            url='/superStore/efectuar_venta';
-            $.ajax({
-                type:'POST',
-                url:url,
-                data:datos,
-                success:function(data){
-                    console.log(data);
-                    if(data.resultado==true){
-                        //limpiando campos de la anterior venta
-                        $("#txt_numero_fact").val('');
-                        $("#txt_cliente").val('');
-                        $("#txt_direccion").val('');
-                        $("#txt_nit").val('');
-                        $("#id_factura").val('');
-                        $("#id_cliente").val('');
-                        $("#table_body").empty();
-                        //desactivando los botones y dejando activo solo el boton de nueva venta
-                        $("#nueva_venta").prop('disabled',false);//activando los botones 
-                        $("#btn_listprod").prop('disabled',true);
-                        $("#btn_listclient").prop('disabled', true);
-                        $("#btn_efectuar_venta").prop('disabled', true);
-                        $("#btn_cancelar").prop('disabled', true);
-        
-                        //desactivando campos
-                        $("#txt_cliente").prop('disabled', true);
-                        $("#txt_direccion").prop('disabled',true);
-                        $("#txt_nit").prop('disabled',true)
-                        $("#txt_numero_fact").prop('disabled',true);
-                        alert("Venta efectuada exisotamente..");
+        if(campo_vacio==false){
+            if(ventas_prod.length>0){//verificando que hay al menos un producto agregado a la tabla de ventas para efectuar la venta
+                ventas_json=JSON.stringify(ventas_prod);
+                var csrftoken=getCookie('csrftoken');
+                datos = {
+                    csrfmiddlewaretoken:csrftoken,
+                    'venta':ventas_json,
+                    'idfactura':id_factura,
+                    'codigo_factura':codigo_factura,
+                    'cliente_factura':cliente_factura,
+                    'direccion_factura':direccion_factura,
+                    'nit_factura':nit_factura,
+                };
+                url='/superStore/efectuar_venta';
+                $.ajax({
+                    type:'POST',
+                    url:url,
+                    data:datos,
+                    success:function(data){
+                        console.log(data);
+                        if(data.resultado==true){
+                            //limpiando campos de la anterior venta
+                            $("#txt_numero_fact").val('');
+                            $("#txt_cliente").val('');
+                            $("#txt_direccion").val('');
+                            $("#txt_nit").val('');
+                            $("#id_factura").val('');
+                            $("#id_cliente").val('');
+                            $("#table_body").empty();
+                            //desactivando los botones y dejando activo solo el boton de nueva venta
+                            $("#nueva_venta").prop('disabled',false);//activando los botones 
+                            $("#btn_listprod").prop('disabled',true);
+                            $("#btn_listclient").prop('disabled', true);
+                            $("#btn_efectuar_venta").prop('disabled', true);
+                            $("#btn_cancelar").prop('disabled', true);
+                            $("#btn_limpiar_tabla_ventas").prop('disabled', true)
+            
+                            //desactivando campos
+                            $("#txt_cliente").prop('disabled', true);
+                            $("#txt_direccion").prop('disabled',true);
+                            $("#txt_nit").prop('disabled',true)
+                            $("#txt_numero_fact").prop('disabled',true);
+                            $("#code_barra").prop('disabled',true);
+                            alert("Venta efectuada exisotamente..");
+                        }
                     }
-                }
-    
-            });
+        
+                });
+            }else{
+                alert("Debe al menos agregar una producto para efectuar una venta..");
+            }
         }else{
-            alert("Debe al menos agregar una producto para efectuar una venta..");
+            alert("Ha dejando un campo de cantidad vacio en alguna de las ventas\n favor ingresar la cantidad a llevar para calcular el total...")
         }
-
-
     });
 
     var close_venta=$('#cancelar_venta').on('show.bs.modal', function(event){
@@ -475,6 +500,7 @@ $(document).ready(function (){
         $("#txt_direccion").val('');
         $("#txt_nit").val('')
         $("#txt_numero_fact").val('');
+        $("#code_barra").val('');
         idfactura=$("#id_factura").val();
         url='/superStore/eliminar_factura';
         var csrftoken=getCookie('csrftoken');
@@ -504,19 +530,87 @@ $(document).ready(function (){
                 $("#txt_cliente").prop('disabled', true);
                 $("#txt_direccion").prop('disabled',true);
                 $("#txt_nit").prop('disabled',true)
-                $("#txt_numero_fact").prop('disabled',true);
-
-                
-                
-                
+                $("#txt_numero_fact").prop('disabled',true); 
+                $("#code_barra").prop('disabled',true);
             }
-
         })
-        
 
-        
     })
+    $("#frm_buscar_code_barra").submit(function(evt){
+        evt.preventDefault();
+        codigo_barra=$("#code_barra").val();
+        url='/superStore/buscar_codigo_barra';
+        var csrftoken=getCookie('csrftoken');
+        data={
+            'codigo_barra':codigo_barra, 
+            csrfmiddlewaretoken:csrftoken,
+        };
+        $.ajax({
+            type:'POST',
+            url:url,
+            data:data,
+            dataType:'json',
+            success:function(data){
+                producto_json=JSON.parse(data);
+                if(producto_json.length==1){
+                    for(let i in producto_json){
+                        idproducto=producto_json[i].pk;
+                        producto=producto_json[i].fields.producto;
+                        stock=producto_json[i].fields.cantidad;
+                        cantidad=1;
+                        precio_venta=producto_json[i].fields.precio_venta;
+                        precio_total=parseFloat(cantidad)*parseFloat(precio_venta);
+                        if(parseInt(stock)>0){//se verifica si hay al menos 1 producto en existencia
+                           
+                            var prod_venta=new Array();
+                            $("#table_body").find('tr').each(function(index){//validando que no se repita un producto al agregarlo con el escanner
+                                fila=[]
+                                $(this).find('td').each(function(index){
+                                    fila.push($(this).html());
+                                });
+                                prod_venta.push(fila)
+                            });
+                            console.log(prod_venta);
+                            existe=false
+                            prod_venta.forEach(function(element){
+                                if(element[0]==idproducto){
+                                    existe=true;
+                                }
+                            });
+                            if(existe==false){
+                               
+                                fila_venta='<tr class="selected">\
+                                                <td>'+idproducto+'</td>\
+                                                <td>'+producto+'</td>\
+                                                <td id="stock_'+idproducto+'">'+stock+'</td>\
+                                                <td><input id="prod_'+idproducto+'" style="width:15vh;" class="cantidad_producto" type="text" value="'+1+'" ></td>\
+                                                <td id="precio_'+idproducto+'">'+precio_venta+'</td>\
+                                                <td id="total_'+idproducto+'">'+precio_total+'</td>\
+                                                <td><button class="borrar_venta btn btn-primary">Eliminar</button></td>\
+                                            </tr>'
+                                $("#table_body").append(fila_venta); 
+                                $("#code_barra").val('');
+                                $("#code_barra").focus();
+                            }else{
+                                alert("El producto que intenta ingresar por el escanner ya esta ingresado\n favor modificar solo la cantidad a vender.. ");
+                                $("#code_barra").val('');
+                                $("#code_barra").focus();
+                            }
 
 
+                        }else{
+                            alert("No hay "+producto+" en existencia en el inventario o no esta registrado el codigo de barra ingresado en ningun producto.");
+                        } 
+                    }
+                }else{
+                    alert("El codigo de barra que se ingresó no esta registrado en ningun producto del inventario!");
+                    $("#code_barra").val('');
+                    $("#code_barra").focus();
+                }
 
+
+            }
+        });
+
+    })
 });
