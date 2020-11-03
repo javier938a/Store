@@ -1,10 +1,12 @@
-from django.http import request
+from django.http import request, FileResponse
 from django.views.generic import TemplateView, ListView
 from django.http import JsonResponse
 from django.core.serializers import serialize
-from superStore.models import tbl_producto, tbl_factura, tbl_venta, tbl_cliente, tbl_factura
+from superStore.models import tbl_producto, tbl_factura, tbl_venta, tbl_cliente, tbl_factura, tbl_mayorista
 from django.db.models import Q
 from django.utils import timezone
+import io
+from reportlab.pdfgen import canvas
 import json
 
 class OpVender(TemplateView):
@@ -119,6 +121,72 @@ def buscar_producto_barra(request):
             producto_json=serialize('json',producto)
             #print(producto_json)
     return JsonResponse(producto_json, safe=False)
+
+
+def ticket(request, pk):
+    buffer=None
+    if request.method=="GET":
+        buffer = io.BytesIO()
+
+        #estandares de ticket 210x98mm(8.26772x3.85827pulgadas)(21x9.8cm)(595.2758x277.7954pt), 210x74mm(8.26772x2.91339pulgadas)(21x7.4cm), 180x60mm(7.08661x2.3622pulgadas)(18x6cm)
+        #El encabezado seria de 3cm(1.1811pulgadas)(85.0392pt)
+        #cada renglon del encabezado seria de 0.40cm(11.338582677)
+        lista_de_ventas=tbl_venta.objects.filter(Q(factura__id=pk))
+        
+        #calculando la cantidad de espacio de alto que llevara el ticket
+        #se sumaria el ancho del encabezado + el ancho del encabezado de la tabla de productos
+        espacio_encabezados=85.039370079+19.842519685
+        #obteniendo la cantidad de productos que irian en la factura y se multiplicatia por el ancho de cada renglon
+        cantidad_productos=lista_de_ventas.count()
+        espaciosTotalRenglones=cantidad_productos*19.842519685
+        alto=espacio_encabezados+espaciosTotalRenglones
+
+        #definiendo el tamaño del papel
+        dimensiom=(277.7954, alto)
+        p=canvas.Canvas(buffer, pagesize=dimensiom)
+
+        #ubicacion del titulo 
+        title_y=alto-11.338582677*2
+        
+        vendedor=tbl_mayorista.objects.get(user__id=request.user.id)
+        nombre_empresa =vendedor.nombre_empresa
+        
+        #Obteniendo la direccion de la empresa
+        direccion=str(vendedor.barrio_canton.municipio.departamento)+', '+str(vendedor.barrio_canton.municipio)+', '+str(vendedor.barrio_canton)
+        
+        p.drawString(8, title_y, str(nombre_empresa))
+
+        #Obteniendo la ubicacion en y de la direccion
+        direc_y=alto-11.338582677*3
+        p.drawString(8, direc_y, direccion)
+
+        #Obteniendo el objetivo del negocio
+        objectivo_negocio=vendedor.objetivo
+
+        #obteniendo la ubicacion en y del objetivo
+
+        object_y=alto-11.338582677*4
+        p.drawString(8, object_y, objectivo_negocio)
+
+        factura = tbl_factura.objects.get(id=pk)
+        
+        #obteniendo el codigo de la factura
+        codigo_factura='Ticket: '+factura.numero_factura
+        #obteniendo la posicion en y del codigo de factura
+        codefact_y=alto-11.338582677*5
+        p.drawString(8, codefact_y, codigo_factura)
+            
+
+
+
+        p.showPage()
+        p.save()
+
+        print(lista_de_ventas)
+
+        buffer.seek(0)
+
+    return FileResponse(buffer, as_attachment=True, filename='ticket.pdf')
         
 
         

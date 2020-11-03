@@ -18,6 +18,7 @@ $(document).ready(function (){
     $('input[name="codigo_factura"]').mask("0000");
     $('input[name="nit"]').mask("0000-000000-000-0");
 
+
     url='ws://'+window.location.host+'/ws/prod_client/';
     socket = new WebSocket(url);
     socket.onopen=function(e){
@@ -368,6 +369,7 @@ $(document).ready(function (){
         $("#btn_efectuar_venta").prop('disabled', false);
         $("#btn_cancelar").prop('disabled', false);
         $("#btn_limpiar_tabla_ventas").prop('disabled', false);
+        $("#btn_ticket").prop('disabled', false)
         //activando campos
         $("#txt_cliente").prop('disabled', false);
         $("#txt_direccion").prop('disabled',false);
@@ -387,7 +389,7 @@ $(document).ready(function (){
             success:function(data){
                 //fact=JSON.parse(data);
                 id_factura=data[0].idfactura;
-                $("#id_factura").val(id_factura);
+                $("#id_factura").val(id_factura);//agregando el id de la factura al hidden
                 console.log(data[0].idfactura);
             }           
             
@@ -445,7 +447,6 @@ $(document).ready(function (){
                             $("#txt_cliente").val('');
                             $("#txt_direccion").val('');
                             $("#txt_nit").val('');
-                            $("#id_factura").val('');
                             $("#id_cliente").val('');
                             $("#table_body").empty();
                             //desactivando los botones y dejando activo solo el boton de nueva venta
@@ -612,5 +613,14 @@ $(document).ready(function (){
             }
         });
 
-    })
+    });
+
+    $("#btn_ticket").on('click', function(evt){
+        var id_factura=$("#id_factura").val();
+        var csrftoken=getCookie('csrftoken');
+        url='/superStore/ticket/'+id_factura;
+        window.open(url, 'Ticket', "width=120, height=300, scrollbars=YES");
+    });
+    
+
 });

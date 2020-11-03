@@ -19,6 +19,7 @@ from .views import listarDeptoA, listarMuniA, listarBacanA
 from .views import listar_seguidores_cliente, listar_seguidores_proveedores
 from .views import get_mensajes_chat
 from .views import OpVender, listar_productos, new_factura, efectuar_venta, eliminar_factura, buscar_producto_barra
+from .views import ticket
 app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
@@ -76,5 +77,6 @@ urlpatterns=[
     path('newfact',new_factura, name='factura' ),
     path('efectuar_venta', efectuar_venta, name='efectar_venta'), 
     path('eliminar_factura', eliminar_factura, name='eliminar_factura'),
-    path('buscar_codigo_barra', buscar_producto_barra, name='buscar_code_barra')
+    path('buscar_codigo_barra', buscar_producto_barra, name='buscar_code_barra'),
+    path('ticket/<int:pk>', ticket, name='ticket')
 ]
