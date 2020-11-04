@@ -124,7 +124,6 @@ $(document).ready(function (){
     });
     
 
-
     mod_cliente=$('#list_client').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget) // Button that triggered the modal
         var recipient = button.data('whatever') // Extract info from data-* attributes
@@ -216,7 +215,7 @@ $(document).ready(function (){
                     //console.log($(this).html());
                     //alert($(this).html());
                     fila_content.push($(this).html());
-                });                
+                });           
             }else if(titulo_modal=='Clientes'){
                 if(fila_clientes.length>0){
                     fila_clientes.splice(0, fila_clientes.length);
@@ -526,6 +525,7 @@ $(document).ready(function (){
                 $("#btn_efectuar_venta").prop('disabled', true);
                 $("#btn_cancelar").prop('disabled', true);
                 $("#btn_limpiar_tabla_ventas").prop('disabled', true);
+                $("#btn_ticket").prop('disabled', true)
 
                 //desactivando campos
                 $("#txt_cliente").prop('disabled', true);

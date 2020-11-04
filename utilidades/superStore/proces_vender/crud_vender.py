@@ -3,10 +3,11 @@ from django.views.generic import TemplateView, ListView
 from django.http import JsonResponse
 from django.core.serializers import serialize
 from superStore.models import tbl_producto, tbl_factura, tbl_venta, tbl_cliente, tbl_factura, tbl_mayorista
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.utils import timezone
 import io
 from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4, letter 
 import json
 
 class OpVender(TemplateView):
@@ -137,48 +138,126 @@ def ticket(request, pk):
         #se sumaria el ancho del encabezado + el ancho del encabezado de la tabla de productos
         espacio_encabezados=85.039370079+19.842519685
         #obteniendo la cantidad de productos que irian en la factura y se multiplicatia por el ancho de cada renglon
-        cantidad_productos=lista_de_ventas.count()
-        espaciosTotalRenglones=cantidad_productos*19.842519685
-        alto=espacio_encabezados+espaciosTotalRenglones
+        #y se le sumarian 11 lineas mas para tener espacio para el gravado, subtotal, exento, no sujeta, total, efectivo, 'cajero' y fecha y hora de generacion de ticket
+        if lista_de_ventas.count()>0:
+            cantidad_productos=lista_de_ventas.count()
+            espaciosTotalRenglones=cantidad_productos*19.842519685+9.842519685*11
+            alto=espacio_encabezados+espaciosTotalRenglones
 
-        #definiendo el tamaño del papel
-        dimensiom=(277.7954, alto)
-        p=canvas.Canvas(buffer, pagesize=dimensiom)
+            #definiendo el tamaño del papel
+            ancho=277.7954
+            dimensiom=(ancho, alto)
+            p=canvas.Canvas(buffer, pagesize=dimensiom)
 
-        #ubicacion del titulo 
-        title_y=alto-11.338582677*2
-        
-        vendedor=tbl_mayorista.objects.get(user__id=request.user.id)
-        nombre_empresa =vendedor.nombre_empresa
-        
-        #Obteniendo la direccion de la empresa
-        direccion=str(vendedor.barrio_canton.municipio.departamento)+', '+str(vendedor.barrio_canton.municipio)+', '+str(vendedor.barrio_canton)
-        
-        p.drawString(8, title_y, str(nombre_empresa))
 
-        #Obteniendo la ubicacion en y de la direccion
-        direc_y=alto-11.338582677*3
-        p.drawString(8, direc_y, direccion)
-
-        #Obteniendo el objetivo del negocio
-        objectivo_negocio=vendedor.objetivo
-
-        #obteniendo la ubicacion en y del objetivo
-
-        object_y=alto-11.338582677*4
-        p.drawString(8, object_y, objectivo_negocio)
-
-        factura = tbl_factura.objects.get(id=pk)
-        
-        #obteniendo el codigo de la factura
-        codigo_factura='Ticket: '+factura.numero_factura
-        #obteniendo la posicion en y del codigo de factura
-        codefact_y=alto-11.338582677*5
-        p.drawString(8, codefact_y, codigo_factura)
+            #ubicacion del titulo 
+            title_y=alto-11.338582677*2
             
+            vendedor=tbl_mayorista.objects.get(user__id=request.user.id)
+            nombre_empresa =vendedor.nombre_empresa
+            
+            #Obteniendo la direccion de la empresa
+            direccion=str(vendedor.barrio_canton.municipio.departamento)+', '+str(vendedor.barrio_canton.municipio)+', '+str(vendedor.barrio_canton)
+            empresa=p.beginText(65, title_y)
+            #Cambiandole el tamaño a nombre de empresa
+            empresa.setFont('Helvetica', 12)
+            empresa.textLine(str(nombre_empresa.upper()))
+            p.drawText(empresa)
+            
+            p.setFont("Helvetica", 5.5)
+            #Obteniendo la ubicacion en y de la direccion
+            direc_y=alto-11.338582677*3
+            p.drawString(8, direc_y, direccion)
 
+            #Obteniendo el objetivo del negocio
+            objectivo_negocio=vendedor.objetivo
 
+            #obteniendo la ubicacion en y del objetivo
 
+            object_y=alto-11.338582677*4
+            p.drawString(8, object_y, objectivo_negocio)
+
+            factura = tbl_factura.objects.get(id=pk)
+            
+            #obteniendo el codigo de la factura
+            codigo_factura='Ticket: '+factura.numero_factura
+            #obteniendo la posicion en y del codigo de factura
+            codefact_y=alto-11.338582677*5
+            p.drawString(8, codefact_y, codigo_factura)
+
+            enca_y=alto-11.338582677*6
+            enca_x1=8
+            p.setLineWidth(0.5)
+            p.setDash(3,3)
+            p.line(enca_x1, enca_y+10, ancho-8, enca_y+10)
+            #dibujando una linea inferior del aencabezado
+            p.line(enca_x1, enca_y-2.0, ancho-8, enca_y-2.0)
+            #primer elemento
+            p.drawString(enca_x1,  enca_y, 'CANT.')
+
+            enca_x2=enca_x1+52.35908
+            p.drawString(enca_x2, enca_y, 'MEDIDA')
+
+            enca_x3=enca_x2+52.35908
+            p.drawString(enca_x3, enca_y, 'ITEM')
+
+            enca_x4 = enca_x3+52.35908
+            p.drawString(enca_x4, enca_y, 'PRECIO')
+
+            enca_x5=enca_x4+52.35908
+            p.drawString(enca_x5, enca_y, 'TOTAL')
+
+            varia_y=enca_y
+            for venta in lista_de_ventas:
+                varia_y=varia_y-11.338582677#haciendo variando 
+                p.drawString(enca_x1, varia_y, str(venta.cantidad))
+                p.drawString(enca_x2, varia_y, "Unidades")
+                p.drawString(enca_x3, varia_y, (str(venta.producto_id.producto)))
+                text =p.beginText(enca_x4, varia_y)
+                text.textLine('')
+                text.textLine(('$'+str(venta.precio_unitario)))
+                p.drawText(text)
+                p.drawString(enca_x5, varia_y, ('$'+str(venta.precio_total)))
+            
+            #Dibujando la ultima linea punteada        
+            p.setLineWidth(0.5)
+            p.setDash(3,3)
+            pos_pie_line_y=varia_y-11.338582677
+            p.line(enca_x1, pos_pie_line_y, ancho-8, pos_pie_line_y)
+            #dibujando el total 
+            gravado_y=varia_y-11.338582677-5.669291339#retomando el valor con el que quedo varia-y ya que es ahi donde se dibujara el total menos la mitad de un espacio
+            gravado_x=enca_x5
+            #Obteniendo la suma de todos los precios total
+            total = lista_de_ventas.aggregate(Sum('precio_total'))
+            print(total)
+            p.drawString(gravado_x-52.35908, gravado_y, 'GRAVADO')
+            p.drawString(gravado_x, gravado_y, '$'+str(total.get('precio_total__sum')))
+
+            sub_total_y=gravado_y-11.338582677
+            sub_total_x=gravado_x
+            p.drawString(sub_total_x-52.35908, sub_total_y, 'SUBTOTAL')
+            p.drawString(sub_total_x, sub_total_y, '$'+str(total.get('precio_total__sum')))
+
+            exento_x=sub_total_x
+            exento_y=sub_total_y-11.338582677
+            p.drawString(exento_x, exento_y, '$'+'0.000')
+            p.drawString(exento_x-52.35908, exento_y, 'EXENTO')
+
+            nosujeto_x=exento_x
+            nosujeto_y=exento_y-11.338582677
+            p.drawString(nosujeto_x, nosujeto_y, '$0.000')
+            p.drawString(nosujeto_x-52.35908, nosujeto_y, 'NO SUJETA')
+
+            total_x=nosujeto_x
+            total_y=nosujeto_y-11.338582677
+            p.drawString(total_x, total_y, '$'+str(total.get('precio_total__sum')))
+            p.drawString(total_x-52.35908, total_y, 'TOTAL')
+
+        #dibujando las lineas finales
+
+        else:
+            p=canvas.Canvas(buffer, pagesize=letter)
+            
         p.showPage()
         p.save()
 

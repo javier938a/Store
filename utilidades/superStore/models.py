@@ -108,6 +108,26 @@ class tbl_mayorista(models.Model):
     
     def __str__(self):
         return "%s" % (self.nombre_empresa)
+class tbl_caja(models.Model):
+    mayoristas=models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True)
+    caja=models.CharField(max_length=100, help_text="Ingrese el nombre de la caja")
+
+    def __str__(self):
+        return "%s" % self.caja
+
+class tbl_cajero(models.Model):
+    cajero=models.ForeignKey(tbl_caja, on_delete=models.SET_NULL, null=True)
+    user=models.OneToOneField(User, on_delete=models.CASCADE)
+    mayorista=models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True)
+    dui=models.CharField(help_text='Ingrese su numero de dui', max_length=50)
+    telefono=models.CharField(max_length=50, help_text='Ingrese el numero de telefono')
+    direccion=models.TextField(max_length=200, help_text="Ingrese su direccion")
+
+    def __str__(self):
+        return "%s , %s" % str(self.cajero, str(self.user))
+    
+
+    
 
 class tbl_seguidores(models.Model):
     mayorista = models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True)
