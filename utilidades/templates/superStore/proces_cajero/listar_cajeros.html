@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<div id="controles">
+    <a class="btn btn-primary" href="{% url 'tienda:registrar_user_cajero' %}">Nuevo Cajero</a>
+</div>
+<div id="litado_cajeros">
+    <table class="table table-dark">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Usuario</th>
+            <th scope="col">Correo</th>
+            <th scope="col">Nombres</th>
+            <th scope="col">Apellidos</th>
+            <th scope="col">Direccion</th>
+            <th scope="col" colspan="2">Operaciones</th>
+        </tr>
+        </thead>
+        {% if cajeros %}
+            <tbody>
+                {% for cajero in cajeros %}
+                    <tr>
+                        <th scope="row">{{ cajero.id }}</th>
+                        <td>{{ cajero.user.username }}</td>
+                        <td>{{ cajero.user.email }}</td>
+                        <td>{{ cajero.user.first_name }}</td>
+                        <td>{{ cajero.user.last_name }}</td>
+                        <td>{{ cajero.direccion }}</td>
+                        <td><a class="btn btn-primary" href="{% url 'tienda:editar_user_cajero' cajero.user.id %}">Editar</a></td>
+                        <td><a class="btn btn-danger" href="#">Eliminar</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        {% endif %}
+    </table> 
+</div>
+   
+{% endblock %}

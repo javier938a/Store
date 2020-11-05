@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.db.models import fields
+from django.forms import widgets
 from .models import User, tbl_mayorista, tbl_cliente, tbl_direccion, tbl_producto, tbl_venta, tbl_categoria, tbl_pais
-from .models import tbl_cesta
+from .models import tbl_cesta, tbl_cajero, tbl_caja
 
 class CreateUserForm(UserCreationForm):#extienda de la clase UserCreationForm
    class Meta:
@@ -173,3 +175,25 @@ class CategoriaForm(forms.ModelForm):
     class Meta:
         model = tbl_categoria
         fields=('categoria',)
+
+
+class CajeroForm(forms.ModelForm):
+    class Meta:
+        model=tbl_cajero
+        fields=('cajero', 'user', 'mayorista', 'dui', 'telefono', 'direccion')
+        labels={
+            'cajero':'Cajero',
+            'user':'Usuario',
+            'mayorista':'Empresa',
+            'telefono':'Telefono',
+            'dui':'Dui',
+            'direccion':'Direccion'
+        }
+        '''widgets={
+            'cajero':forms.Select(attrs={'class':'form-control',}),
+            'user':forms.Select(attrs={'class':'form-control',}),
+            'mayorista':forms.Select(attrs={'class':'form-control',}),
+            'telefono':forms.TextInput(attrs={'class':'form-control',}),
+            'dui':forms.TextInput(attrs={'class':'form-control', }),
+            'direccion':forms.TextInput(attrs={'class':'form-control',})
+        }'''

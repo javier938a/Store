@@ -20,6 +20,7 @@ from .views import listar_seguidores_cliente, listar_seguidores_proveedores
 from .views import get_mensajes_chat
 from .views import OpVender, listar_productos, new_factura, efectuar_venta, eliminar_factura, buscar_producto_barra
 from .views import ticket
+from .views import RegistrarCajero, RegistrarUserCajero, ListarCajeros, EditarUserCajero, EditarCajero
 app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
@@ -78,5 +79,10 @@ urlpatterns=[
     path('efectuar_venta', efectuar_venta, name='efectar_venta'), 
     path('eliminar_factura', eliminar_factura, name='eliminar_factura'),
     path('buscar_codigo_barra', buscar_producto_barra, name='buscar_code_barra'),
-    path('ticket/<int:pk>', ticket, name='ticket')
+    path('ticket/<int:pk>', ticket, name='ticket'), 
+    path('registrar_user_cajero', RegistrarUserCajero.as_view(), name='registrar_user_cajero'),
+    path('registrar_info_cajero/<int:pk>', RegistrarCajero.as_view(), name='registrar_cajero'),
+    path('listar_cajeros', ListarCajeros.as_view(), name='listar_cajeros'),
+    path('editar_user_cajero/<int:pk>', EditarUserCajero.as_view(), name='editar_user_cajero'),
+    path('editar_cajero/<int:pk>', EditarCajero.as_view(), name='editar_cajero')
 ]

@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.urls import reverse
 from django.utils.text import slugify
 # Create your models here.
@@ -47,7 +47,7 @@ class tbl_tipo_usuario(models.Model):
     def __str__(self):
         return self.tipo_usuario
 
-class UserManager(models.Manager):
+class UserManager(BaseUserManager):
     def get_by_natural_key(self, username):
         return self.get(username=username)
 
@@ -60,7 +60,7 @@ class User(AbstractUser):
     
     class Meta:
         db_table = "auth_user"
-        unique_together = [['username' ,'first_name', 'last_name']]
+        #unique_together = [['username' ,'first_name', 'last_name']]
     
     def natural_key(self):
         return (self.username, self.first_name, self.last_name)
@@ -109,7 +109,7 @@ class tbl_mayorista(models.Model):
     def __str__(self):
         return "%s" % (self.nombre_empresa)
 class tbl_caja(models.Model):
-    mayoristas=models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True)
+    mayorista=models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True)
     caja=models.CharField(max_length=100, help_text="Ingrese el nombre de la caja")
 
     def __str__(self):
@@ -124,7 +124,7 @@ class tbl_cajero(models.Model):
     direccion=models.TextField(max_length=200, help_text="Ingrese su direccion")
 
     def __str__(self):
-        return "%s , %s" % str(self.cajero, str(self.user))
+        return "%s , %s" % (str(self.cajero), str(self.user))
     
 
     

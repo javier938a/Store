@@ -55,7 +55,7 @@ class RegistrarProducto(CreateView):#esta vista sirve para registrar producto se
 
         return form_valid
     def get_success_url(self):#Definiendo la direccion a donde se tiene que regresar cuando se guarde un producto que es al listado de producto
-
+        #Pasando como argumento el id del usuario
         return reverse_lazy('tienda:listar_prod', args=[str(self.kwargs['pk'])])
 
 

@@ -1,4 +1,9 @@
 /*Letra responsiva*/
+*{
+    margin: 0;
+    padding: 0;
+}
+
 .estiloLogin{
     width: 1250px;
     height: 500px;
