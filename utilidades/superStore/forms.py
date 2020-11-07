@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.db.models import fields
 from django.forms import widgets
 from .models import User, tbl_mayorista, tbl_cliente, tbl_direccion, tbl_producto, tbl_venta, tbl_categoria, tbl_pais
-from .models import tbl_cesta, tbl_cajero, tbl_caja
+from .models import tbl_cesta, tbl_cajero, tbl_caja, tbl_proveedor
 
 class CreateUserForm(UserCreationForm):#extienda de la clase UserCreationForm
    class Meta:
@@ -197,3 +197,16 @@ class CajeroForm(forms.ModelForm):
             'dui':forms.TextInput(attrs={'class':'form-control', }),
             'direccion':forms.TextInput(attrs={'class':'form-control',})
         }'''
+
+class ProveedorForm(forms.ModelForm):
+    class Meta:
+        model=tbl_proveedor
+        fields=('mayorista','empresa', 'representante', 'contacto', 'direccion')
+        labels={
+            'mayorista':'Negocio',
+            'empresa':'Empresa',
+            'representante':'Representante',
+            'contacto':'Contacto',
+            'direccion':'Direccion'
+        }
+

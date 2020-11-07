@@ -198,7 +198,16 @@ class tbl_factura(models.Model):
     
     def __str__(self):
         return "factura N° %s cliente %s "%(self.numero_factura, self.cliente)
-    
+
+class tbl_proveedor(models.Model):
+    mayorista=models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True, blank=True)
+    empresa=models.CharField(help_text="Ingrese el nombre de la campañia", max_length=100)
+    representante=models.CharField(max_length=50, help_text='Nombre del algun representante de la Empresa', null=True, blank=True)
+    contacto=models.CharField(max_length=10, help_text='Numero de contanto de la empresa')
+    direccion=models.TextField(max_length=200, help_text='Direccion de la compañia o empresa')
+
+    def __str__(self):
+        return '%s' % self.empresa
 
 
 class tbl_venta(models.Model):#almacenara las ventas efectuadas por los mayoristas por parte de los clientes
@@ -213,6 +222,8 @@ class tbl_venta(models.Model):#almacenara las ventas efectuadas por los mayorist
     factura = models.ForeignKey(tbl_factura, on_delete=models.SET_NULL, null=True, blank=True)
     def __str__(self):
         return "producto %s " % self.producto_id
+
+
 
 class tbl_comentario_producto(models.Model):
     cliente = models.ForeignKey(tbl_cliente, on_delete=models.SET_NULL, null=True)

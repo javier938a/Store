@@ -64,7 +64,7 @@
 
     {% block titulo %}
       <title>Inicio</title>
-  {% endblock %}
+    {% endblock %}
   {% load pwa %}
   {% progressive_web_app_meta %}
 
@@ -150,6 +150,9 @@
                 {% endif %}
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'tienda:listar_cajeros' %}">Cajeros</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'tienda:listar_proveedores' %}">Proveedores</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'tienda:list_venta' %}">Ventas</a>

@@ -38,7 +38,8 @@ from .proces_seguidores.crud_seguidores import listar_seguidores_cliente, listar
 from .proces_chat.crud_chat import get_mensajes_chat
 from .proces_vender.crud_vender import OpVender
 from .proces_vender.crud_vender import listar_productos, new_factura, efectuar_venta, eliminar_factura, buscar_producto_barra, ticket
-from .process_cajero.crud_cajero import RegistrarCajero, RegistrarUserCajero, ListarCajeros, EditarUserCajero, EditarCajero
+from .process_cajero.crud_cajero import RegistrarCajero, RegistrarUserCajero, ListarCajeros, EditarUserCajero, EditarCajero, EliminarCajero
+from .proces_proveedores.crud_proveedores import ListarProveedores ,RegistrarProveedor, EditarProveedor, EliminarProveedor
 import random
 # Create your views here.
 class index(ListView):#Mostrando index Pagina Principal

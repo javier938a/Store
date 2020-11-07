@@ -2,7 +2,15 @@
 
 {% block contenido %}
 <div id="controles">
-    <a class="btn btn-primary" href="{% url 'tienda:registrar_user_cajero' %}">Nuevo Cajero</a>
+    <div>
+        <form method="GET">
+            <input name="txt_clave_cajero" placeholder="Buscar" type="text">
+            <button class="btn btn-primary" type="submit">Buscar</button>
+        </form>
+    </div>
+    <div>
+        <a class="btn btn-primary" href="{% url 'tienda:registrar_user_cajero' %}">Nuevo Cajero</a>
+    </div>
 </div>
 <div id="litado_cajeros">
     <table class="table table-dark">
@@ -28,7 +36,7 @@
                         <td>{{ cajero.user.last_name }}</td>
                         <td>{{ cajero.direccion }}</td>
                         <td><a class="btn btn-primary" href="{% url 'tienda:editar_user_cajero' cajero.user.id %}">Editar</a></td>
-                        <td><a class="btn btn-danger" href="#">Eliminar</a></td>
+                        <td><a class="btn btn-danger" href="{% url 'tienda:eliminar_cajero' cajero.id %}">Eliminar</a></td>
                     </tr>
                 {% endfor %}
             </tbody>

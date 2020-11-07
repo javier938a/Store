@@ -5,6 +5,7 @@ from .models import tbl_estado_envio, tbl_comentario_producto, tbl_seguidores, t
 from .models import tbl_clients_connect
 from .models import tbl_bandeja_de_entrada_cliente, tbl_bandeja_de_salida_cliente, tbl_bandeja_de_entrada_mayorista, tbl_bandeja_de_salida_mayorista
 from .models import tbl_factura, tbl_caja, tbl_cajero
+from .models import tbl_proveedor
 # Register your models here.
 admin.site.register(User)
 admin.site.register(tbl_mayorista)
@@ -32,3 +33,4 @@ admin.site.register(tbl_bandeja_de_salida_mayorista)
 admin.site.register(tbl_factura)
 admin.site.register(tbl_cajero)
 admin.site.register(tbl_caja)
+admin.site.register(tbl_proveedor)

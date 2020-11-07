@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+    <title>LISTA DE PROVEEDORES</title>
+{% endblock %}
+
+{% block contenido %}
+<div id='op_proveedores'>
+    <div id="buscar">
+        <form method="GET">
+            <input type="text" name="txt_clave_prove" placeholder="Buscar">
+            <button class="btn btn-primary" type="submit">Buscar</button>
+        </form>
+    </div>
+    <div> 
+        <a class="btn btn-secondary" href="{% url 'tienda:registrar_cajero' %}">Nuevo Proveedor</a>
+    </div>
+</div>
+
+<div id="content_table">
+    <table class="table table-dark">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Empresa</th>
+            <th scope="col">Representante</th>
+            <th scope="col">Contacto</th>
+            <th scope="col">Direccion</th>
+            <th scope="col" colspan="2">Operaciones</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% if proveedores %}
+                {% for prove in proveedores %}
+                    <tr>
+                        <th scope="row">{{ prove.id }}</th>
+                        <td>{{ prove.empresa }}</td>
+                        <td>{{ prove.representante }}</td>
+                        <td>{{ prove.contacto }}</td>
+                        <td>{{ prove.direccion }}</td>
+                        <td><a class="btn btn-success" href="{% url 'tienda:editar_prove' prove.id %}">Editar</a></td>
+                        <td><a class="btn btn-danger" href="{% url 'tienda:eliminar_prove' prove.id %}">Eliminar</a></td>
+                    </tr>
+                {% endfor %}
+          {% else %}
+            <p>No hay registros aun</p>
+          {% endif %}
+        </tbody>
+      </table>
+</div>
+
+{% endblock %}

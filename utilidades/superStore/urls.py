@@ -20,7 +20,8 @@ from .views import listar_seguidores_cliente, listar_seguidores_proveedores
 from .views import get_mensajes_chat
 from .views import OpVender, listar_productos, new_factura, efectuar_venta, eliminar_factura, buscar_producto_barra
 from .views import ticket
-from .views import RegistrarCajero, RegistrarUserCajero, ListarCajeros, EditarUserCajero, EditarCajero
+from .views import RegistrarCajero, RegistrarUserCajero, ListarCajeros, EditarUserCajero, EditarCajero, EliminarCajero
+from .views import RegistrarProveedor, EditarProveedor, ListarProveedores, EliminarProveedor
 app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
@@ -84,5 +85,10 @@ urlpatterns=[
     path('registrar_info_cajero/<int:pk>', RegistrarCajero.as_view(), name='registrar_cajero'),
     path('listar_cajeros', ListarCajeros.as_view(), name='listar_cajeros'),
     path('editar_user_cajero/<int:pk>', EditarUserCajero.as_view(), name='editar_user_cajero'),
-    path('editar_cajero/<int:pk>', EditarCajero.as_view(), name='editar_cajero')
+    path('editar_cajero/<int:pk>', EditarCajero.as_view(), name='editar_cajero'),
+    path('eliminar_cajero/<int:pk>', EliminarCajero.as_view(), name='eliminar_cajero'),
+    path('registrar_prove', RegistrarProveedor.as_view(), name='registrar_cajero'),
+    path('editar_prove/<int:pk>', EditarProveedor.as_view(), name='editar_prove'),
+    path('eliminar_prove/<int:pk>', EliminarProveedor.as_view(), name='eliminar_prove'),
+    path('listar_proveedores', ListarProveedores.as_view(), name='listar_proveedores'),
 ]

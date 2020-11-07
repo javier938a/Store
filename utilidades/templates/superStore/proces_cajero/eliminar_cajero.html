@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+    <div id="del_cajero">
+        <form action="" method="post">
+            {% csrf_token %}
+            <h1>¿Esta seguro de eliminar a {{ cajero.user.username }}</h1>
+            <button class="btn btn-danger" type="submit">Si Eliminar</button>
+            <a class="btn btn-success" href="{% url 'tienda:listar_cajeros' %}">No eliminar</a>
+        </form>
+    </div>
+{% endblock %}

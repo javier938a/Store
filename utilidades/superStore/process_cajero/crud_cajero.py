@@ -20,11 +20,8 @@ class RegistrarUserCajero(CreateView):
         return context
 
     def get_success_url(self):
-        #print("Este es el usuario..")
-        username=self.request.POST.get('username')
-        cajero=User.objects.get(username=username)
-        print(self.get_object().id)
-
+        cajero=User.objects.get(id=self.object.id)
+        print(cajero)
         return reverse_lazy('tienda:registrar_cajero', args=[str(cajero.id)])
 
 
@@ -53,6 +50,10 @@ class ListarCajeros(ListView):
     context_object_name='cajeros'
 
     def get_queryset(self):
+        clave=self.request.GET.get('txt_clave_cajero')
+        if clave is not None:
+            return tbl_cajero.objects.filter(Q(mayorista__user__id=self.request.user.id) & Q(cajero__caja__icontains=clave)|Q(user__username__icontains=clave)|Q(user__first_name__icontains=clave)|Q(user__last_name__icontains=clave)|Q(dui__icontains=clave)|Q(telefono=clave)|Q(direccion__icontains=clave))
+
         return tbl_cajero.objects.filter(mayorista__user__id=self.request.user.id)
 
 
@@ -100,6 +101,15 @@ class EditarCajero(UpdateView):
         return reverse_lazy('tienda:listar_cajeros')
 
 
+class EliminarCajero(DeleteView):
+    template_name='superStore/proces_cajero/eliminar_cajero.html'
+    model=tbl_cajero
 
+    def get_success_url(self):
+        user_cajero_del=User.objects.filter(id=self.kwargs['pk']).delete()
+        print('Usuario Eliminado..')
+        print(user_cajero_del)
+        
+        return reverse_lazy('tienda:listar_cajeros')
 
 
