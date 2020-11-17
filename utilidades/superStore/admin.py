@@ -6,6 +6,7 @@ from .models import tbl_clients_connect
 from .models import tbl_bandeja_de_entrada_cliente, tbl_bandeja_de_salida_cliente, tbl_bandeja_de_entrada_mayorista, tbl_bandeja_de_salida_mayorista
 from .models import tbl_factura, tbl_caja, tbl_cajero
 from .models import tbl_proveedor
+from .models import tbl_compras
 # Register your models here.
 admin.site.register(User)
 admin.site.register(tbl_mayorista)

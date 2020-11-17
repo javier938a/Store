@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block css_agregado %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/comprar.css" %}">
+{% endblock %}
+
+{% block titulo %}
+    <title>Compras</title>
+{% endblock %}
+
+{% block contenido %}
+    <div>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="">Productos</button>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div id="productos" class="modal-body">
+                  <div id="buscar">
+                      
+                  </div>
+                  <div id="tabla-prod">
+
+                  </div>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send message</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {% load static %}
+    <script type="text/babel" src="{% static "js/compras.js" %}"></script>
+{% endblock %}

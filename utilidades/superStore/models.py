@@ -223,6 +223,19 @@ class tbl_venta(models.Model):#almacenara las ventas efectuadas por los mayorist
     def __str__(self):
         return "producto %s " % self.producto_id
 
+class tbl_compras(models.Model):
+    proveedor=models.ForeignKey(tbl_proveedor, on_delete=models.CASCADE)
+    producto=models.ForeignKey(tbl_producto, on_delete=models.CASCADE)
+    mayorista=models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True)
+    cajero=models.ForeignKey(tbl_cajero, on_delete=models.SET_NULL, null=True)
+    cantidad=models.IntegerField(help_text="Cantidad de producto que se compra")
+    precio_compra=models.DecimalField( decimal_places=3, max_digits=10 ,help_text="Precio de compra del producto")
+    total_compra=models.DecimalField(decimal_places=3, max_digits=10, help_text= "Ingrese el total de la compra")
+    
+    def __str__(self):
+        return "compra de %s unidades de %s"%(str(self.cantidad), str(self.producto))
+    
+
 
 
 class tbl_comentario_producto(models.Model):

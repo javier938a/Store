@@ -40,6 +40,7 @@ from .proces_vender.crud_vender import OpVender
 from .proces_vender.crud_vender import listar_productos, new_factura, efectuar_venta, eliminar_factura, buscar_producto_barra, ticket
 from .process_cajero.crud_cajero import RegistrarCajero, RegistrarUserCajero, ListarCajeros, EditarUserCajero, EditarCajero, EliminarCajero
 from .proces_proveedores.crud_proveedores import ListarProveedores ,RegistrarProveedor, EditarProveedor, EliminarProveedor
+from .proces_compras.crud_compras import Comprar
 import random
 # Create your views here.
 class index(ListView):#Mostrando index Pagina Principal

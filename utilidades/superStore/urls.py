@@ -22,6 +22,7 @@ from .views import OpVender, listar_productos, new_factura, efectuar_venta, elim
 from .views import ticket
 from .views import RegistrarCajero, RegistrarUserCajero, ListarCajeros, EditarUserCajero, EditarCajero, EliminarCajero
 from .views import RegistrarProveedor, EditarProveedor, ListarProveedores, EliminarProveedor
+from .views import Comprar
 app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
@@ -91,4 +92,5 @@ urlpatterns=[
     path('editar_prove/<int:pk>', EditarProveedor.as_view(), name='editar_prove'),
     path('eliminar_prove/<int:pk>', EliminarProveedor.as_view(), name='eliminar_prove'),
     path('listar_proveedores', ListarProveedores.as_view(), name='listar_proveedores'),
+    path('comprar',Comprar.as_view(), name="compras" )
 ]

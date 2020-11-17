@@ -28,8 +28,13 @@
     {# js MD Bootstrap #}
     <!-- MDB core JavaScript -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
+    {# librerias de react js #}
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js" ></script>
+    {#<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>#}
     <!-- Font Awesome -->
-  
+
     
     {% block js %}
 
@@ -159,6 +164,9 @@
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'tienda:vender'%}">Vender</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'tienda:compras' %}">Compras</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="#">seguidores</a>
