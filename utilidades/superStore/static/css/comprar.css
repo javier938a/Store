@@ -10,3 +10,7 @@
 .fila_seleccionada{
     background-color: #8b189d;
 }
+.ponerScroll{
+    height:50vh; 
+    overflow-y:scroll;
+}

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.db.models.manager import Manager
 from django.urls import reverse
 from django.utils.text import slugify
 # Create your models here.
@@ -153,6 +154,27 @@ class tbl_sub_categoria1(models.Model):
     def get_absolute_url(self):
         return reverse("categoria-detalle",args=[str(self.id)])
 
+class ProductoManager(models.Manager):
+    def get_by_natural_key(self, empresa):
+        return self.get(empresa=empresa)
+
+class tbl_proveedor(models.Model):
+    mayorista=models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True, blank=True)
+    empresa=models.CharField(help_text="Ingrese el nombre de la campañia", max_length=100)
+    representante=models.CharField(max_length=50, help_text='Nombre del algun representante de la Empresa', null=True, blank=True)
+    contacto=models.CharField(max_length=10, help_text='Numero de contanto de la empresa')
+    direccion=models.TextField(max_length=200, help_text='Direccion de la compañia o empresa')
+    objects=ProductoManager()
+
+    def __str__(self):
+        return '%s' % self.empresa
+    
+    def natural_key(self):
+        return (self.empresa,)
+    
+
+
+
 class tbl_producto(models.Model):#Tabla producto que almacenara todos los producto de todos los proveedores
     codigo_producto = models.CharField(max_length=50, help_text="Ingrese el codigo del producto", null=True)
     foto_producto1 = models.ImageField(verbose_name="Imagen", upload_to='foto_producto', null=True, blank=True)
@@ -162,7 +184,8 @@ class tbl_producto(models.Model):#Tabla producto que almacenara todos los produc
     mayorista = models.ForeignKey(tbl_mayorista, on_delete=models.CASCADE, blank=True)
     producto = models.CharField(max_length=100, help_text="Ingrese el nombre el producto")
     info_producto = models.TextField(max_length=1000, null=True)
-    fecha_registro = models.DateField(null=True, blank=True)
+    fecha_registro = models.DateTimeField(null=True, blank=True)
+    fecha_edicion=models.DateTimeField(null=True, blank=True)
     costo_envio = models.FloatField(help_text="Costo del envio", null=True)
     medio_de_envio = models.CharField(max_length=100, help_text="empresa por donde se envia el producto", null=True)
     cantidad = models.IntegerField(help_text="Ingrese la cantidad del producto")
@@ -170,6 +193,7 @@ class tbl_producto(models.Model):#Tabla producto que almacenara todos los produc
     precio_venta = models.FloatField(help_text="Ingrese el precio unitario de venta del producto", null=True)
     precio_total = models.FloatField(help_text="precio total en inventario", blank=True, null=True)
     precio_total_venta=models.FloatField(help_text="Ingrese el precio total de venta", null=True)
+    proveedor=models.ForeignKey(tbl_proveedor, on_delete=models.SET_NULL, null=True)
     sub_categoria1 = models.ForeignKey(tbl_sub_categoria1, on_delete=models.SET_NULL, blank=True, null=True)
     codigo_barra=models.TextField(help_text="cogigo de barra", null=True, blank=True)
 
@@ -199,17 +223,6 @@ class tbl_factura(models.Model):
     def __str__(self):
         return "factura N° %s cliente %s "%(self.numero_factura, self.cliente)
 
-class tbl_proveedor(models.Model):
-    mayorista=models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True, blank=True)
-    empresa=models.CharField(help_text="Ingrese el nombre de la campañia", max_length=100)
-    representante=models.CharField(max_length=50, help_text='Nombre del algun representante de la Empresa', null=True, blank=True)
-    contacto=models.CharField(max_length=10, help_text='Numero de contanto de la empresa')
-    direccion=models.TextField(max_length=200, help_text='Direccion de la compañia o empresa')
-
-    def __str__(self):
-        return '%s' % self.empresa
-
-
 class tbl_venta(models.Model):#almacenara las ventas efectuadas por los mayoristas por parte de los clientes
     cliente_id = models.ForeignKey(tbl_cliente, on_delete=models.CASCADE, null=True, blank=True)
     producto_id = models.ForeignKey(tbl_producto, on_delete=models.CASCADE)
@@ -224,7 +237,6 @@ class tbl_venta(models.Model):#almacenara las ventas efectuadas por los mayorist
         return "producto %s " % self.producto_id
 
 class tbl_compras(models.Model):
-    proveedor=models.ForeignKey(tbl_proveedor, on_delete=models.CASCADE)
     producto=models.ForeignKey(tbl_producto, on_delete=models.CASCADE)
     mayorista=models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True)
     cajero=models.ForeignKey(tbl_cajero, on_delete=models.SET_NULL, null=True)

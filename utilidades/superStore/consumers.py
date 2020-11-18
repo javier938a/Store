@@ -43,7 +43,7 @@ class BuscarProductosCliente(AsyncWebsocketConsumer):
             productos = tbl_producto.objects.filter(Q(mayorista__user__id=self.scope['user'].id))
         #print(productos)
         list_productos=[]
-        productos_json=serialize('json', productos)
+        productos_json=serialize('json', productos, use_natural_foreign_keys=True, use_natural_primary_keys=True)
         
         return productos_json
     

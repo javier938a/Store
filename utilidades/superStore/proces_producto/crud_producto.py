@@ -1,3 +1,5 @@
+from django.contrib.auth import forms
+from superStore.models import tbl_proveedor
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
 from superStore.forms import FormCrearProducto, SubCateForm
@@ -21,7 +23,9 @@ class RegistrarProducto(CreateView):#esta vista sirve para registrar producto se
     def get_context_data(self,**kwargs):
         context = super(RegistrarProducto, self).get_context_data(**kwargs)
         context.get('form').fields['mayorista'].empty_label=None
-        context.get('form').fields['mayorista'].queryset = tbl_mayorista.objects.filter(id=self.kwargs['pk'])#Validando que solo el mayorista que ha ingresado seccion vea sus productos en inventario
+        context.get('form').fields['mayorista'].queryset = tbl_mayorista.objects.filter(user__id=self.request.user.id)#Validando que solo el mayorista que ha ingresado seccion vea sus productos en inventario
+        context.get('form').fields.get('proveedor').empty_label=None
+        context.get('form').fields.get('proveedor').queryset=tbl_proveedor.objects.filter(Q(mayorista__user__id=self.request.user.id))        
         context['subCateForm']=SubCateForm#formulario auxiliar para elegir las categorias
         context['id_cli']=self.request.session.get('id_cli')
         print(context.get('form').errors)
@@ -36,6 +40,7 @@ class RegistrarProducto(CreateView):#esta vista sirve para registrar producto se
         form.instance.precio_total_venta=total_precio_venta#asignandolo al campo de total precio de venta
         fecha_registro = timezone.now()
         form.instance.fecha_registro = fecha_registro
+        form.instance.fecha_edicion=fecha_registro
         #obteniendo los seguidores del proveedor
         idUserProve = self.request.user.id
         idProve = tbl_mayorista.objects.get(user__id=idUserProve).id#obteniendo el id del mayorista
@@ -56,7 +61,8 @@ class RegistrarProducto(CreateView):#esta vista sirve para registrar producto se
         return form_valid
     def get_success_url(self):#Definiendo la direccion a donde se tiene que regresar cuando se guarde un producto que es al listado de producto
         #Pasando como argumento el id del usuario
-        return reverse_lazy('tienda:listar_prod', args=[str(self.kwargs['pk'])])
+        
+        return reverse_lazy('tienda:listar_prod')
 
 
 
@@ -68,14 +74,13 @@ class ListarProductos(ListView):
         prod = self.request.GET.get('prod')
         print("Este es el producto "+str(prod))
         context = super(ListarProductos, self).get_context_data(**kwargs)
-        context['id_prove']=self.kwargs['pk']
         if prod!=None and prod!='':
-            context['prod_list']=tbl_producto.objects.filter(Q(mayorista__id=self.kwargs['pk']) & Q(producto__icontains=prod))
+            context['prod_list']=tbl_producto.objects.filter(Q(mayorista__user__id=self.request.user.id) & Q(producto__icontains=prod))
             print(context['prod_list'])
         return context
     
     def get_queryset(self):
-        return self.model.objects.filter(mayorista=self.kwargs['pk'])#filtrando que solo sean los productos del mayorista que acaba de iniciar secion sean los que se vean
+        return self.model.objects.filter(Q(mayorista__user__id=self.request.user.id))#filtrando que solo sean los productos del mayorista que acaba de iniciar secion sean los que se vean
 
 class EditarProducto(UpdateView):
     template_name = 'superStore/procesos_producto/registrar_productos.html'
@@ -86,6 +91,8 @@ class EditarProducto(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(EditarProducto, self).get_context_data(**kwargs)
         context.get('form').fields['mayorista'].queryset = tbl_mayorista.objects.filter(user__id=self.request.user.id)
+        context.get('form').fields.get('proveedor').empty_label=None
+        context.get('form').fields.get('proveedor').queryset=tbl_proveedor.objects.filter(Q(mayorista__user__id=self.request.user.id))  
         context['id_cli']=self.request.session.get('id_cli')
         context['subCateForm']=SubCateForm
         #context['editar']=1 #servira para validar si se esta usando para registrar o editar
@@ -100,12 +107,14 @@ class EditarProducto(UpdateView):
         total_precio_venta=float(cantidad)*float(precio_venta)
         form.instance.precio_total = total_precio_compra#Agregandolo a el campo del formulario
         form.instance.precio_total_venta=total_precio_venta#agregando el precio total de venta que es lo que se espera obtener al mes
+        fecha_edicion=timezone.now()
+        form.instance.fecha_edicion=fecha_edicion
         form_valid = super(EditarProducto, self).form_valid(form)
 
         return form_valid
     
     def get_success_url(self):
-        return reverse_lazy('tienda:listar_prod', args=[str(self.object.mayorista.id)] )
+        return reverse_lazy('tienda:listar_prod')
 
 class EliminarProducto(DeleteView):
     template_name='superStore/procesos_producto/eliminar_producto.html'

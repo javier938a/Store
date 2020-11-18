@@ -97,7 +97,7 @@ class FormCrearDireccion(forms.ModelForm):#para registrar las multiples direccio
 class FormCrearProducto(forms.ModelForm):
     class Meta:
         model = tbl_producto
-        fields = ('codigo_producto','foto_producto1','foto_producto2','foto_producto3','mayorista', 'producto','info_producto','medio_de_envio', 'cantidad', 'precio_unitario','precio_venta','costo_envio','sub_categoria1')
+        fields = ('codigo_producto','foto_producto1','foto_producto2','foto_producto3','mayorista', 'producto','proveedor','info_producto','medio_de_envio', 'cantidad', 'precio_unitario','precio_venta','costo_envio','sub_categoria1')
         labels = {
             'codigo_producto':'Codigo de Producto',
             'foto_producto1':'Foto del producto No1',
@@ -105,6 +105,7 @@ class FormCrearProducto(forms.ModelForm):
             'foto_producto3':'Foto del producto No3',
             'mayorista':'Proveedor',
             'producto':'Producto',
+            'proveedor':'Proveedor',
             'info_producto':'Descripcion',
             'medio_de_envio':'Medio de envio',
             'cantidad':'Cantidad',
@@ -120,6 +121,7 @@ class FormCrearProducto(forms.ModelForm):
             'foto_producto3':forms.FileInput(attrs={'class':'form-control'}),
             'mayorista':forms.Select(attrs={'class':'form-control'}),
             'producto':forms.TextInput(attrs={'class':'form-control'}),
+            'proveedor':forms.Select(attrs={'class':'form-control'}),
             'info_producto':forms.TextInput(attrs={'class':'form-control'}),   
             'medio_de_envio':forms.TextInput(attrs={'class':'form-control'}),
             'cantidad':forms.NumberInput(attrs={'class':'form-control'}),

@@ -20,7 +20,7 @@
                 <div class="row">
                   <div class="col sm-3">
                     <button class="btn btn-success" type="submit">Buscar</button>
-                    <a class="btn btn-success" href="{% url 'tienda:prod' id_prove %}">Nuevo producto</a>
+                    <a class="btn btn-success" href="{% url 'tienda:prod' %}">Nuevo producto</a>
                   </div>
                 </div>
               </div>
@@ -44,6 +44,8 @@
 
                   <div class="card-body">
                     Fecha de registro: <h5 class="card-title">{{ prod.fecha_registro }}</h5>
+                    Ultima fecha de Edicion:<h5 class="card-title">{{ prod.fecha_edicion }}</h5>
+                    Proveedor:<h5 class="card-tittle">{{ prod.proveedor }}</h5>
                     Categoria: <h5 class="card-title">{{ prod.sub_categoria1.categoria }} --> {{ prod.sub_categoria1 }}</h5>
                     Precio: <h5 class="card-title">$ {{ prod.precio_unitario }}</h5>
                     Cantidad: <h5 class="card-title">{{ prod.cantidad }} unidades</h5>

@@ -141,7 +141,7 @@
               {% ifequal user.tipo_usuario_id.tipo_usuario "Proveedor" %}{# en dado caso el usuario logiado es proveedor se le mostrara el menu del proveedor #}
                 {% if id_prove %}
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'tienda:listar_prod' id_prove %}">Productos</a>
+                    <a class="nav-link" href="{% url 'tienda:listar_prod' %}">Productos</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'tienda:infoUsuario' 2 %}">{{ user.username }} </a>
