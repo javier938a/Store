@@ -22,14 +22,33 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div id="productos" class="modal-body">
-                  <div id="buscar">
-                      
-                  </div>
-                  <div class="ponerScroll" id="tabla-prod">
+              <div class="modal-body">
+                <div id="busqueda" style="height: 15vh;">
+                  <form method="GET">
+                      <input id="txt_clave_prod" type="text" placeholder="producto"><br/>
+  
+                      <button class="btn btn-primary" type="submit">Buscar</button>
+                      <a class="btn btn-secondary" href="#">Nuevo Proveedor</a>
+                      <a class="btn btn-secondary" href="#">Nuevo <br/>Producto</a>
+                  </form>
+                </div>
+                <div style="height: 5vh;;">
 
-                  </div>
-
+                </div>
+                <div class="ponerScroll " id="tabla">
+                  <table class="table table-dark">
+                    <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">producto</th>
+                        <th scope="col">Existencia Actual</th>
+                      </tr>
+                    </thead>
+                    <tbody id="productos">
+   
+                    </tbody>
+                  </table>
+                </div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -38,6 +57,8 @@
             </div>
           </div>
         </div>
+
+
         <div id="compras">
           <table class="table table-dark">
             <thead>
@@ -58,5 +79,5 @@
 
 {% block script %}
     {% load static %}
-    <script type="text/babel" src="{% static "js/compras.js" %}"></script>
+    <script src="{% static "js/compras.js" %}"></script>
 {% endblock %}
