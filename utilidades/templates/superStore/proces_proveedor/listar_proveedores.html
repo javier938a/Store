@@ -13,7 +13,7 @@
         </form>
     </div>
     <div> 
-        <a class="btn btn-secondary" href="{% url 'tienda:registrar_cajero' %}">Nuevo Proveedor</a>
+        <a class="btn btn-secondary" href="{% url 'tienda:reg_prove_mayo' %}">Nuevo Proveedor</a>
     </div>
 </div>
 
@@ -39,7 +39,7 @@
                         <td>{{ prove.contacto }}</td>
                         <td>{{ prove.direccion }}</td>
                         <td><a class="btn btn-success" href="{% url 'tienda:editar_prove' prove.id %}">Editar</a></td>
-                        <td><a class="btn btn-danger" href="{% url 'tienda:eliminar_prove' prove.id %}">Eliminar</a></td>
+                        <td><a class="btn btn-danger" href="{% url 'tienda:eliminar_prove' prove.id %}" >Eliminar</a></td>
                     </tr>
                 {% endfor %}
           {% else %}

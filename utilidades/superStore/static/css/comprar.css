@@ -14,3 +14,7 @@
     height:50vh; 
     overflow-y:scroll;
 }
+
+.tam_input{
+    width: 3vh !important;
+}

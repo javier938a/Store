@@ -240,6 +240,7 @@ class tbl_compras(models.Model):
     producto=models.ForeignKey(tbl_producto, on_delete=models.CASCADE)
     mayorista=models.ForeignKey(tbl_mayorista, on_delete=models.SET_NULL, null=True)
     cajero=models.ForeignKey(tbl_cajero, on_delete=models.SET_NULL, null=True)
+    fecha_compra=models.DateTimeField(null=True, blank=True)
     cantidad=models.IntegerField(help_text="Cantidad de producto que se compra")
     precio_compra=models.DecimalField( decimal_places=3, max_digits=10 ,help_text="Precio de compra del producto")
     total_compra=models.DecimalField(decimal_places=3, max_digits=10, help_text= "Ingrese el total de la compra")

@@ -28,11 +28,11 @@
                       <input id="txt_clave_prod" type="text" placeholder="producto"><br/>
   
                       <button class="btn btn-primary" type="submit">Buscar</button>
-                      <a class="btn btn-secondary" href="#">Nuevo Proveedor</a>
-                      <a class="btn btn-secondary" href="#">Nuevo <br/>Producto</a>
-                  </form>
+                      <a class="btn btn-secondary" target="_blank" href="{% url 'tienda:reg_prove_mayo' %}">Nuevo Proveedor</a>
+                      <a class="btn btn-secondary" target="_blank" href="{% url 'tienda:prod' %}">Nuevo <br/>Producto</a>
+                    </form>
                 </div>
-                <div style="height: 5vh;;">
+                <div style="height: 5vh;">
 
                 </div>
                 <div class="ponerScroll " id="tabla">
@@ -52,27 +52,40 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Agregar</button>
+                <button id="btn_agregar_prod" type="button" class="btn btn-primary">Agregar</button>
               </div>
             </div>
           </div>
         </div>
-
+        <button class="btn btn-secondary" type="button">Efectuar compras</button>
+        <button id="btn_eliminar_compras" class="btn btn-secondary" type="button">Eliminar todas las compras</button>
 
         <div id="compras">
           <table class="table table-dark">
             <thead>
                 <th scope="col">ID</th>
                 <th scope="col">Producto</th>
+                <th scope="col">Existencia<br/>actual</th>
                 <th scope="col">Proveedor</th>
                 <th scope="col">Cantidad</th>
                 <th scope="col">Precio</th>
                 <th scope="col">Total</th>
+                <th scope="col">Operaciones</th>
             </thead>
             <tbody id="lista_compras">
 
             </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="6">Sumatoria Total ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------></td>
+                <td id="suma_total">$0</td>
+                <td></td>
+              </tr>
+            </tfoot>
           </table>
+          <div id="total">
+
+          </div>
         </div>
     </div>
 {% endblock %}
