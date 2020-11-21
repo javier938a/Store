@@ -169,7 +169,10 @@
                     <a class="nav-link" href="{% url 'tienda:compras' %}">Compras</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">seguidores</a>
+                    <a class="nav-link" href="{% url 'tienda:reporte' %}">Reportes</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Seguidores</a>
                   </li>
                   <div class="dropdown">{# Buzon de mensajes #}
                     <button id="noti" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -195,7 +198,16 @@
                       </div>
                   {% endif %}
               {% endifequal %}
-
+              {# inicio de enlaces del cajero #}
+              {% ifequal user.tipo_usuario_id.tipo_usuario "cajero" %}
+                <li class="nav-item">
+                  <a href="{% url 'tienda:vender'%}" class="nav-link">Vender</a>
+                </li>   
+                <li class="nav-item">
+                  <a href="{% url 'tienda:compras' %}" class="nav-link">Comprar</a>
+                </li>     
+            {% endifequal %}
+            {# fin del enlace del cajero #}
             {% else %} {# si no esta logeado poner menu de autenticar o iniciar secion y registrarse #}
               <li class="nav-item">
                 <a id="registrar" class="nav-link" href="{% url 'tienda:registrar' %}" tabindex="-1" aria-disabled="true">Registrarse</a>

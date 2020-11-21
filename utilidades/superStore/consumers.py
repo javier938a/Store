@@ -11,7 +11,7 @@ from django.utils import timezone
 from .models import tbl_seguidores
 from .models import tbl_clients_connect
 from .models import tbl_bandeja_de_entrada_cliente, tbl_bandeja_de_salida_cliente, tbl_bandeja_de_entrada_mayorista, tbl_bandeja_de_salida_mayorista
-from .models import tbl_producto
+from .models import tbl_producto, tbl_cajero
 from django.core.serializers import serialize
 
 class BuscarProductosCliente(AsyncWebsocketConsumer):
@@ -38,9 +38,20 @@ class BuscarProductosCliente(AsyncWebsocketConsumer):
     def get_producto_nombre(self, clave_nombre):
         productos=None
         if len(clave_nombre)>0:
-            productos = tbl_producto.objects.filter(Q(producto__icontains=clave_nombre.lower())& Q(mayorista__user__id=self.scope['user'].id))
+            print(clave_nombre)
+            if self.scope.get('user').tipo_usuario_id.tipo_usuario=='cajero':#verificando si es un cajero logueado
+                print(self.scope.get('user').tipo_usuario_id.tipo_usuario)
+                mayorista = tbl_cajero.objects.get(user__id=self.scope.get('user').id).mayorista
+                print(mayorista)
+                productos = tbl_producto.objects.filter(Q(producto__icontains=clave_nombre.lower())& Q(mayorista=mayorista))
+            elif self.scope.get('user').tipo_usuario_id.tipo_usuario=='Proveedor':
+                productos = tbl_producto.objects.filter(Q(producto__icontains=clave_nombre.lower())& Q(mayorista__user__id=self.scope['user'].id))
         elif len(clave_nombre)==0:
-            productos = tbl_producto.objects.filter(Q(mayorista__user__id=self.scope['user'].id))
+            if self.scope.get('user').tipo_usuario_id.tipo_usuario=='cajero':
+                mayorista = tbl_cajero.objects.get(user__id=self.scope['user'].id).mayorista
+                productos = tbl_producto.objects.filter(Q(mayorista=mayorista))
+            elif self.scope.get('user').tipo_usuario_id.tipo_usuario=='Proveedor':
+                productos = tbl_producto.objects.filter(Q(mayorista__user__id=self.scope['user'].id))
         #print(productos)
         list_productos=[]
         productos_json=serialize('json', productos, use_natural_foreign_keys=True, use_natural_primary_keys=True)

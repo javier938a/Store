@@ -298,10 +298,12 @@ $(document).ready(function (){
         evt.preventDefault();
         $(this).closest('tr').remove();
     });
+    $(document).on('input', '.cantidad_producto', function(){
+        this.value=this.value.replace(/[^0-9]/g, '').replace(/,/g, '.');
+    });
     //esta funcion escucha el eventon de modificar la cantidad de producto, al teclear los numeros se actualiza el total de compra
     $(document).on('keyup',".cantidad_producto", function(evt){
         console.log(evt.keyCode);
-        if((evt.keyCode>=48 && evt.keyCode<58) || (evt.keyCode>=96 && evt.keyCode<=105)){
             //alert(evt.keyCode);
             //alert($(this).attr("id"));
                 idStock=$(this).attr("id").replace('prod_','#stock_')//obteniendo el id del producto y modificandolo para obtener el id del stock
@@ -312,40 +314,28 @@ $(document).ready(function (){
                     idprecio = $(this).attr("id").replace('prod_','#precio_');
                     precio=$(idprecio).html();
                     total = parseFloat(cantidad)*parseFloat(precio.replace('$',''));
+                    total_rounded=Math.round(total*1000)/1000;
                     ///alert('cantidad: '+cantidad+' precio:'+precio+' total: '+total);
                     console.log('cantidad: '+cantidad+' precio:'+precio+' total: '+total);
                     idtotal=$(this).attr("id").replace("prod_",'#total_');
         
                     //limpiando el total actual para poner el nuevo total
                     $(idtotal).html('');
-                    $(idtotal).html('$'+total); 
+                    $(idtotal).html('$'+total_rounded); 
+                    //Haciendo la suma total de la columna de los totales
+                    var suma_total=0.0
+                    $("#table_body").find('tr').each(function(){
+                        var total=parseFloat($(this).find('td').eq(5).html().replace('$',''));
+                        suma_total+=total;
+                    })
+                    var suma_total_round=Math.round(suma_total*1000)/1000;
+                    $("#suma_total").html('$'+suma_total_round.toString());
+                    
                 }else{
                     $("#"+$(this).attr("id")+"").val('');
                     alert("La cantida ingresada supera el Stock del inventario favor ingresar una cantidad menor o igual al stock");
                 }              
-
-        }else if(evt.keyCode==8){
-            //alert(evt.keyCode);
-            //alert($(this).attr("id"));
-            cantidad=$("#"+$(this).attr("id")+"").val();//utilizando el id para obtener el valor del imput
-            if(cantidad==''){
-                cantidad='0';
-            }
-            idprecio = $(this).attr("id").replace('prod_','#precio_');
-            precio=$(idprecio).html();
-            total = parseFloat(cantidad)*parseFloat(precio.replace('$',''));
-            ///alert('cantidad: '+cantidad+' precio:'+precio+' total: '+total);
-            console.log('cantidad: '+cantidad+' precio:'+precio+' total: '+total);
-            idtotal=$(this).attr("id").replace("prod_",'#total_');
-
-            //limpiando el total actual para poner el nuevo total
-            $(idtotal).html('');
-            $(idtotal).html('$'+total);
-
-        }else if(evt.keyCode==130){
-            return false;
-        }
-    });
+        });
 
 
     

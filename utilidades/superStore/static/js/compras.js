@@ -1,4 +1,18 @@
-
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 
 
 $(document).ready(function(){
@@ -187,4 +201,44 @@ $(document).ready(function(){
 
 
       });
+
+
+      $("#btn_efectuar_compras").click(function(e){
+        e.preventDefault();
+        var lista_compras=new Array();
+        $("#lista_compras").find('tr').each(function(index){
+            
+            var id=$(this).find('td').eq(0).html();
+            var producto=$(this).find('td').eq(1).html();
+            var cantidad=$(this).find('td').eq(4).find('input').val();
+            var precio_compra=$(this).find('td').eq(5).find('input').val();
+            var precio_total=$(this).find('td').eq(6).html().replace('$','');
+            var fila={'id':id, 'producto':producto, 'cantidad':cantidad, 'precio_compra':precio_compra, 'precio_total':precio_total}
+            lista_compras.push(fila);
+            
+        });
+        var url='/superStore/guardar_compras';
+        const csrftoken = getCookie('csrftoken');
+        lista_compras_json=JSON.stringify(lista_compras);
+        var datos={
+            csrfmiddlewaretoken:csrftoken,
+            'compras':lista_compras_json
+        };
+
+        $.ajax({
+            type:'POST',
+            url:url,
+            data:datos,
+            dataType:'json',
+            success:function(data){
+                if(data.res==true){
+                    $("#lista_compras").empty();
+                    alert("Compra efectuada exitosamente..");
+                }
+            }
+
+        })
+        console.log(lista_compras_json);
+      });
+
 });
