@@ -7,8 +7,34 @@
 {% block contenido %}
     <h1>Reportes</h1>
     <div>
-        <a href="#" class="btn btn-primary">Reportes Diario</a>
-        <a href="#" class="btn btn-secondary">Reporte Mensual</a>
-        <a href="#" class="btn btn-danger">Reporte Anual</a>
+        <form action="#">
+            <button class="btn btn-primary" type="submit">Reporte diario</button>
+        </form>
+        <a id="btn_intervalo" href="#" class="btn btn-primary">Reportes por intervalo de fecha</a>
+        <a id="btn_mes" href="#" class="btn btn-danger">Reporte anual</a>
     </div>
+    <div id="fechas">
+        <div id="fecha_intervalo" style="display: none;"> 
+            <form id="form-fechas" target="_blank" action="{% url 'tienda:generar_reporte' %}" method="POST">
+                {% csrf_token %}
+                {{ form }}
+                <button class="btn btn-success" type="submit">Generar</button>
+            </form>
+        </div>
+        <div id="fecha_mes" style="display: none;">
+            <form action="{% url 'tienda:generar_reporte_anual' %}" target="_blank" method="POST">
+                {% csrf_token %}
+                {{ formMes }}
+                <button class="btn btn-success" type="submit">Generar</button>
+            </form>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+
+{% block script %}
+    {% load static %}
+    <script src="{% static "js/reporte.js" %}"></script>
 {% endblock %}

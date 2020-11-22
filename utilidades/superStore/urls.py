@@ -23,7 +23,7 @@ from .views import ticket
 from .views import RegistrarCajero, RegistrarUserCajero, ListarCajeros, EditarUserCajero, EditarCajero, EliminarCajero
 from .views import RegistrarProveedor, EditarProveedor, ListarProveedores, EliminarProveedor
 from .views import Comprar, guardar_compras
-from .views import Reportes
+from .views import Reportes, generar_reporte, generar_reporte_anual
 app_name='tienda'
 urlpatterns=[
     path('', index.as_view(), name='index'),
@@ -95,5 +95,7 @@ urlpatterns=[
     path('listar_proveedores', ListarProveedores.as_view(), name='listar_proveedores'),
     path('comprar',Comprar.as_view(), name="compras" ),
     path('guardar_compras', guardar_compras, name='guardar_compras'),
-    path('reportes', Reportes.as_view(), name="reporte")
+    path('reportes', Reportes.as_view(), name="reporte"),
+    path('generar_reporte', generar_reporte, name="generar_reporte"),
+    path('generar_reporte_anual', generar_reporte_anual, name='generar_reporte_anual')
 ]

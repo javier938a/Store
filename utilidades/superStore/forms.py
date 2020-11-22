@@ -2,8 +2,11 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.db.models import fields
 from django.forms import widgets
+from django.forms.widgets import Widget
 from .models import User, tbl_mayorista, tbl_cliente, tbl_direccion, tbl_producto, tbl_venta, tbl_categoria, tbl_pais
 from .models import tbl_cesta, tbl_cajero, tbl_caja, tbl_proveedor
+from django.contrib.admin import widgets as wdadmin
+
 
 class CreateUserForm(UserCreationForm):#extienda de la clase UserCreationForm
    class Meta:
@@ -212,3 +215,11 @@ class ProveedorForm(forms.ModelForm):
             'direccion':'Direccion'
         }
 
+
+class FechaReporte(forms.Form):
+    fecha_inicio=forms.DateTimeField(label='Fecha de inicio:', widget=wdadmin.AdminDateWidget)
+    fecha_fin=forms.DateTimeField(label='Fecha final:', widget=wdadmin.AdminDateWidget)
+
+
+class ReporteAnual(forms.Form):
+    anio=forms.CharField(label="Ingrese el Año:")

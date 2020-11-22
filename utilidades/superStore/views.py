@@ -41,7 +41,7 @@ from .proces_vender.crud_vender import listar_productos, new_factura, efectuar_v
 from .process_cajero.crud_cajero import RegistrarCajero, RegistrarUserCajero, ListarCajeros, EditarUserCajero, EditarCajero, EliminarCajero
 from .proces_proveedores.crud_proveedores import ListarProveedores ,RegistrarProveedor, EditarProveedor, EliminarProveedor
 from .proces_compras.crud_compras import Comprar, guardar_compras
-from .proces_reportes.reportes import Reportes
+from .proces_reportes.reportes import Reportes, generar_reporte, generar_reporte_anual
 import random
 # Create your views here.
 class index(ListView):#Mostrando index Pagina Principal
