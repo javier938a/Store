@@ -1,31 +1,35 @@
 {% extends "base.html" %}
 {# cesta_list es el nombre del contexto que recibo#}
 {% block titulo %}
-    <title>Listado</title>
+    <title>CARRITO DE COMPRAS</title>
 {% endblock %}
 
 {% block contenido %}
 <div class="container">
-    <center><h1>Cesta</h1></center> 
+    <center><h1>CARRITO DE COMPRAS</h1></center> 
     {% if cesta_list %}{# se verifica si existe esta variable #}
         <div class="row"> {# se agrega una fila dentro del contenedor que tendra todos los productos #}
             <div class="container-fluid">
                 <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-4">
                    {% for cesta in cesta_list %}
                         <div class="col mb-4">
-                            <div class="card">
+                            <div class="card card-cascade wider">
                                 {# Titulo Vendedor#}
-                                <h5 class="card-title"><center>{{ cesta.producto.mayorista }}</center></h5>
+                                <h5 class="card-title tam-texto"><center>{{ cesta.producto.mayorista }}</center></h5>
                                 {#titulo de producto#}
-                                <h5 class="card-title">{{ cesta.producto }}</h5>
+                                <h5 class="card-title tam-texto">{{ cesta.producto }}</h5>
                                 {#Imagen del producto#}
-                                <center><img class="img-fluid" src="{{ MEDIA_URL }}{{ cesta.producto.foto_producto1 }}" alt=""></center>
-                                {# precio por unidad del producto#}
-                                <center><h4 class="card-title">${{ cesta.precio_unitario }}</h4></center> 
+                                <div class="view-cascade overlay">
+                                    <img class="img-fluid" src="{{ MEDIA_URL }}{{ cesta.producto.foto_producto1 }}" alt="Card image cap">
+                                </div>
                                 <div class="card-body"> 
-                                    <a class="btn btn-primary" href="{% url 'tienda:reg_venta' cesta.producto.id %}">Comprar</a>
-                                    <a class="btn btn-success" href="{% url 'tienda:actualizar_cesta' cesta.id %}">Editar</a>
-                                    <a class="btn btn-danger" href="{% url 'tienda:eliminar_cesta' cesta.id %}">Borrar</a>
+                                {# precio por unidad del producto#}
+                                    <center>
+                                        <h4 class="card-title tam-texto">${{ cesta.precio_unitario }}</h4>
+                                        <a class="btn btn-primary" href="{% url 'tienda:reg_venta' cesta.producto.id %}">Comprar</a>
+                                        <a class="btn btn-success" href="{% url 'tienda:actualizar_cesta' cesta.id %}">Editar</a>
+                                        <a class="btn btn-danger" href="{% url 'tienda:eliminar_cesta' cesta.id %}">Borrar</a>
+                                    </center> 
                                 </div>
                             </div>
                         </div>

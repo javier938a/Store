@@ -83,39 +83,32 @@
 <script src='{% static "js/conectFirebase.js" %}'></script>
 
 </head>
-<body>
-    <div style="background-color: slategrey;" class="container-fluid">
+<body class="h-100">
+    <div  class="container-fluid">
       {% block menu %}
-      {# menu del sitio... #}
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <nav class="navbar navbar-dark secondary-color d-flex bd-highlight justify-content-center">
+        {% block clave %}
+          <form method="GET" class="form-inline my-2 my-lg-0">
+            <div class="md-form my-0">
+              <input name="clave" class="form-control" style="width: 50vh;" type="search" placeholder="Buscar" aria-label="Search">
+            </div>
+            <button class="btn btn-outline-white btn-md my-2 my-sm-0 ml-3">Buscar</button>
+          </form>
+        {% endblock %}
+      </nav>
+      {# menu del sitio... #}      
+      <nav class="navbar navbar-expand-lg navbar-dark secondary-color ">{# centrando todos los li don d-flex #}
         <a class="navbar-brand" href="{% url 'tienda:index' %}">superStore</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        {% block clave %}
-          <form style="display: flex; align-items:center; justify-content: center;" method="GET" class="form-inline my-2 my-lg-0">
-            <input name="clave" class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
-          </form>
-        {% endblock %}
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto nav-tabs">
+          <ul class="navbar-nav mr-auto nav-tabs mx-auto">
             <li class="nav-item">
               <a class="nav-link" href="{% url 'tienda:contry' %}">Ubicacion</a>
             </li>
             {% if user.is_authenticated %}{# verificando si el usuario esta logeado para poner el menu ya sea de cliente o de proveedor #} 
               {% ifequal user.tipo_usuario_id.tipo_usuario "Cliente" %}{# se verifica si usuario es cliente para ponerle el menu que corresponde al cliente #}
-                  {% if id_cli %}
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'tienda:infoUsuario' 1 %}">{{ user.username }} </a>
-                  </li>
-                  {% else %}
-                    {% block registrar_cli %}{# creando este bloque para anular el item cuando se habran las otras paginas donde no se pase el id del proveedor #}
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'tienda:perfil_cli' %}">{{ user.username }}</a>
-                      </li>  
-                    {% endblock %}
-                  {% endif %}
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'tienda:list_cesta' %}">Cesta</a>  
                   </li>
@@ -125,34 +118,43 @@
                   <li class="nav-item">
                     <a href="{% url 'tienda:list_venta' %}" class="nav-link">Compras</a> 
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Vendedores</a>
-                  </li>
-                  <div class="dropdown">{# Buzon de mensajes #}
-                    <button id="noti" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Mensajes
-                    </button>
-                    <div id="list_noti" class="dropdown-menu h-scroll" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#"></a>
+                  <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" id="nav-login" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-user"></i>Perfil
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="nav-login">
+                      {% if id_cli %}
+                        <a href="{% url 'tienda:infoUsuario' 1 %}" class="dropdonw-item">{{ user.username }}</a>
+                      {% else %}
+                        {% block registrar_cli %}{# creando este bloque para anular el item cuando se habran las otras paginas donde no se pase el id del proveedor #}
+                          <li class="nav-item">
+                            <a href="{% url 'tienda:perfil_cli' %}" class="dropdonw-item">{{ user.username }}</a>
+                          </li>  
+                        {% endblock %}
+                      {% endif %}                      
+                      <a href="{% url 'tienda:logout' %}" class="dropdown-item">Cerrar Sesión</a>
                     </div>
-                  </div>
+                  </li>
+                  <li class="nav-item dropdown">
+                      <a class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">Notificaciones
+                        <span class="badge badge-ligth">0</span>
+                        <span class="sr-only">Notificaciones no leidas</span>
+                      </a>
+                    
+                      <div class="dropdown-menu dropdown-primary">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                      </div>
+                  </li>
               {% endifequal %}
 
               {% ifequal user.tipo_usuario_id.tipo_usuario "Proveedor" %}{# en dado caso el usuario logiado es proveedor se le mostrara el menu del proveedor #}
-                {% if id_prove %}
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'tienda:listar_prod' %}">Productos</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'tienda:infoUsuario' 2 %}">{{ user.username }} </a>
-                  </li>
-                {% else %}
-                  {% block registrar_prove %}
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'tienda:reg_provee' %}">{{ user.username }}</a>                    
-                    </li>
-                  {% endblock %}
-                {% endif %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'tienda:listar_prod' %}">Productos</a>
+              </li>
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'tienda:listar_cajeros' %}">Cajeros</a>
                   </li>
@@ -174,29 +176,35 @@
                   <li class="nav-item">
                     <a class="nav-link" href="#">Seguidores</a>
                   </li>
-                  <div class="dropdown">{# Buzon de mensajes #}
-                    <button id="noti" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Mensajes
-                    </button>
-                    <div id="list_noti" class="dropdown-menu h-scroll" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#"></a>
+                  <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" id="nav-login" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-user"></i>Perfil
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="nav-login">
+                      {% if id_prove %}
+                        <a href="{% url 'tienda:infoUsuario' 2 %}" class="dropdonw-item">{{ user.username }}</a>
+                      {% else %}
+                        {% block registrar_prove %}
+                          <a class="dropdonw-item" href="{% url 'tienda:reg_provee' %}">{{ user.username }}</a>                    
+                        {% endblock %}
+                      {% endif %}
+                      <a href="{% url 'tienda:logout' %}" class="dropdown-item">Cerrar Sesión</a>
                     </div>
-                  </div>
-                  {% if id_prove %}                
-                      <div class="dropdown">{# seccion de notificaciones #}
-                        <button id="noti" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Notificacion
-                        </button>
-                        <div id="list_noti" class="dropdown-menu h-scroll" aria-labelledby="dropdownMenuButton">
-                            {% if noti_seguidores %}{# verificando si existe la variable en el contexto #}
-                              {# recorriendo la lista de seguidores #}
-                                {% for seguir in noti_seguidores %}
-                                    <a class="dropdown-item" href="#">{{ seguir.cliente }} te esta siguiendo ahora mismo</a>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
+                  </li>
+                  <li class="nav-item dropdown">
+                      <!--Trigger-->
+                      <a class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">Notificaciones
+                        <span class="badge badge-ligth">0</span>
+                        <span class="sr-only">Notificaciones no leidas</span>
+                      </a>
+                      <div class="dropdown-menu dropdown-primary">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
                       </div>
-                  {% endif %}
+                  </li>
               {% endifequal %}
               {# inicio de enlaces del cajero #}
               {% ifequal user.tipo_usuario_id.tipo_usuario "cajero" %}
@@ -209,7 +217,7 @@
             {% endifequal %}
             {# fin del enlace del cajero #}
             {% else %} {# si no esta logeado poner menu de autenticar o iniciar secion y registrarse #}
-              <li class="nav-item">
+              <li class="nav-item dropdown">
                 <a id="registrar" class="nav-link" href="{% url 'tienda:registrar' %}" tabindex="-1" aria-disabled="true">Registrarse</a>
               </li>
               <li class="nav-item">
@@ -218,11 +226,6 @@
             {% endif %}
             {# finaliza la comparacion si esta autenticado #}
           </ul> 
-          {% block logout%}
-            {% if user.is_authenticated %}
-              <a class="btn btn-danger" href="{% url 'tienda:logout' %}">Cerrar Sesión</a> 
-            {% endif %}
-          {% endblock %}
         </div>
       </nav>
       {% endblock %}

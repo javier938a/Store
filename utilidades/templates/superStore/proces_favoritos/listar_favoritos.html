@@ -5,7 +5,7 @@
 
 {% block contenido %}
     <div class="container">
-        <center><h1>Favoritos</h1></center>
+        <center><h1>FAVORITOS</h1></center>
         {% if favoritos %}
         <div class="row"> {# se agrega una fila dentro del contenedor que tendra todos los productos #}
             <div class="container-fluid">
@@ -14,13 +14,18 @@
                         <div class="col mb-4">
                             <div class="card">
                                 {# Titulo Vendedor#}
-                                <h5 class="card-title">Tienda {{ fav.producto.mayorista }}</h5>
+                                <h5 class="card-title tam-texto">Tienda {{ fav.producto.mayorista }}</h5>
                                 {#titulo de producto#}
-                                <h5 class="card-title">{{ fav.producto.producto }}</h5>
+                                <h5 class="card-title tam-texto">{{ fav.producto.producto }}</h5>
                                 {#Imagen del producto#}
-                                <a href="/superStore/producto/detalle_producto/{{ fav.producto.url }}/{{ fav.producto.id }}">
-                                   <center><img class="img-fluid img-thumbnail" src="{{ MEDIA_URL }}{{ fav.producto.foto_producto1 }}" alt=""></center> 
-                                </a>
+                                <div class="view view-cascade overlay">
+                                    <center><img class="card-img-top img-fluid img-thumbnail tam-img-md-card" src="{{ MEDIA_URL }}{{ fav.producto.foto_producto1 }}" alt=""></center> 
+                                    <a href="/superStore/producto/detalle_producto/{{ fav.producto.url }}/{{ fav.producto.id }}">
+                                        <div class="mask rgba-white-slight">
+                                        </div>
+                                    </a>
+
+                                </div>
                                 <div class="card-body">
                                     {# precio por unidad del producto#}
                                     <h4 class="card-title">${{ fav.producto.precio_unitario }}</h4>

@@ -23,34 +23,39 @@
         <div class="container-fluid">
           <div class="row row-cols-1 row-cols-sm-1 row-col-md-1 row-cols-lg-4">
             {% for venta in venta_list %}
-              <div class="col mb-4">
+              <div class="col mb-4 card-cascade wider">
                 <div class="card">
                   {# Nombre del producto #}
-                  <h5 class="card-title">{{ venta.producto_id }}</h5>
+                  <h5 class="card-title tam-texto">{{ venta.producto_id }}</h5>
                   {# Imagen del producto #}
-                  <center><img class=" img-fluid img-thumbnail"src=" {{ MEDIA_URL }}{{ venta.producto_id.foto_producto1 }} " alt=""></center>
+                  <div class="view view-cascade overlay">
+                    <center><img class="img-fluid tam-img-md-card img-thumbnail card-img-top"src=" {{ MEDIA_URL }}{{ venta.producto_id.foto_producto1 }} " alt=""></center>
+                    <div class="mask rgba-white-slight"></div>
+                  
+                  </div>
+                  
                   {# Precio del producto #}
                   <center><h4 class="card-title"></h4></center>
                   {# Opciones #}
                   <div class="card-body">
                     {# nombre del vendedor #}
                     Vendedor:
-                    <h5 class="card-title">{{ venta.producto_id.mayorista }}</h5>
+                    <h5 class="card-title tam-texto">{{ venta.producto_id.mayorista }}</h5>
                     {# Nombre del Cliente #}
                     Cliente:
-                    <h5 class="card-title">{{ venta.cliente_id }}</h5>
+                    <h5 class="card-title tam-texto">{{ venta.cliente_id }}</h5>
                     Fecha de compra:
-                    <h5 class="card-title">{{ venta.fecha_hora_realizada }}</h5>
+                    <h5 class="card-title tam-texto">{{ venta.fecha_hora_realizada }}</h5>
                     Cantidad:
-                    <h5 class="card-title">{{ venta.cantidad }} unidades</h5>
+                    <h5 class="card-title tam-texto">{{ venta.cantidad }} unidades</h5>
                     Precio por unidad:
-                    <h5 class="card-title">${{ venta.precio_unitario }}</h5>
+                    <h5 class="card-title tam-texto">${{ venta.precio_unitario }}</h5>
                     Total:
-                    <h5 class="card-title">${{ venta.precio_total }}</h5>
+                    <h5 class="card-title tam-texto">${{ venta.precio_total }}</h5>
                     Direccion a enviar:
-                    <h5 class="card-title">{{ venta.direccion }}</h5>
+                    <h5 class="card-title tam-texto">{{ venta.direccion }}</h5>
                     Telefono del cliente:
-                    <h5 class="card-title">{{ venta.cliente_id.telefono }}</h5>
+                    <h5 class="card-title tam-texto">{{ venta.cliente_id.telefono }}</h5>
                     {% ifequal user.tipo_usuario_id.tipo_usuario "Cliente" %}{# verifica si el usuario logeado es cliente si es cliente solo le dara la opcion de confirmar de recivido#}
                     <th><a class="btn btn-success" href="{% url 'tienda:mod_estado' venta.id %}">Confirmar de recivido</a></th>
                     {% endifequal %}

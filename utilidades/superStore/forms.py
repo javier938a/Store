@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.admin.widgets import AdminDateWidget
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.db.models import fields
 from django.forms import widgets
@@ -222,4 +223,7 @@ class FechaReporte(forms.Form):
 
 
 class ReporteAnual(forms.Form):
-    anio=forms.CharField(label="Ingrese el Año:")
+    anio=forms.CharField(label="Ingrese el Año:", widget=wdadmin.AdminIntegerFieldWidget)
+
+class ReporteDiario(forms.Form):
+    dia=forms.DateTimeField(label='Seleccione el dia: ', widget=wdadmin.AdminDateWidget)

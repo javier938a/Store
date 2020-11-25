@@ -12,22 +12,37 @@
 
 {% block contenido %}
 {% load crispy_forms_tags %}
-<div class="container">
-  <div>
-    <h1><center>REGISTRAR NUEVO USUARIO</center></h1>
-</div>
-<div class="container">
-  <form method="post">
-    {% csrf_token %}
-    {{ form|crispy }}
 
-    <div class="float-right">
-      <button type="submit" class="btn btn-primary">Siguiente</button>
-      <a class="btn btn-success" href="{% url 'tienda:index' %}">Inicio</a>
+  <div class="h-100 container">
+    <div class="container h-100">
+        <div class="row justify-content-center h-100">
+            <div class="col-sm-8 align-self-center text-center">
+                <!-- Material form login -->
+                <div class="card">
+
+                    <h5 class="card-header bg-secondary white-text text-center py-4">
+                    <strong>REGISTRARSE</strong>
+                    </h5>
+                
+                    <!--Card content-->
+                    <div class="card-body px-lg-5 pt-0">
+                
+                    <!-- Form -->
+                    <form class="text-center" style="color: #757575;" method="POST">
+                      {% csrf_token %}
+                      {{ form|crispy }}              
+                        <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit">Registrarse</button>          
+                    </form>
+                    <!-- Form -->
+                
+                    </div>
+                
+                </div>
+                <!-- Material form login -->
+            </div>
+        </div>
     </div>
-  </form>
-</div>
-</div>
+  </div>
 
 
 

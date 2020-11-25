@@ -6,173 +6,192 @@
 
 {% block contenido %}
 <div class="container">
-    <center><h1>{{ usuario.username }}</h1></center>
-    <div class="row">{# primera fila seria la imagen #}
-        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-            <center><img id="fotoPerfil" src="{{ MEDIA_URL }}{{ proveedor.foto_perfil }}" width="200px" height="200px" alt=""></center>
-        </div>
-    </div>
     {# Segunda fila seria el formulario #}
-    <div class="row">
-        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-            <form class="needs-validation" action="{% url 'tienda:editarProveedor' id_proveedor %}" enctype="multipart/form-data" method="POST" novalidate>
-                {% csrf_token %}
-                <div class="form-row">
-                    <div class="form-group col-md-12">
-                        <label for="">Informacion de la empresa</label>
-                        <textarea class="form-control" name="objetivo" rows="3" required>
-                            {{ proveedor.objetivo }}
-                        </textarea>
-                        <div class="valid-feedback">
-                            Es correcto!
+    <div class="h-100 container">
+        <div class="container h-100">
+            <div class="row justify-content-center h-100">
+                <div class="col-sm-8 align-self-center text-center">
+                    <!-- Material form login -->
+                    <div class="card">
+    
+                        <h5 class="card-header bg-secondary white-text text-center py-4">
+                        <strong>Informacion de su empresa</strong>
+                        </h5>
+
+                        <img class="img-fluid img-thumbnail" src="{{ MEDIA_URL }}{{ proveedor.foto_perfil }}" class="card-img-top" alt="...">
+                        <b><h5></h5>{{ usuario.username }}</h5></b>
+                        <!--Card content-->
+                        <div class="card-body px-lg-5 pt-0">
+                    
+                        <!-- Form -->
+                        <form class="text-center needs-validation" style="color: #757575;" action="{% url 'tienda:editarProveedor' id_proveedor %}" enctype="multipart/form-data" method="POST" novalidate>
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for="">Informacion de la empresa</label>
+                                    <textarea class="form-control" name="objetivo" rows="3" required>
+                                        {{ proveedor.objetivo }}
+                                    </textarea>
+                                    <div class="valid-feedback">
+                                        Es correcto!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        No es correcto!
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <input class="form-control" type="text" name="nombres" value="{{ usuario.first_name }}" placeholder="Nombres" required>
+                                    <div class="valid-feedback">
+                                        Es correcto!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        No es correcto!
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input class="form-control" type="text" name="apellidos" value="{{ usuario.last_name }}" placeholder="Apellidos" required>
+                                    <div class="valid-feedback">
+                                        Es correcto!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        No es correcto
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <select class="form-control" name="genero" required>
+                                        {% ifequal proveedor.genero "M" %}
+                                            <option value="M">Masculino</option>
+                                            <option value="F">Femenino</option>
+                                        {% endifequal %}
+                                        {% ifequal proveedor.genero "F" %}
+                                            <option value="M">Femenino/option>
+                                            <option value="F">Masculino</option>
+                                        {% endifequal %}
+                                    </select>
+                                    <div class="valid-feedback">
+                                        Es correcto!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        No es correcto!
+                                    </div>                       
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input class="form-control" type="text" name="nombre_empresa" value="{{ proveedor.nombre_empresa }}" placeholder="Nombre de la Empresa" required>
+                                    <div class="valid-feedback">
+                                        Es correcto!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        No es correcto!
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <input class="form-control" type="text" name="telefono" value="{{ proveedor.telefono }}" placeholder="Telefono" required>
+                                    <div class="valid-feedback">
+                                        Es correcto!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        No es correcto!
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input class="form-control" type="date" name="fecha_nacimiento" value="{{ proveedor.fecha_nacimiento | date:"Y-m-d" }}" required>
+                                    <div class="valid-feedback">
+                                        Es correcto!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        No es correcto!
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <input class="form-control" type="email" name="correo" value="{{ usuario.email }}" placeholder="Correo electronico" required>
+                                    <div class="valid-feedback">
+                                        Es correcto!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        No es correcto!
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label for="dire">Direccion Actual:</label>
+                                <input id="dire" class="form-control" type="text" name="dir" value="{{ proveedor.barrio_canton.municipio.departamento.pais }}, {{ proveedor.barrio_canton.municipio.departamento }}, {{ proveedor.barrio_canton.municipio }}, {{ proveedor.barrio_canton }}" disabled>
+                            </div>
+                            <div class="form-row"> 
+                                <div class="form-group col-md-12">
+                                    <label for="id_pais">Pais:</label>
+                                    <select id="id_pais" class="form-control" name="pais" multiple="" required>
+                                        <option value="">---------</option>
+                                        {% if paises %}
+                                            {% for pais in paises %}
+                                                <option value="{{ pais.id }}">{{ pais.pais }}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                    <div class="valid-feedback">
+                                        Es correcto!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        No es correcto!
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for="id_depto">Departamento:</label>
+                                    <select id="id_depto" class="form-control" name="depto" multiple="" required></select>    
+                                    <div class="valid-feedback">
+                                        Es correcto!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        No es correcto!
+                                    </div>                    
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for="id_muni">Municipio:</label>
+                                    <select id="id_muni" class="form-control" name="muni" multiple="" required></select>
+                                    <div class="valid-feedback">
+                                        Es correcto!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        No es correcto!
+                                    </div>                     
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for="id_barrio_canton">Barrio o Canton:</label>
+                                    <select id="id_barrio_canton" class="form-control" name="barrio_canton" multiple="" required></select>
+                                    <div class="valid-feedback">
+                                        Es correcto!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        No es correcto!
+                                    </div> 
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" type="submit">Guardar</button>
+                            <a class="btn btn-success" href="{% url 'tienda:index' %}">Inicio</a>        
+                            <a class="btn btn-secondary" href="{% url 'tienda:registrar' %}">Registrarse</a>
+                            </p>           
+                        </form>
+                        <!-- Form -->
+                    
                         </div>
-                        <div class="invalid-feedback">
-                            No es correcto!
-                        </div>
+                    
                     </div>
+                    <!-- Material form login -->
                 </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <input class="form-control" type="text" name="nombres" value="{{ usuario.first_name }}" placeholder="Nombres" required>
-                        <div class="valid-feedback">
-                            Es correcto!
-                        </div>
-                        <div class="invalid-feedback">
-                            No es correcto!
-                        </div>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <input class="form-control" type="text" name="apellidos" value="{{ usuario.last_name }}" placeholder="Apellidos" required>
-                        <div class="valid-feedback">
-                            Es correcto!
-                        </div>
-                        <div class="invalid-feedback">
-                            No es correcto
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <select class="form-control" name="genero" required>
-                            {% ifequal proveedor.genero "M" %}
-                                <option value="M">Masculino</option>
-                                <option value="F">Femenino</option>
-                            {% endifequal %}
-                            {% ifequal proveedor.genero "F" %}
-                                <option value="M">Femenino/option>
-                                <option value="F">Masculino</option>
-                            {% endifequal %}
-                        </select>
-                        <div class="valid-feedback">
-                            Es correcto!
-                        </div>
-                        <div class="invalid-feedback">
-                            No es correcto!
-                        </div>                       
-                    </div>
-                    <div class="form-group col-md-6">
-                        <input class="form-control" type="text" name="nombre_empresa" value="{{ proveedor.nombre_empresa }}" placeholder="Nombre de la Empresa" required>
-                        <div class="valid-feedback">
-                            Es correcto!
-                        </div>
-                        <div class="invalid-feedback">
-                            No es correcto!
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <input class="form-control" type="text" name="telefono" value="{{ proveedor.telefono }}" placeholder="Telefono" required>
-                        <div class="valid-feedback">
-                            Es correcto!
-                        </div>
-                        <div class="invalid-feedback">
-                            No es correcto!
-                        </div>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <input class="form-control" type="date" name="fecha_nacimiento" value="{{ proveedor.fecha_nacimiento | date:"Y-m-d" }}" required>
-                        <div class="valid-feedback">
-                            Es correcto!
-                        </div>
-                        <div class="invalid-feedback">
-                            No es correcto!
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-12">
-                        <input class="form-control" type="email" name="correo" value="{{ usuario.email }}" placeholder="Correo electronico" required>
-                        <div class="valid-feedback">
-                            Es correcto!
-                        </div>
-                        <div class="invalid-feedback">
-                            No es correcto!
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <label for="dire">Direccion Actual:</label>
-                    <input id="dire" class="form-control" type="text" name="dir" value="{{ proveedor.barrio_canton.municipio.departamento.pais }}, {{ proveedor.barrio_canton.municipio.departamento }}, {{ proveedor.barrio_canton.municipio }}, {{ proveedor.barrio_canton }}" disabled>
-                </div>
-                <div class="form-row"> 
-                    <div class="form-group col-md-12">
-                        <label for="id_pais">Pais:</label>
-                        <select id="id_pais" class="form-control" name="pais" multiple="" required>
-                            <option value="">---------</option>
-                            {% if paises %}
-                                {% for pais in paises %}
-                                    <option value="{{ pais.id }}">{{ pais.pais }}</option>
-                                {% endfor %}
-                            {% endif %}
-                        </select>
-                        <div class="valid-feedback">
-                            Es correcto!
-                        </div>
-                        <div class="invalid-feedback">
-                            No es correcto!
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-12">
-                        <label for="id_depto">Departamento:</label>
-                        <select id="id_depto" class="form-control" name="depto" multiple="" required></select>    
-                        <div class="valid-feedback">
-                            Es correcto!
-                        </div>
-                        <div class="invalid-feedback">
-                            No es correcto!
-                        </div>                    
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-12">
-                        <label for="id_muni">Municipio:</label>
-                        <select id="id_muni" class="form-control" name="muni" multiple="" required></select>
-                        <div class="valid-feedback">
-                            Es correcto!
-                        </div>
-                        <div class="invalid-feedback">
-                            No es correcto!
-                        </div>                     
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-12">
-                        <label for="id_barrio_canton">Barrio o Canton:</label>
-                        <select id="id_barrio_canton" class="form-control" name="barrio_canton" multiple="" required></select>
-                        <div class="valid-feedback">
-                            Es correcto!
-                        </div>
-                        <div class="invalid-feedback">
-                            No es correcto!
-                        </div> 
-                    </div>
-                </div>
-                <button class="btn btn-primary" type="submit">Guardar</button>
-                <a class="btn btn-success" href="{% url 'tienda:index' %}">Inicio</a>
-            </form>            
+            </div>
         </div>
     </div>
 </div>

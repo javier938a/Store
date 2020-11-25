@@ -519,6 +519,7 @@ $(document).ready(function () {
         } else {
             $("#ver_detalle_producto").removeClass("active");
         }
+        
         $("#perfil_tienda").css('display', 'none');
         $("#producto_detalle").css('display', 'block');
         $("#ver_tienda").css('display', 'none');
@@ -558,7 +559,21 @@ $(document).ready(function () {
                     var producto = prod[i].fields.producto;
                     var precio_unitario = prod[i].fields.precio_unitario;
 
-                    parte_tmp = '<div class="col mb-4"><div class="card"><h5 class="card-title">' + producto + '</h5><a href="/superStore/producto/detalle_producto/' + url + '/' + id + '"><img class="img-fluid img-thumbnail" src="/media/' + foto_producto1 + '" alt=""></a><div class="card-body"><h4 class="card-title">$' + precio_unitario + '</h4></div></div></div>';
+                    parte_tmp = '<div class="col mb-4">\
+                                    <div class="card card-cascade wider">\
+                                        <h5 class="card-title tam-texto">' + producto + '</h5>\
+                                        \<div class="view view-cascade overlay">\
+                                        <img class="img-fluid img-thumbnail" src="/media/' + foto_producto1 + '" alt="Card image cap">\
+                                            <a target="_blank" href="/superStore/producto/detalle_producto/' + url + '/' + id + '">\
+                                                <div class="mask rgba-white-slight"></div>\
+                                                \
+                                            </a>\
+                                        </div>\
+                                        <div class="card-body">\
+                                            <h4 class="card-title">$' + precio_unitario + '</h4>\
+                                        </div>\
+                                    </div>\
+                                </div>';
                     tmp += parte_tmp;
                     console.log(precio_unitario);
                 }

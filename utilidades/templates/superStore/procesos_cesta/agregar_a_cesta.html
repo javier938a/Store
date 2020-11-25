@@ -5,14 +5,34 @@
 {% load crispy_forms_tags %}{#llamando a crispy#}
 
 {% block contenido %}
-<div class="container">
-    <form method="post">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <div class="float-right">
-            <button class="btn btn-primary" type="submit">agregar</button>
+<div class="h-100 container">
+    <div class="container h-100">
+        <div class="row justify-content-center h-100">
+            <div class="col-sm-8 align-self-center text-center">
+                <!-- Material form login -->
+                <div class="card">
+
+                    <h5 class="card-header bg-secondary white-text text-center py-4">
+                    <strong>Añadir a carro de compras</strong>
+                    </h5>
+                
+                    <!--Card content-->
+                    <div class="card-body px-lg-5 pt-0">
+                
+                    <!-- Form -->
+                    <form class="text-center" style="color: #757575;" method="POST">
+                        {% csrf_token %}
+                        {{ form|crispy }}                       
+                        <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit">Agregar a cesta</button>     
+                    </form>
+                    <!-- Form -->
+                
+                    </div>
+                
+                </div>
+            </div>
         </div>
-    </form>
+    </div>
 </div>
 
 {% endblock %}

@@ -63,9 +63,8 @@
 	<parameter name="compania" class="java.lang.String"/>
 	<parameter name="direccion" class="java.lang.String"/>
 	<parameter name="telefono" class="java.lang.String"/>
-	<parameter name="fecha_inicio" class="java.lang.String"/>
-	<parameter name="fecha_fin" class="java.lang.String"/>
 	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="dia" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[select public."superStore_tbl_venta".id, producto, 
 public."superStore_tbl_venta".cantidad, public."superStore_tbl_venta".precio_unitario, 
@@ -78,7 +77,8 @@ on public."superStore_tbl_producto".mayorista_id=public."superStore_tbl_mayorist
 inner join public."auth_user" 
 on public."superStore_tbl_mayorista".user_id=public."auth_user".id
 where public."auth_user".id=101 
-and fecha_hora_realizada>= date( $P{fecha_inicio})  and fecha_hora_realizada<= date( $P{fecha_fin})]]>
+and 
+date(Extract(year from fecha_hora_realizada)||'-'||extract(month from fecha_hora_realizada)||'-'||extract(day from fecha_hora_realizada))= date( $P{dia} ); ]]>
 	</queryString>
 	<field name="id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="id"/>
@@ -208,7 +208,7 @@ and fecha_hora_realizada>= date( $P{fecha_inicio})  and fecha_hora_realizada<= d
 		<groupExpression><![CDATA[$F{precio_total}]]></groupExpression>
 	</group>
 	<title>
-		<band height="91" splitType="Stretch">
+		<band height="88" splitType="Stretch">
 			<staticText>
 				<reportElement x="415" y="10" width="50" height="20" uuid="0f86baff-6386-4f3f-b3fe-2388707babe8"/>
 				<box rightPadding="4"/>
@@ -245,32 +245,12 @@ and fecha_hora_realizada>= date( $P{fecha_inicio})  and fecha_hora_realizada<= d
 				<textFieldExpression><![CDATA[$P{telefono}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="216" y="50" width="170" height="20" uuid="9a941413-d624-4107-bb96-6402430a3476"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Reporte comprendido entre:]]></text>
+				<reportElement x="240" y="60" width="90" height="20" uuid="2821270f-1543-4834-aa5e-31a88996f6a0"/>
+				<text><![CDATA[Reporte del dia: ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="370" y="50" width="74" height="20" uuid="b9daa4b1-5bce-4430-a806-299d2f01c06a"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{fecha_inicio}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="430" y="50" width="19" height="20" uuid="d3cba3c3-ed5b-4adf-8327-b848152b7f49"/>
-				<textElement textAlignment="Center">
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[y]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="463" y="50" width="77" height="21" uuid="5de2a07b-f7cc-4f95-85b6-279345dceb37"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{fecha_fin}]]></textFieldExpression>
+				<reportElement x="330" y="60" width="120" height="20" uuid="4791ffee-17ee-4261-91f1-3e68058a5b1d"/>
+				<textFieldExpression><![CDATA[$P{dia}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

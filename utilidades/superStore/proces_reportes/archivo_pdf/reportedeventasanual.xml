@@ -67,7 +67,7 @@
 		</text>
 		<text textHeight="11.640625" lineSpacingFactor="1.1640625" leadingOffset="-2.3583984" valueClass="java.util.Date" pattern="EEEEE dd MMMMM yyyy">
 			<reportElement uuid="bb10dbe1-0a4f-4722-9953-c163b63cf979" x="485" y="30" width="84" height="20" origin="10" srcId="10" printId="1"/>
-			<textContent><![CDATA[sábado 21 ]]></textContent>
+			<textContent><![CDATA[domingo 22 ]]></textContent>
 		</text>
 		<image scaleImage="RetainShape" hAlign="Center" vAlign="Top">
 			<reportElement uuid="94883631-a913-43e2-b182-ab8d77d0181e" x="20" y="20" width="65" height="60" origin="10" srcId="11" printId="1"/>

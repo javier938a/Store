@@ -8,16 +8,53 @@
 
 {% load crispy_forms_tags %}{# Declarando el plugin crispy #}
 {% block contenido %}
-    <div class="container">
-        <form method="post">
-            {% csrf_token %}
-            {{ form|crispy }}
-            <div class="float-right">
-                <a class="btn btn-danger" href="">Olvide mi contraseña</a> 
-                <input type="submit" value="Iniciar sesión">
+<div class="h-100 container">
+    <div class="container h-100">
+        <div class="row justify-content-center h-100">
+            <div class="col-sm-8 align-self-center text-center">
+                <!-- Material form login -->
+                <div class="card">
+
+                    <h5 class="card-header bg-secondary white-text text-center py-4">
+                    <strong>Iniciar Sesión</strong>
+                    </h5>
+                
+                    <!--Card content-->
+                    <div class="card-body px-lg-5 pt-0">
+                
+                    <!-- Form -->
+                    <form class="text-center" style="color: #757575;" method="POST">
+                        {% csrf_token %}
+                        {{ form|crispy }}               
+                        <div class="d-flex justify-content-around">
+                            <div>
+                                <!-- Forgot password -->
+                                <a href="">Se te olvidó tu contraseña?</a>
+                            </div>
+                        </div>
+                
+                        <!-- Sign in button -->
+                        <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit">Iniciar sesión</button>
+                
+                        <!-- Register -->
+                        <p>¿No estas registrado?
+                        <a href="{% url 'tienda:registrar' %}">Registrarse</a>
+                        </p>
+                
+                        <!-- Social login -->
+                        <p>O iniciar sesion con facebook:</p>
+                        <a type="button" class="btn-floating btn-fb btn-sm">
+                        <i class="fab fa-facebook-f"></i>
+                        </a>               
+                    </form>
+                    <!-- Form -->
+                
+                    </div>
+                
+                </div>
+                <!-- Material form login -->
             </div>
-
-
-        </form>
+        </div>
     </div>
+</div>
 {% endblock %}

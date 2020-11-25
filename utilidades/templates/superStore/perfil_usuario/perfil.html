@@ -17,51 +17,77 @@
 {% block contenido %}
 <div class="container ">
     {% if perfil_cliente %}
-    <div class="card" style="width: 25rem;">
-        <div><center><h1>Informacion General</h1> </center> </div>
-        <img src="{{ MEDIA_URL }}{{ perfil_cliente.foto_perfil }}" class="card-img-top" width="200" height="300" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">{{perfil_cliente.user}}</h5>
-        </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item"><h5>Tipo de Usuario</h5> {{ perfil_cliente.user.tipo_usuario_id }}</li>
-          <li class="list-group-item"><h5>Genero</h5> {{ perfil_cliente.genero }}</li>
-          <li class="list-group-item"><h5>Nombres</h5> {{ perfil_cliente.user.first_name }}</li>
-          <li class="list-group-item"><h5>Apellidos</h5> {{ perfil_cliente.user.last_name }}</li>
-          <li class="list-group-item"><h5>Correo</h5> {{ perfil_cliente.user.email }}</li>
-          <li class="list-group-item"><h5>Telefono</h5> {{ perfil_cliente.telefono }}</li>
-          <li class="list-group-item"><h5>Fecha de nacimiento</h5> {{ perfil_cliente.fecha_nacimiento }}</li>
-        </ul>
-        <div class="card-body float-center">
-            <div class="float-left">
-                <a class="btn btn-success card-link" href="{% url 'tienda:dire_list' perfil_cliente.id %}">Direcciones</a>
-                <a class="btn btn-success card-link" href="{% url 'tienda:editarUsuario' perfil_cliente.id %}">Editar<br>Informacion</a>          
+        <div class="h-100 container">
+            <div class="container h-100">
+                <div class="row justify-content-center h-100">
+                    <div class="col-sm-8 align-self-center text-center">
+                        <div class="card">
+                            <h5 class="card-header bg-secondary white-text text-center py-4">
+                                <strong>PERFIL DE USUARIO</strong>
+                                </h5>
+                            <img src="{{ MEDIA_URL }}{{ perfil_cliente.foto_perfil }}" class="card-img-top" width="200" height="300" alt="...">
+                            <div class="card-body">
+                            <h5 class="card-title">{{perfil_cliente.user}}</h5>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><h5>Tipo de Usuario</h5> {{ perfil_cliente.user.tipo_usuario_id }}</li>
+                            <li class="list-group-item"><h5>Genero</h5> {{ perfil_cliente.genero }}</li>
+                            <li class="list-group-item"><h5>Nombres</h5> {{ perfil_cliente.user.first_name }}</li>
+                            <li class="list-group-item"><h5>Apellidos</h5> {{ perfil_cliente.user.last_name }}</li>
+                            <li class="list-group-item"><h5>Correo</h5> {{ perfil_cliente.user.email }}</li>
+                            <li class="list-group-item"><h5>Telefono</h5> {{ perfil_cliente.telefono }}</li>
+                            <li class="list-group-item"><h5>Fecha de nacimiento</h5> {{ perfil_cliente.fecha_nacimiento }}</li>
+                            </ul>
+                        
+                            <!--Card content-->
+                            <div class="card-body  px-lg-5 pt-0">
+                                <div class="float-center">
+                                    <a class="btn btn-success card-link" href="{% url 'tienda:dire_list' perfil_cliente.id %}">Direcciones</a>
+                                    <a class="btn btn-success card-link" href="{% url 'tienda:editarUsuario' perfil_cliente.id %}">Editar<br>Informacion</a>          
+                                </div>                        
+                            </div>
+                        
+                        </div>
+                        <!-- Material form login -->
+                    </div>
+                </div>
             </div>
-
-        </div>
-      </div>        
+        </div>    
     {% else %}
-    <div class="card" style="width: 25rem;">
-        <center><h1>Informacion General</h1></center>
-        <img src="{{ MEDIA_URL }}{{ perfil_proveedor.foto_perfil }}" class="card-img-top" width="200" height="300" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">{{ perfil_proveedor.nombre_empresa }}</h5>
-          <h6>{{ perfil_proveedor.objetivo }}</h6>
-        </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item"><h5>Tipo de Usuario</h5>{{ perfil_proveedor.user.tipo_usuario_id }}</li>
-            <li class="list-group-item"><h5>Genero</h5>{{ perfil_proveedor.genero }}</li>
-            <li class="list-group-item"><h5>Usuario</h5>{{ perfil_proveedor.user }} </li>
-            <li class="list-group-item"><h5>Nombres</h5>{{ perfil_proveedor.user.first_name }}</li>
-            <li class="list-group-item"><h5>Apellidos</h5>{{ perfil_proveedor.user.last_name }}</li>
-            <li class="list-group-item"><h5>Correo</h5>{{ perfil_proveedor.user.email }}</li>
-            <li class="list-group-item"><h5>Telefono</h5>{{ perfil_proveedor.telefono }}</li>
-            <li class="list-group-item"><h5>Direccion</h5>{{ perfil_proveedor.barrio_canton.municipio.departamento.pais }}, {{ perfil_proveedor.barrio_canton.municipio.departamento }}, {{ perfil_proveedor.barrio_canton.municipio }}, {{ perfil_proveedor.barrio_canton }}</li>
-        </ul>
-        <div class="card-body">
-            <a class="btn btn-success" href="{% url 'tienda:editarProveedor' perfil_proveedor.id %}">Modificar informacion</a>
-        </div>
-    </div>
+        <div class="h-100 container">
+            <div class="container h-100">
+                <div class="row justify-content-center h-100">
+                    <div class="col-sm-8 align-self-center text-center">
+                        <div class="card">
+                            <h5 class="card-header bg-secondary white-text text-center py-4">
+                                <strong>PERFIL DE USUARIO</strong>
+                                </h5>
+                                <img src="{{ MEDIA_URL }}{{ perfil_proveedor.foto_perfil }}" class="card-img-top" width="200" height="300" alt="...">
+                                <div class="card-body">
+                                  <h5 class="card-title">{{ perfil_proveedor.nombre_empresa }}</h5>
+                                  <h6>{{ perfil_proveedor.objetivo }}</h6>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><h5>Tipo de Usuario</h5>{{ perfil_proveedor.user.tipo_usuario_id }}</li>
+                                    <li class="list-group-item"><h5>Genero</h5>{{ perfil_proveedor.genero }}</li>
+                                    <li class="list-group-item"><h5>Usuario</h5>{{ perfil_proveedor.user }} </li>
+                                    <li class="list-group-item"><h5>Nombres</h5>{{ perfil_proveedor.user.first_name }}</li>
+                                    <li class="list-group-item"><h5>Apellidos</h5>{{ perfil_proveedor.user.last_name }}</li>
+                                    <li class="list-group-item"><h5>Correo</h5>{{ perfil_proveedor.user.email }}</li>
+                                    <li class="list-group-item"><h5>Telefono</h5>{{ perfil_proveedor.telefono }}</li>
+                                    <li class="list-group-item"><h5>Direccion</h5>{{ perfil_proveedor.barrio_canton.municipio.departamento.pais }}, {{ perfil_proveedor.barrio_canton.municipio.departamento }}, {{ perfil_proveedor.barrio_canton.municipio }}, {{ perfil_proveedor.barrio_canton }}</li>
+                                </ul>                        
+                            <!--Card content-->
+                            <div class="card-body  px-lg-5 pt-0">
+                                <a class="btn btn-success" href="{% url 'tienda:editarProveedor' perfil_proveedor.id %}">Modificar informacion</a>
+                            </div>
+                        
+                        </div>
+                        <!-- Material form login -->
+                    </div>
+                </div>
+            </div>
+        </div> 
     {% endif %}
 </div>
 

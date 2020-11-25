@@ -35,16 +35,16 @@
   </ul>
 </div>
 <div class="container">
-  <ul class="nav nav-tabs nav-pills">
+  <ul class="nav md-tabs nav-justified secondary-color ">
     <li class="nav-item">
-      <a id="ver_perfil_tienda" class="nav-link" href="{% url 'tienda:verifica_seguidor' detalle_producto.mayorista.id %}">Informacion<br>de Vendedor</a>
+      <a id="ver_perfil_tienda" class="nav-link waves-light text-white tam-texto" href="{% url 'tienda:verifica_seguidor' detalle_producto.mayorista.id %}">Informacion<br>de Vendedor</a>
     </li>
     <li class="nav-item">
-      <a id="ver_detalle_producto" class="nav-link active" href="#">Detalle <br> producto</a>
+      <a id="ver_detalle_producto" class="nav-link active waves-light show text-white tam-texto" href="#">Detalle <br> producto</a>
     </li>
     <li class="nav-item">
       <input id="mayo" value="{{ detalle_producto.mayorista.id }}" type="hidden">{# servira para capturar el id del proveedor #}
-      <a id="ver_tienda_prove" class="nav-link" href="{% url 'tienda:prod_all' %}">Tienda</a>
+      <a id="ver_tienda_prove" class="nav-link waves-light text-white tam-texto" href="{% url 'tienda:prod_all' %}">Tienda</a>
     </li>
   </ul>
 </div>
@@ -71,37 +71,54 @@
 {# informacion del perfil de la tienda #}
 <div id="perfil_tienda" class="container visible">{# la clase visible oculta inicialmente el div #}
     <div class="row">
-      <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-        <div class="card" style="width: 35rem;">
-          <img src="{{ MEDIA_URL }}{{ detalle_producto.mayorista.foto_perfil }}" class="card-img-top img-thumbnail" alt="">
-          <div class="card-body">
-            <h5 class="card-title">{{ detalle_producto.mayorista.nombre_empresa }}</h5>
-            <p class="card-text">{{ detalle_producto.mayorista.objetivo }}</p>
-          </div>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item"><h5>Registrado desde:</h5>{{ detalle_producto.mayorista.user.date_joined }}</li>
-            <li class="list-group-item"><h5>Seguidores</h5><p id="numero_amigos"></p></li>
-            <li class="list-group-item"><h5>Direccion: </h5>{{ detalle_producto.mayorista.barrio_canton.municipio.departamento.pais }}, {{ detalle_producto.mayorista.barrio_canton.municipio.departamento }}, {{ detalle_producto.mayorista.barrio_canton.municipio }}, {{ detalle_producto.mayorista.barrio_canton }} </li>
-            <input id="id_mayorista" type="hidden" name="" value="{{ detalle_producto.mayorista.id }}">
-            <li class="list-group-item">
-              <div class="container">
-                <div class="row">
-                  <div class="col-md-6">
-                    <p class="error"></p>
-                    <a href="{% url 'tienda:nuevo_seguidor' detalle_producto.mayorista.id %}" id="btnSeguir" class="btn btn-primary active" >Seguir</a>
-                    <div id="mensaje_pro">
 
-                    </div>
+          <div class="container h-100">
+              <div class="row justify-content-center h-100">
+                  <div class="col-sm-8 align-self-center text-center">
+                      <!-- Material form login -->
+                      <div class="card">
+      
+                          <h5 class="card-header bg-secondary white-text text-center py-4">
+                          <strong>INFORMACION DEL VENDEDOR</strong>
+                          </h5>
+                      
+                          <!--Card content-->
+                          <div class="card-body px-lg-5 pt-0">
+                            <img src="{{ MEDIA_URL }}{{ detalle_producto.mayorista.foto_perfil }}" class="card-img-top img-thumbnail" alt="">
+                            <div class="card-body">
+                              <h5 class="card-title">{{ detalle_producto.mayorista.nombre_empresa }}</h5>
+                              <p class="card-text">{{ detalle_producto.mayorista.objetivo }}</p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                              <li class="list-group-item"><h5>Registrado desde:</h5>{{ detalle_producto.mayorista.user.date_joined }}</li>
+                              <li class="list-group-item"><h5>Seguidores</h5><p id="numero_amigos"></p></li>
+                              <li class="list-group-item"><h5>Direccion: </h5>{{ detalle_producto.mayorista.barrio_canton.municipio.departamento.pais }}, {{ detalle_producto.mayorista.barrio_canton.municipio.departamento }}, {{ detalle_producto.mayorista.barrio_canton.municipio }}, {{ detalle_producto.mayorista.barrio_canton }} </li>
+                              <input id="id_mayorista" type="hidden" name="" value="{{ detalle_producto.mayorista.id }}">
+                              <li class="list-group-item">
+                                <div class="container">
+                                  <div class="row">
+                                    <div class="col-md-6">
+                                      <p class="error"></p>
+                                      <a href="{% url 'tienda:nuevo_seguidor' detalle_producto.mayorista.id %}" id="btnSeguir" class="btn btn-primary active" >Seguir</a>
+                                      <div id="mensaje_pro">
+                  
+                                      </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <a class="btn btn-primary contact" href="">contactar al vendedor</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </li>
+                            </ul>                    
+                          </div>
+                      
+                      </div>
+                      <!-- Material form login -->
                   </div>
-                  <div class="col-md-6">
-                    <a class="btn btn-primary contact" href="">contactar al vendedor</a>
-                  </div>
-                </div>
               </div>
-            </li>
-          </ul>
-        </div> 
-      </div>
+          </div>
+
     </div>
 </div>
 <div id="producto_detalle" class="container">

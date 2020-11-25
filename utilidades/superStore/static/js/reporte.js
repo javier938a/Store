@@ -16,16 +16,25 @@ function getCookie(name) {
 
 $(document).ready(function(){
 
+    $("#btn_diario").click(function(evt){
+        evt.preventDefault();
+        $("#dia").css('display', 'block');
+        $("#fecha_intervalo").css('display', 'none');
+        $("#fecha_mes").css('display', 'none');
+    });
+
     $("#btn_intervalo").click(function(evt){
         evt.preventDefault();
         $("#fecha_intervalo").css('display', 'block');
-        $("#fecha_mes").css('display','none')
+        $("#fecha_mes").css('display','none');
+        $("#dia").css('display', 'none');
 
     })
     $("#btn_mes").click(function(evt){
         evt.preventDefault();
         $("#fecha_intervalo").css('display', 'none');
         $("#fecha_mes").css('display', 'block');
+        $("#dia").css('display', 'none');
     });
 
     /*$("#form-fechas").submit(function(){

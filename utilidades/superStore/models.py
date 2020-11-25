@@ -226,6 +226,7 @@ class tbl_factura(models.Model):
 class tbl_venta(models.Model):#almacenara las ventas efectuadas por los mayoristas por parte de los clientes
     cliente_id = models.ForeignKey(tbl_cliente, on_delete=models.CASCADE, null=True, blank=True)
     producto_id = models.ForeignKey(tbl_producto, on_delete=models.CASCADE)
+    cajero=models.ForeignKey(tbl_cajero, on_delete=models.SET_NULL, null=True, blank=True)
     fecha_hora_realizada = models.DateTimeField(null=True, blank = True)
     cantidad = models.IntegerField(help_text="Ingrese la cantida vendida")
     precio_unitario = models.DecimalField(decimal_places=3, max_digits=10, help_text="Ingrese el precio unitario del producto")

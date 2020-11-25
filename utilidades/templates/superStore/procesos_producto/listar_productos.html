@@ -35,21 +35,23 @@
         <div class="container-fluid">
           <div class="row row-cols-5 row-cols-sm-1 row-cols-md-1 row-cols-lg-4">
             {% for prod in prod_list  %}
-              <div class="col mb">
-                <div class="card">
+              <div class="col mb-4">
+                <div class="card card-cascade wider">
                   <h5 class="card-title">{{ prod.mayorista }}</h5>
                   <h5 class="card-title">{{ prod.producto }}</h5>
+                  <div class="view view-cascade overlay">
+                    <center><img class="card-img-top img-fluid img-thumbnail tam-img-md-card" src="{{ MEDIA_URL }}{{ prod.foto_producto1 }}" alt="Card image cap"></center>
+                    <div class="mask rgba-white-slight"></div>
+                  </div>
                   
-                  <center><img class="img-fluid img-thumbnail" src="{{ MEDIA_URL }}{{ prod.foto_producto1 }}" alt=""></center>
-
                   <div class="card-body">
-                    Fecha de registro: <h5 class="card-title">{{ prod.fecha_registro }}</h5>
-                    Ultima fecha de Edicion:<h5 class="card-title">{{ prod.fecha_edicion }}</h5>
-                    Proveedor:<h5 class="card-tittle">{{ prod.proveedor }}</h5>
-                    Categoria: <h5 class="card-title">{{ prod.sub_categoria1.categoria }} --> {{ prod.sub_categoria1 }}</h5>
-                    Precio: <h5 class="card-title">$ {{ prod.precio_unitario }}</h5>
-                    Cantidad: <h5 class="card-title">{{ prod.cantidad }} unidades</h5>
-                    Total: <h5 class="card-title">$ {{ prod.precio_total }}</h5>
+                    Fecha de registro: <h5 class="card-title tam-texto">{{ prod.fecha_registro }}</h5>
+                    Ultima fecha de Edicion:<h5 class="card-title tam-texto">{{ prod.fecha_edicion }}</h5>
+                    Proveedor:<h5 class="card-tittle tam-texto">{{ prod.proveedor }}</h5>
+                    Categoria: <h5 class="card-title tam-texto">{{ prod.sub_categoria1.categoria }} --> {{ prod.sub_categoria1 }}</h5>
+                    Precio: <h5 class="card-title tam-texto">$ {{ prod.precio_unitario }}</h5>
+                    Cantidad: <h5 class="card-title tam-texto">{{ prod.cantidad }} unidades</h5>
+                    Total: <h5 class="card-title tam-texto">$ {{ prod.precio_total }}</h5>
                     <center>
                       <a class="btn btn-success" href="{% url 'tienda:edit_prod' prod.id %}">Editar</a>
                       <a class="btn btn-danger" href="{% url 'tienda:del_prod' prod.id %}">Eliminar</a>

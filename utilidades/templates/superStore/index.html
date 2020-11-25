@@ -9,13 +9,13 @@
         {% if cate_list %}
                 <div class="jumbotron jumbotron-fluid">
                     <div class="container-fluid">
-                        <div class="row row-cols-5 row-cols-md-4 row-cols-lg-4">
+                        <div class="row row-cols-3 row-cols-sm-3 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 ">
                             {% for cate in cate_list %}
                                 <div class="col mb-4">
                                 <div class="card">
                                     <a href="{% url 'tienda:sub_categoria' cate.id %}"><img class="img-fluid img-thumbnail" src=" {{ MEDIA_URL }}{{ cate.icono }}" class="card-img-top" alt="..."></a>
-                                    <div style="float:none; margin:0 auto;" class="card-body co">
-                                        <h5 style=" font-size: 1.5vw;" class="card-title">{{ cate.categoria }}</h5>
+                                    <div style="float:none; margin:0 auto;" class="card-body">
+                                        <h5 class="card-title tam-texto">{{ cate.categoria }}</h5>
                                     </div>
                                 </div>
                                 </div>
@@ -34,36 +34,42 @@
 
 {# se mostraran todas las ventas de los usuarios #}
 {% block ventas %}
-    {% if producto %}
-        <div class="row"> {# se agrega una fila dentro del contenedor que tendra todos los productos #}
-            <div class="container-fluid">
-                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-4">
-                {% for prod in producto %}
+<!-- Card deck -->
+        <div class="row row-cols-1 row-cols-md-1 row-cols-sm-1 row-cols-lg-4 row-cols-xl-4">
+                {% if producto %}
+                <!-- Card -->
+                    {% for prod in producto %}
                         <div class="col mb-4">
-                            <div class="card">
-                                {# Titulo Vendedor#}
-                                <center><h5 class="card-title"><strong>Tienda {{ prod.mayorista }}</strong></h5></center>
-                                
-                                {#titulo de producto#}
-                                <center><b><h5 class="card-title"><strong>{{ prod.producto }}</strong></h5></b></center>
-                                
-                                {#Imagen del producto#}
-                                <a href="/superStore/producto/detalle_producto/{{ prod.url }}/{{prod.id}}">
-                                   <center><img class="img-fluid img-thumbnail" src="{{ MEDIA_URL }}{{ prod.foto_producto1 }}" width="265em" height="200em" alt=""></center> 
-                                </a>
-                                <div style="float:none; margin:0 auto;" class="card-body">
-                                    {# precio por unidad del producto#}
-                                    <h4 class="card-title">${{ prod.precio_unitario }}</h4>
+                            <div class="card card-cascade wider ">
+                    
+                                <!--Card image-->
+                                <div class="view view-cascade overlay">
+                                    <img class="card-img-top img-fluid img-thumbnail tam-img-md-card" src="{{ MEDIA_URL }}{{ prod.foto_producto1 }}"
+                                    alt="Card image cap">
+                                    <a target="_blank" href="/superStore/producto/detalle_producto/{{ prod.url }}/{{prod.id}}">
+                                        <div class="mask rgba-white-slight"></div>
+                                    </a>
                                 </div>
-                            </div>
+                            
+                                <!--Card content-->
+                                <div class="card-body">
+                                    {# Titulo Vendedor#}
+                                    <center><h5 class="card-title tam-texto"><strong>Tienda {{ prod.mayorista }}</strong></h5></center>
+                                    
+                                    {#titulo de producto#}
+                                    <center><b><h5 class="card-title tam-texto"><strong>{{ prod.producto }}</strong></h5></b></center>
+                                    <center><h4 class="card-title tam-texto">${{ prod.precio_unitario }}</h4></center>              
+                                </div>
+                        
+                            </div>                            
                         </div>
-                {% endfor %}                   
-                </div>
-            </div>
-        </div> 
-    {% else %}
-        <p>No hay datos que mostrar</p>     
-    {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p>No hay datos que mostrar</p>
+                {% endif %}
+        </div>
+
+ 
 
 {% endblock %}
 

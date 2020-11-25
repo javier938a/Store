@@ -1,25 +1,49 @@
 {% extends "base.html" %}
 
 {% block titulo %}
-    <title>Registrar Productos</title>
+    <title>REGISTRAR NUEVO PRODUCTO</title>
 {% endblock %}
 {% block clave %}
 
 {% endblock %}
 {% load crispy_forms_tags %}{# llamando a crispy para aplicarle boostrap#}
 {% block contenido %}
-<div class="container">
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <div class="float-right">
-            <button class="btn btn-success" type="submit">Guardar</button>
+
+<div class="h-100 container">
+    <div class="container h-100">
+        <div class="row justify-content-center h-100">
+            <div class="col-sm-8 align-self-center text-center">
+                <!-- Material form login -->
+                <div class="card">
+
+                    <h5 class="card-header bg-secondary white-text text-center py-4">
+                    <strong>REGISTRAR NUEVO PRODUCTO</strong>
+                    </h5>
+                
+                    <!--Card content-->
+                    <div class="card-body px-lg-5 pt-0">
+                
+                    <!-- Form -->
+                    <form class="text-center" style="color: #757575;" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <!--button -->
+                        <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit">Registrar</button>             
+                    </form>
+                    <!-- Form -->
+                    <form class="text-center" style="color: #757575;">
+                        {% csrf_token %}
+                        {{ subCateForm|crispy }}
+                    </form>
+
+                
+                    </div>
+                
+                </div>
+                <!-- Material form login -->
+            </div>
         </div>
-    </form>
-    <form action="">
-        {% csrf_token %}
-        {{ subCateForm|crispy }}
-    </form>
+    </div>
 </div>
 
 {% endblock %}

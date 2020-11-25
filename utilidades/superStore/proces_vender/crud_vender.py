@@ -1,3 +1,4 @@
+from superStore.models import User, tbl_cajero
 from django.http import request, FileResponse
 from django.views.generic import TemplateView, ListView
 from django.http import JsonResponse
@@ -49,17 +50,31 @@ def efectuar_venta(request):
                 idfactura=venta['idFactura']
                 producto=tbl_producto.objects.get(id=id_prod)
                 factura=tbl_factura.objects.get(id=idfactura)
+                usuario=request.user
 
                 print(idcliente)
                 print("Tamaño del idcliente"+str(idcliente))
                 newVenta=None
                 if(len(idcliente)>0):#Si se selecciona algun cliente se registra la venta a un cliente 
                     cliente=tbl_cliente.objects.get(id=idcliente)
-                    newVenta=tbl_venta(cliente_id=cliente, producto_id=producto, fecha_hora_realizada=fecha_hora_realizada,
+                    if usuario.tipo_usuario_id.tipo_usuario=='cajero':
+                        user_cajero=tbl_cajero.objects.get(user__id=usuario.id)
+                        newVenta=tbl_venta(cliente_id=cliente,cajero=user_cajero, producto_id=producto, fecha_hora_realizada=fecha_hora_realizada,
+                                        cantidad=cantidad, precio_unitario=precio, precio_total=total, factura=factura
+                                        )
+                    else:
+                        newVenta=tbl_venta(cliente_id=cliente, producto_id=producto, fecha_hora_realizada=fecha_hora_realizada,
+                                        cantidad=cantidad, precio_unitario=precio, precio_total=total, factura=factura
+                                        )
+
+                else:#de lo contrario se registra la venta sin cliente
+                    if usuario.tipo_usuario_id.tipo_usuario=='cajero':
+                        user_cajero=tbl_cajero.objects.get(user__id=usuario.id)
+                        newVenta=tbl_venta(producto_id=producto, cajero=user_cajero, fecha_hora_realizada=fecha_hora_realizada,
                                     cantidad=cantidad, precio_unitario=precio, precio_total=total, factura=factura
                                     )
-                else:#de lo contrario se registra la venta sin cliente
-                    newVenta=tbl_venta(producto_id=producto, fecha_hora_realizada=fecha_hora_realizada,
+                    else:
+                        newVenta=tbl_venta(producto_id=producto, fecha_hora_realizada=fecha_hora_realizada,
                                     cantidad=cantidad, precio_unitario=precio, precio_total=total, factura=factura
                                     )
 

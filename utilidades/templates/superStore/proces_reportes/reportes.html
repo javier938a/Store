@@ -7,13 +7,19 @@
 {% block contenido %}
     <h1>Reportes</h1>
     <div>
-        <form action="#">
-            <button class="btn btn-primary" type="submit">Reporte diario</button>
-        </form>
+        <a id="btn_diario" href="#" class="btn btn-primary">Reporte diario</a>
         <a id="btn_intervalo" href="#" class="btn btn-primary">Reportes por intervalo de fecha</a>
         <a id="btn_mes" href="#" class="btn btn-danger">Reporte anual</a>
     </div>
     <div id="fechas">
+        <div style="display: none;" id="dia">
+            <form target="_blank" action="{% url 'tienda:reporte_diario' %}" method="POST">
+                {% csrf_token %}
+                {{ form_dia }}
+                <button class="btn btn-primary" type="submit">Generar</button>
+            </form>
+
+        </div>
         <div id="fecha_intervalo" style="display: none;"> 
             <form id="form-fechas" target="_blank" action="{% url 'tienda:generar_reporte' %}" method="POST">
                 {% csrf_token %}
@@ -29,7 +35,6 @@
             </form>
         </div>
     </div>
-
 
 {% endblock %}
 

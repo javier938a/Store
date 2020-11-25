@@ -375,3 +375,22 @@
         height: 15%;
         z-index: 780;
     }
+
+.tam-img-sm-card{
+    width: 50vh;
+    height: 50vh;
+}
+
+.tam-img-md-card{
+    width: 100vh;
+    height: 100vh;
+}
+
+.tam-img-lg-card{
+    width: 200vh;
+    height: 200vh;
+}
+
+.tam-texto{
+    font-size: 3vh;
+}
